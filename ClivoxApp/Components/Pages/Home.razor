@@ -55,6 +55,7 @@
 
     private async Task OpenAddClientDialog()
     {
+        //ExcelExporter.ExportToExcel();
         client = new Client(); // Reset client
         var options = new DialogOptions { CloseOnEscapeKey = true };
         var parameters = new DialogParameters { ["Client"] = client };

@@ -104,7 +104,6 @@ namespace ClivoxApp {
                 return ResourceManager.GetString("client_LastName", resourceCulture);
             }
         }
-        
         /// <summary>
         ///   Looks up a localized string similar to Phone Number.
         /// </summary>
@@ -113,7 +112,6 @@ namespace ClivoxApp {
                 return ResourceManager.GetString("client_PhoneNumber", resourceCulture);
             }
         }
-        
         /// <summary>
         ///   Looks up a localized string similar to Email.
         /// </summary>
@@ -122,13 +120,52 @@ namespace ClivoxApp {
                 return ResourceManager.GetString("client_Email", resourceCulture);
             }
         }
-        
         /// <summary>
         ///   Looks up a localized string similar to Address.
         /// </summary>
         public static string client_Address {
             get {
                 return ResourceManager.GetString("client_Address", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Company/Person.
+        /// </summary>
+        public static string client_Address_CompanyOrPerson {
+            get {
+                return ResourceManager.GetString("client_Address_CompanyOrPerson", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Street.
+        /// </summary>
+        public static string client_Address_Street {
+            get {
+                return ResourceManager.GetString("client_Address_Street", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Postal Code.
+        /// </summary>
+        public static string client_Address_PostalCode {
+            get {
+                return ResourceManager.GetString("client_Address_PostalCode", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to City.
+        /// </summary>
+        public static string client_Address_City {
+            get {
+                return ResourceManager.GetString("client_Address_City", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Country.
+        /// </summary>
+        public static string client_Address_Country {
+            get {
+                return ResourceManager.GetString("client_Address_Country", resourceCulture);
             }
         }
     }

@@ -14,12 +14,13 @@ public class Client : IAggregateRoot
     public Gender Gender { get; set; } = Gender.Male;
     public string Email { get; set; } = null!; 
     public string PhoneNumber { get; set; } = null!;
-    public string Address { get; set; } = null!;
+    public Address Address { get; set; } = new();
 
     // Add computed property for full name display
     public string FullName => $"{FirstName} {LastName}";
 }
 
 public enum Gender { Male, Female}
+
 
 

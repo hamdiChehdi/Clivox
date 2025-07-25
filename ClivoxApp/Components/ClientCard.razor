@@ -10,9 +10,17 @@
                 <MudIcon Icon="@Icons.Material.Filled.Phone" style="margin-right: 8px;" />
                 <MudText Typo="Typo.body2">@Client.PhoneNumber</MudText>
             </div>
-            <div style="display: flex; align-items: center; margin-top: 8px;">
-                <MudIcon Icon="@Icons.Material.Filled.LocationOn" style="margin-right: 8px;" />
-                <MudText Typo="Typo.body2">@Client.Address</MudText>
+            <div style="display: flex; align-items: flex-start; margin-top: 8px;">
+                <MudIcon Icon="@Icons.Material.Filled.LocationOn" style="margin-right: 8px; margin-top: 2px;" />
+                <div>
+                    @if (!string.IsNullOrWhiteSpace(Client.Address.CompanyOrPerson))
+                    {
+                        <MudText Typo="Typo.body2">@Client.Address.CompanyOrPerson</MudText><br />
+                    }
+                    <MudText Typo="Typo.body2">@Client.Address.Street</MudText><br />
+                    <MudText Typo="Typo.body2">@Client.Address.PostalCode @Client.Address.City</MudText>
+                    <br /><MudText Typo="Typo.body2">@Client.Address.Country</MudText>
+                </div>
             </div>
         </MudCardContent>
         <MudCardActions style="justify-content: flex-end;">

@@ -1,0 +1,59 @@
+<div class="client-card">
+    <MudCard>
+        <MudCardContent>
+            <MudText Typo="Typo.h6">@Client.FullName</MudText>
+            <div style="display: flex; align-items: center; margin-top: 8px;">
+                <MudIcon Icon="@Icons.Material.Filled.Email" style="margin-right: 8px;" />
+                <MudText Typo="Typo.body2">@Client.Email</MudText>
+            </div>
+            <div style="display: flex; align-items: center; margin-top: 8px;">
+                <MudIcon Icon="@Icons.Material.Filled.Phone" style="margin-right: 8px;" />
+                <MudText Typo="Typo.body2">@Client.PhoneNumber</MudText>
+            </div>
+            <div style="display: flex; align-items: center; margin-top: 8px;">
+                <MudIcon Icon="@Icons.Material.Filled.LocationOn" style="margin-right: 8px;" />
+                <MudText Typo="Typo.body2">@Client.Address</MudText>
+            </div>
+        </MudCardContent>
+        <MudCardActions style="justify-content: flex-end;">
+            <MudIconButton Icon="@Icons.Material.Filled.Work" Color="Color.Info" OnClick="ManageJobs" />
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="EditClient" />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="DeleteClient" />
+        </MudCardActions>
+    </MudCard>
+</div>
+
+@code {
+    [Parameter]
+    public Client Client { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<Guid> OnDelete { get; set; }
+
+    [Parameter]
+    public EventCallback<Client> OnEdit { get; set; }
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = null!;
+
+    private async Task DeleteClient()
+    {
+        if (OnDelete.HasDelegate)
+        {
+            await OnDelete.InvokeAsync(Client.Id);
+        }
+    }
+
+    private async Task EditClient()
+    {
+        if (OnEdit.HasDelegate)
+        {
+            await OnEdit.InvokeAsync(Client);
+        }
+    }
+
+    private void ManageJobs()
+    {
+        NavigationManager.NavigateTo($"/jobs/{Client.Id}");
+    }
+}

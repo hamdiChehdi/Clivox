@@ -1,0 +1,37 @@
+﻿
+<MudDialog>
+    <TitleContent>Add/Edit Client</TitleContent>
+    <DialogContent>
+        <MudTextField @bind-Value="@Client.FirstName" Label="First Name" Variant="Variant.Outlined" Required="true" />
+        <MudTextField @bind-Value="@Client.LastName" Label="Last Name" Variant="Variant.Outlined" Required="true" />
+        <MudSelect @bind-Value="@Client.Gender" Label="Select gender" HelperText="Enum" AdornmentColor="Color.Secondary">
+            @foreach (Gender item in Enum.GetValues(typeof(Gender)))
+            {
+                <MudSelectItem Value="@item">@item</MudSelectItem>
+            }
+        </MudSelect>
+        <MudTextField @bind-Value="@Client.Email" Label="Email" Variant="Variant.Outlined" Required="true" />
+        <MudTextField @bind-Value="@Client.PhoneNumber" Label="Phone Number" Variant="Variant.Outlined" />
+        <MudTextField @bind-Value="@Client.Address" Label="Address" Variant="Variant.Outlined" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Submit" Color="Color.Primary">Save</MudButton>
+        <MudButton OnClick="Cancel" Color="Color.Secondary">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+
+
+
+    [Parameter]
+
+    public Client Client { get; set; } = new();
+
+    private void Submit() => MudDialog.Close(DialogResult.Ok(true));
+
+    private void Cancel() => MudDialog.Cancel();
+}

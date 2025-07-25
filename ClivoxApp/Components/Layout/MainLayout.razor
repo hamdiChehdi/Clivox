@@ -1,0 +1,60 @@
+﻿@inherits LayoutComponentBase
+
+
+<MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<div class="page">
+    <div class="sidebar">
+        <MudGrid>
+            <MudItem xs="9">
+            </MudItem>
+            <MudItem xs="3">
+                <MudSelect T="string"
+                           Label="Language"
+                           @bind-Value="SelectedLanguage"
+                           Variant="Variant.Outlined"
+                           OnChange="ChangeLanguage"
+                           class="mr-10">
+                    <MudSelectItem Value="@("en")">
+                        <div style="display: flex; align-items: center; margin-top: 8px;">
+                            <MudImage Src="images/en.jpg" alt="English" class="mr-5" Width="25" Height="25" />
+                            English
+                        </div>
+                    </MudSelectItem>
+                    <MudSelectItem Value="@("de")">
+                        <div style="display: flex; align-items: center; margin-top: 8px;">
+                            <MudImage Src="images/de.jpg" alt="German" class="mr-5" Width="25" Height="25" />
+                            German
+                        </div>
+                    </MudSelectItem>
+                </MudSelect>
+            </MudItem>
+        </MudGrid>
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+
+@code {
+    private string SelectedLanguage { get; set; } = "en";
+
+    private void ChangeLanguage(string language)
+    {
+        SelectedLanguage = language;
+        var culture = new System.Globalization.CultureInfo(language);
+        System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
+        System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
+    }
+}

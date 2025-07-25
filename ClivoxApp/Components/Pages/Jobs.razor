@@ -1,0 +1,16 @@
+@page "/jobs/{id:guid}"
+
+<MudIconButton Icon="@Icons.Material.Filled.Home" Color="Color.Primary" OnClick="NavigateToHome" />
+
+@code {
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = null!;
+
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private void NavigateToHome()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}

@@ -14,9 +14,8 @@
             <MudItem xs="3">
                 <MudSelect T="string"
                            Label="Language"
-                           @bind-Value="SelectedLanguage"
                            Variant="Variant.Outlined"
-                           OnChange="ChangeLanguage"
+                           ValueChanged="ChangeLanguage"
                            class="mr-10">
                     <MudSelectItem Value="@("en")">
                         <div style="display: flex; align-items: center; margin-top: 8px;">
@@ -48,11 +47,9 @@
 
 
 @code {
-    private string SelectedLanguage { get; set; } = "en";
 
     private void ChangeLanguage(string language)
     {
-        SelectedLanguage = language;
         var culture = new System.Globalization.CultureInfo(language);
         System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
         System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;

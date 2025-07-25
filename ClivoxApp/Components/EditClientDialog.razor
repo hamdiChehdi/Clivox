@@ -2,17 +2,17 @@
 <MudDialog>
     <TitleContent>Add/Edit Client</TitleContent>
     <DialogContent>
-        <MudTextField @bind-Value="@Client.FirstName" Label="First Name" Variant="Variant.Outlined" Required="true" />
-        <MudTextField @bind-Value="@Client.LastName" Label="Last Name" Variant="Variant.Outlined" Required="true" />
-        <MudSelect @bind-Value="@Client.Gender" Label="Select gender" HelperText="Enum" AdornmentColor="Color.Secondary">
+        <MudTextField @bind-Value="@Client.FirstName" Label="@Resource.client_FirstName" Variant="Variant.Outlined" Required="true" />
+        <MudTextField @bind-Value="@Client.LastName" Label="@Resource.client_LastName" Variant="Variant.Outlined" Required="true" />
+        <MudSelect @bind-Value="@Client.Gender" Label="@Resource.client_Gender" AdornmentColor="Color.Secondary">
             @foreach (Gender item in Enum.GetValues(typeof(Gender)))
             {
-                <MudSelectItem Value="@item">@item</MudSelectItem>
+                <MudSelectItem Value="@item">@(item == Gender.Male ? Resource.client_GenderMale: Resource.client_GenderFemale) </MudSelectItem>
             }
         </MudSelect>
-        <MudTextField @bind-Value="@Client.Email" Label="Email" Variant="Variant.Outlined" Required="true" />
-        <MudTextField @bind-Value="@Client.PhoneNumber" Label="Phone Number" Variant="Variant.Outlined" />
-        <MudTextField @bind-Value="@Client.Address" Label="Address" Variant="Variant.Outlined" />
+        <MudTextField @bind-Value="@Client.Email" Label="@Resource.client_Email" Variant="Variant.Outlined" Required="true" />
+        <MudTextField @bind-Value="@Client.PhoneNumber" Label="@Resource.client_PhoneNumber" Variant="Variant.Outlined" />
+        <MudTextField @bind-Value="@Client.Address" Label="@Resource.client_Address" Variant="Variant.Outlined" />
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Submit" Color="Color.Primary">Save</MudButton>

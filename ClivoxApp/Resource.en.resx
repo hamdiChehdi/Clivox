@@ -192,4 +192,16 @@
   <data name="client_IsCompany" xml:space="preserve">
     <value>Is Company?</value>
   </data>
+  <data name="invoice_InvoiceNumber" xml:space="preserve">
+    <value>Invoice Number</value>
+  </data>
+  <data name="invoice_InvoiceDate" xml:space="preserve">
+    <value>Invoice Date</value>
+  </data>
+  <data name="invoice_DueDate" xml:space="preserve">
+    <value>Due Date</value>
+  </data>
+  <data name="invoice_ServiceDate" xml:space="preserve">
+    <value>Service Date</value>
+  </data>
 </root>

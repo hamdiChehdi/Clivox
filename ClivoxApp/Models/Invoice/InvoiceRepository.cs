@@ -6,6 +6,7 @@ using ClivoxApp.EventSourcingInfrastucture;
 using ClivoxApp.Models.Invoice.Events;
 using Marten;
 using Microsoft.Extensions.Logging;
+using NPOI.OpenXmlFormats.Dml;
 
 namespace ClivoxApp.Models.Invoice;
 
@@ -42,6 +43,15 @@ public class InvoiceRepository
         {
             _logger.LogWarning("No invoices found");
         }
+        return invoices;
+    }
+
+    public async Task<IReadOnlyList<Invoice>> GetInvoicesByClientIdAsync(Guid clientId)
+    {
+        var invoices = await _querySession.Query<Invoice>()
+                                           .Where(x => x.ClientId == clientId)
+                                           .OrderBy(x => x.InvoiceNumber)
+                                           .ToListAsync();
         return invoices;
     }
 

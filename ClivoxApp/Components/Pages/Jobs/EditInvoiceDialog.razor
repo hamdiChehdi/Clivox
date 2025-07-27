@@ -1,0 +1,25 @@
+@using ClivoxApp.Models.Invoice
+<MudDialog>
+    <TitleContent>Add/Edit Invoice</TitleContent>
+    <DialogContent>
+        <MudTextField @bind-Value="Invoice.InvoiceNumber" Label="@Resource.invoice_InvoiceNumber" Variant="Variant.Outlined" />
+        <MudDatePicker @bind-Value="Invoice.InvoiceDate" Label="@Resource.invoice_InvoiceDate" />
+        <MudDatePicker @bind-Value="Invoice.DueDate" Label="@Resource.invoice_DueDate" />
+        <MudDatePicker @bind-Value="Invoice.ServiceDate" Label="@Resource.invoice_ServiceDate" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Submit" Color="Color.Primary">Save</MudButton>
+        <MudButton OnClick="Cancel" Color="Color.Secondary">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private MudBlazor.IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public Invoice Invoice { get; set; } = new();
+
+    private void Submit() => MudDialog.Close(MudBlazor.DialogResult.Ok(Invoice));
+    private void Cancel() => MudDialog.Cancel();
+}

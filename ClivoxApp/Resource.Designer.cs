@@ -263,5 +263,37 @@ namespace ClivoxApp {
                 return ResourceManager.GetString("country_Switzerland", resourceCulture);
             }
         }
+        /// <summary>
+        ///   Looks up a localized string similar to Invoice Number.
+        /// </summary>
+        public static string invoice_InvoiceNumber {
+            get {
+                return ResourceManager.GetString("invoice_InvoiceNumber", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Invoice Date.
+        /// </summary>
+        public static string invoice_InvoiceDate {
+            get {
+                return ResourceManager.GetString("invoice_InvoiceDate", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Due Date.
+        /// </summary>
+        public static string invoice_DueDate {
+            get {
+                return ResourceManager.GetString("invoice_DueDate", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Service Date.
+        /// </summary>
+        public static string invoice_ServiceDate {
+            get {
+                return ResourceManager.GetString("invoice_ServiceDate", resourceCulture);
+            }
+        }
     }
 }

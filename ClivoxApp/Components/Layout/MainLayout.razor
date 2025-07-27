@@ -9,13 +9,17 @@
 <div class="page">
     <div class="sidebar">
         <MudGrid>
-            <MudItem xs="3">
-                <MudButton StartIcon="@Icons.Material.Filled.AccountBox" Color="Color.Primary" Variant="Variant.Filled" Class="mt-2 ml-4" OnClick="OpenBusinessOwnerDialog">
+            <MudItem xs="1" Class="d-flex flex-column align-items-center justify-content-center" Style="height:100%;">
+                <MudIconButton Icon="@Icons.Material.Filled.Home" Color="Color.Primary" OnClick="NavigateToHome" Size="Size.Large" Class="mt-2" Style=" height:40px;width:40px;margin-bottom:8px;" />
+            </MudItem>
+            <MudItem xs="2">
+                <MudButton StartIcon="@Icons.Material.Filled.AccountBox" Color="Color.Primary" Variant="Variant.Filled" Class="mt-2" OnClick="OpenBusinessOwnerDialog">
                     Business Owner  
                 </MudButton>
             </MudItem>
-            <MudItem xs="6">
+             <MudItem xs="6">
             </MudItem>
+           
             <MudItem xs="3">
                 <MudStack Row="true" Spacing="2">
                     <MudSwitch @bind-Value="_isDarkMode" Color="Color.Primary" Class="ma-4" T="bool">
@@ -65,6 +69,13 @@
 
 
 @code {
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = null!;
+
+    private void NavigateToHome()
+    {
+        NavigationManager.NavigateTo("/");
+    }
 
     private void ChangeLanguage(string language)
     {

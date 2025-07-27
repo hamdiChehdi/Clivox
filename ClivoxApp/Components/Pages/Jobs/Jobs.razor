@@ -1,0 +1,30 @@
+@page "/jobs/{id:guid}"
+@using ClivoxApp.Models.Invoice
+
+<MudButton StartIcon="@Icons.Material.Filled.PostAdd" Color="Color.Primary" Variant="Variant.Filled" Class="mt-2 ml-4" OnClick="AddNewInvoice">
+    Add invoice
+</MudButton>
+
+@inject ClivoxApp.Models.Invoice.InvoiceRepository InvoiceRepository
+@inject MudBlazor.IDialogService DialogService
+
+@code {
+
+    [Parameter]
+    public Guid Id { get; set; }
+
+
+    private async Task AddNewInvoice()
+    {
+        var invoice = new Invoice();
+        invoice.ClientId = Id;
+        var parameters = new MudBlazor.DialogParameters { ["Invoice"] = invoice };
+        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true };
+        var dialog = await DialogService.ShowAsync<EditInvoiceDialog>("New Invoice", parameters, options);
+        var result = await dialog.Result;
+        if (result is null || result.Canceled)
+            return;
+        await InvoiceRepository.AddInvoiceAsync(invoice);
+        // Optionally: show a snackbar or refresh UI
+    }
+}

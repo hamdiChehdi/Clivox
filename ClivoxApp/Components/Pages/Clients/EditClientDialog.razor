@@ -84,6 +84,10 @@
 
     public bool IsCompany;
 
+    [Inject]
+    private MudBlazor.IDialogService DialogService { get; set; }
+    [Inject]
+    private ClivoxApp.Models.Invoice.InvoiceRepository InvoiceRepository { get; set; }
 
     private void CompanyChanged(bool value)
     {

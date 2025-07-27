@@ -5,8 +5,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using ClivoxApp.EventSourcingInfrastucture;
 using ClivoxApp.Models.Clients.Events;
-using ClivoxApp.Models.Shared;
 using JasperFx.CodeGeneration.Frames;
 using Marten;
 using Microsoft.Extensions.Logging;
@@ -51,9 +51,10 @@ public class ClientRepository
     public async Task FindClient(string lowerCaseSearchText)
     {
         var clients = await _querySession.Query<Client>()
-            .Where(c => c.FirstName.ToLower().Contains(lowerCaseSearchText) || 
-                        c.LastName.ToLower().Contains(lowerCaseSearchText) || 
-                        c.Email.ToLower().Contains(lowerCaseSearchText))
+            .Where(c => (c.FirstName != null && c.FirstName.ToLower().Contains(lowerCaseSearchText)) ||
+                        (c.LastName != null && c.LastName.ToLower().Contains(lowerCaseSearchText)) || 
+                        (c.Email != null && c.Email.ToLower().Contains(lowerCaseSearchText)) ||
+                        (c.CompanyName != null && c.CompanyName.ToLower().Contains(lowerCaseSearchText)))
             .ToListAsync();
     }
 
@@ -61,7 +62,15 @@ public class ClientRepository
     {
         if (client == null) throw new ArgumentNullException(nameof(client));
         _logger.LogInformation("Adding new client: {ClientName}", client.FullName);
-        var evt = new ClientCreated(client.FirstName, client.LastName, client.Gender, client.Email, client.PhoneNumber, client.Address);
+        var evt = new ClientCreated(
+            client.FirstName,
+            client.LastName,
+            client.CompanyName,
+            client.IsCompany,
+            client.Gender,
+            client.Email,
+            client.PhoneNumber,
+            client.Address);
         using var session = _documentStore.LightweightSession();
         session.StoreEvents<Client>(null, evt, null);
         await session.SaveChangesAsync();
@@ -77,8 +86,16 @@ public class ClientRepository
     public async Task UpdateClientAsync(Client client)
     {
         if (client == null) throw new ArgumentNullException(nameof(client));
-        _logger.LogInformation("Adding new client: {ClientName}", client.FullName);
-        var evt = new ClientUpdated(client.FirstName, client.LastName, client.Gender, client.Email, client.PhoneNumber, client.Address);
+        _logger.LogInformation("Updating client: {ClientName}", client.FullName);
+        var evt = new ClientUpdated(
+            client.FirstName,
+            client.LastName,
+            client.CompanyName,
+            client.IsCompany,
+            client.Gender,
+            client.Email,
+            client.PhoneNumber,
+            client.Address);
         using var session = _documentStore.LightweightSession();
         session.StoreEvents<Client>(client.Id, evt, null);
         await session.SaveChangesAsync();

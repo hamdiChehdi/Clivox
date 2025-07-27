@@ -1,0 +1,121 @@
+@using ClivoxApp.Models.Shared
+@using ClivoxApp.Models
+@using Marten
+@inject IDocumentStore DocumentStore
+@inject IQuerySession QuerySession
+
+<MudDialog>
+    <TitleContent>Business Owner</TitleContent>
+    <DialogContent>
+        <MudGrid GutterSize="2">
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="BusinessOwner.FirstName" Label="First Name" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="BusinessOwner.LastName" Label="Last Name" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="12">
+                <MudTextField @bind-Value="BusinessOwner.CompanyName" Label="Company Name" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="BusinessOwner.Email" Label="Email" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="BusinessOwner.TaxNumber" Label="Tax Number" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="BusinessOwner.PhoneNumber" Label="Phone Number" Variant="Variant.Outlined" />
+            </MudItem>
+            <!-- Address fields -->
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="BusinessOwner.Address.CompanyOrPerson" Label="Company/Person" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="BusinessOwner.Address.Street" Label="Street" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="BusinessOwner.Address.PostalCode" Label="Postal Code" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="BusinessOwner.Address.City" Label="City" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudSelect T="Countries" @bind-Value="BusinessOwner.Address.Country" Label="Country" Variant="Variant.Outlined">
+                    @foreach (Countries country in Enum.GetValues(typeof(Countries)))
+                    {
+                        <MudSelectItem Value="@country">@country.ToString()</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <!-- BankAccount fields -->
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="bankAccountHolder" Label="Account Holder" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="bankAccountIBAN" Label="IBAN" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="bankAccountBIC" Label="BIC" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="bankAccountReference" Label="Reference" Variant="Variant.Outlined" />
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Submit" Color="Color.Primary">Save</MudButton>
+        <MudButton OnClick="Cancel" Color="Color.Secondary">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private MudBlazor.IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public BusinessOwner BusinessOwner { get; set; } = new()
+    {
+        Address = new Address(),
+        bankAccount = null
+    };
+
+    private string? bankAccountHolder;
+    private string? bankAccountIBAN;
+    private string? bankAccountBIC;
+    private string? bankAccountReference;
+
+    protected override void OnInitialized()
+    {
+        var bo = QuerySession.Query<BusinessOwner>().FirstOrDefault();
+
+        if (bo is not null)
+        {
+            BusinessOwner = bo;
+            if (BusinessOwner.bankAccount != null)
+            {
+                bankAccountHolder = BusinessOwner.bankAccount.AccountHolder;
+                bankAccountIBAN = BusinessOwner.bankAccount.IBAN;
+                bankAccountBIC = BusinessOwner.bankAccount.BIC;
+                bankAccountReference = BusinessOwner.bankAccount.Reference;
+            }
+        }
+        else
+        {
+            BusinessOwner = new()
+            {
+               Address = new Address(),
+               bankAccount = null
+            };
+        }
+    }
+
+    private async Task Submit()
+    {
+        BusinessOwner.bankAccount = new BankAccount(bankAccountHolder, bankAccountIBAN, bankAccountBIC, bankAccountReference);
+        using var session = DocumentStore.LightweightSession();
+        session.Store(BusinessOwner);
+        await session.SaveChangesAsync();
+        MudDialog.Close(MudBlazor.DialogResult.Ok(BusinessOwner));
+    }
+    private void Cancel() => MudDialog.Cancel();
+}

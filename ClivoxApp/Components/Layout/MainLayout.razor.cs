@@ -9,7 +9,7 @@ namespace ClivoxApp.Components.Layout;
 public partial class MainLayout
 {
     //private MudTheme _theme = new();
-    private bool _isDarkMode;
+    private bool _isDarkMode = true;
     private MudThemeProvider? _mudThemeProvider;
 
     // Customize theme colors if you want rather than defaults.
@@ -19,30 +19,23 @@ public partial class MainLayout
     {
         // Colors : https://mudblazor.com/features/colors#material-colors-list-of-material-colors
 
-        //PaletteLight = new PaletteLight()
-        //{
-        //    Primary = MudBlazor.Colors.Yellow.Darken3,
-        //    Secondary = MudBlazor.Colors.Yellow.Accent4,
-        //    AppbarBackground = MudBlazor.Colors.Yellow.Darken4,
-        //},
-        //PaletteDark = new PaletteDark()
-        //{
-        //    Primary = MudBlazor.Colors.Yellow.Darken4,
-        //},
+        PaletteLight = new PaletteLight()
+        {
+            Primary = MudBlazor.Colors.Blue.Default,
+            Secondary = MudBlazor.Colors.Green.Accent4,
+            AppbarBackground = MudBlazor.Colors.Red.Default,
+        },
+        PaletteDark = new PaletteDark()
+        {
+            Primary = MudBlazor.Colors.Yellow.Darken4,
+        },
 
-        //LayoutProperties = new LayoutProperties()
-        //{
-        //    DrawerWidthLeft = "260px",
-        //    DrawerWidthRight = "300px"
-        //}
+        LayoutProperties = new LayoutProperties()
+        {
+            DrawerWidthLeft = "260px",
+            DrawerWidthRight = "300px"
+        }
     };
-
-    bool _drawerOpen = true;
-
-    void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
-    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -63,9 +56,4 @@ public partial class MainLayout
         true => Icons.Material.Rounded.LightMode,
         false => Icons.Material.Outlined.DarkMode,
     };
-
-    private async Task DarkModeToggle()
-    {
-        _isDarkMode = !_isDarkMode;
-    }
 }

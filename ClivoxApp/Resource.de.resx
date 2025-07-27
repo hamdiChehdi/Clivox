@@ -141,4 +141,55 @@
   <data name="client_Address" xml:space="preserve">
     <value>Adresse</value>
   </data>
+  <data name="client_Address_CompanyOrPerson" xml:space="preserve">
+    <value>Firma oder Person</value>
+  </data>
+  <data name="client_Address_Street" xml:space="preserve">
+    <value>Straße</value>
+  </data>
+  <data name="client_Address_PostalCode" xml:space="preserve">
+    <value>Postleitzahl</value>
+  </data>
+  <data name="client_Address_City" xml:space="preserve">
+    <value>Stadt</value>
+  </data>
+  <data name="client_Address_Country" xml:space="preserve">
+    <value>Land</value>
+  </data>
+  <data name="country_Germany" xml:space="preserve">
+    <value>Deutschland</value>
+  </data>
+  <data name="country_Austria" xml:space="preserve">
+    <value>Österreich</value>
+  </data>
+  <data name="country_Belgium" xml:space="preserve">
+    <value>Belgien</value>
+  </data>
+  <data name="country_CzechRepublic" xml:space="preserve">
+    <value>Tschechien</value>
+  </data>
+  <data name="country_Denmark" xml:space="preserve">
+    <value>Dänemark</value>
+  </data>
+  <data name="country_France" xml:space="preserve">
+    <value>Frankreich</value>
+  </data>
+  <data name="country_Luxembourg" xml:space="preserve">
+    <value>Luxemburg</value>
+  </data>
+  <data name="country_Netherlands" xml:space="preserve">
+    <value>Niederlande</value>
+  </data>
+  <data name="country_Poland" xml:space="preserve">
+    <value>Polen</value>
+  </data>
+  <data name="country_Switzerland" xml:space="preserve">
+    <value>Schweiz</value>
+  </data>
+  <data name="client_CompanyName" xml:space="preserve">
+    <value>Firmenname</value>
+  </data>
+  <data name="client_IsCompany" xml:space="preserve">
+    <value>Firma?</value>
+  </data>
 </root>

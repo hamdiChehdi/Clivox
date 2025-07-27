@@ -10,8 +10,9 @@
 
 namespace ClivoxApp {
     using System;
+    using System.Reflection;
     
-    
+
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -19,7 +20,7 @@ namespace ClivoxApp {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public partial class Resource {
@@ -39,7 +40,7 @@ namespace ClivoxApp {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ClivoxApp.Resource", typeof(Resource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ClivoxApp.Resource", typeof(Resource).GetTypeInfo().Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,38 +62,27 @@ namespace ClivoxApp {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Company Name.
+        /// </summary>
+        public static string client_CompanyName {
+            get {
+                return ResourceManager.GetString("client_CompanyName", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Is Company?.
+        /// </summary>
+        public static string client_IsCompany {
+            get {
+                return ResourceManager.GetString("client_IsCompany", resourceCulture);
+            }
+        }
+        /// <summary>
         ///   Looks up a localized string similar to First Name.
         /// </summary>
         public static string client_FirstName {
             get {
                 return ResourceManager.GetString("client_FirstName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Gender.
-        /// </summary>
-        public static string client_Gender {
-            get {
-                return ResourceManager.GetString("client_Gender", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Female.
-        /// </summary>
-        public static string client_GenderFemale {
-            get {
-                return ResourceManager.GetString("client_GenderFemale", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Male.
-        /// </summary>
-        public static string client_GenderMale {
-            get {
-                return ResourceManager.GetString("client_GenderMale", resourceCulture);
             }
         }
         
@@ -105,11 +95,28 @@ namespace ClivoxApp {
             }
         }
         /// <summary>
-        ///   Looks up a localized string similar to Phone Number.
+        ///   Looks up a localized string similar to Gender.
         /// </summary>
-        public static string client_PhoneNumber {
+        public static string client_Gender {
             get {
-                return ResourceManager.GetString("client_PhoneNumber", resourceCulture);
+                return ResourceManager.GetString("client_Gender", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Male.
+        /// </summary>
+        public static string client_GenderMale {
+            get {
+                return ResourceManager.GetString("client_GenderMale", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Female.
+        /// </summary>
+        public static string client_GenderFemale {
+            get {
+                return ResourceManager.GetString("client_GenderFemale", resourceCulture);
             }
         }
         /// <summary>
@@ -121,6 +128,14 @@ namespace ClivoxApp {
             }
         }
         /// <summary>
+        ///   Looks up a localized string similar to Phone Number.
+        /// </summary>
+        public static string client_PhoneNumber {
+            get {
+                return ResourceManager.GetString("client_PhoneNumber", resourceCulture);
+            }
+        }
+        /// <summary>
         ///   Looks up a localized string similar to Address.
         /// </summary>
         public static string client_Address {
@@ -129,7 +144,7 @@ namespace ClivoxApp {
             }
         }
         /// <summary>
-        ///   Looks up a localized string similar to Company/Person.
+        ///   Looks up a localized string similar to Company or Person.
         /// </summary>
         public static string client_Address_CompanyOrPerson {
             get {
@@ -166,6 +181,86 @@ namespace ClivoxApp {
         public static string client_Address_Country {
             get {
                 return ResourceManager.GetString("client_Address_Country", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Germany.
+        /// </summary>
+        public static string country_Germany {
+            get {
+                return ResourceManager.GetString("country_Germany", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Austria.
+        /// </summary>
+        public static string country_Austria {
+            get {
+                return ResourceManager.GetString("country_Austria", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Belgium.
+        /// </summary>
+        public static string country_Belgium {
+            get {
+                return ResourceManager.GetString("country_Belgium", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Czech Republic.
+        /// </summary>
+        public static string country_CzechRepublic {
+            get {
+                return ResourceManager.GetString("country_CzechRepublic", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Denmark.
+        /// </summary>
+        public static string country_Denmark {
+            get {
+                return ResourceManager.GetString("country_Denmark", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to France.
+        /// </summary>
+        public static string country_France {
+            get {
+                return ResourceManager.GetString("country_France", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Luxembourg.
+        /// </summary>
+        public static string country_Luxembourg {
+            get {
+                return ResourceManager.GetString("country_Luxembourg", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Netherlands.
+        /// </summary>
+        public static string country_Netherlands {
+            get {
+                return ResourceManager.GetString("country_Netherlands", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Poland.
+        /// </summary>
+        public static string country_Poland {
+            get {
+                return ResourceManager.GetString("country_Poland", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Switzerland.
+        /// </summary>
+        public static string country_Switzerland {
+            get {
+                return ResourceManager.GetString("country_Switzerland", resourceCulture);
             }
         }
     }

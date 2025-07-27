@@ -1,6 +1,6 @@
 using Marten;
 
-namespace ClivoxApp.Models.Shared;
+namespace ClivoxApp.EventSourcingInfrastucture;
 
 public static class MartenExtensions
 {

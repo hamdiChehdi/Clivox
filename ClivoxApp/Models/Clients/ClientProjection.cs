@@ -20,6 +20,8 @@ public class ClientProjection : SingleStreamProjection<Client, Guid>
     {
         client.FirstName = @event.FirstName;
         client.LastName = @event.LastName;
+        client.CompanyName = @event.CompanyName;
+        client.IsCompany = @event.IsCompany;
         client.Gender = @event.Genre;
         client.Email = @event.Email;
         client.PhoneNumber = @event.PhoneNumber;
@@ -30,6 +32,8 @@ public class ClientProjection : SingleStreamProjection<Client, Guid>
     {
         client.FirstName = @event.FirstName;
         client.LastName = @event.LastName;
+        client.CompanyName = @event.CompanyName;
+        client.IsCompany = @event.IsCompany;
         client.Gender = @event.Genre;
         client.Email = @event.Email;
         client.PhoneNumber = @event.PhoneNumber;

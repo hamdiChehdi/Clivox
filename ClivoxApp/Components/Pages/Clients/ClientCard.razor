@@ -1,15 +1,32 @@
 <div class="client-card">
     <MudCard>
         <MudCardContent>
-            <MudText Typo="Typo.h6">@Client.FullName</MudText>
-            <div style="display: flex; align-items: center; margin-top: 8px;">
-                <MudIcon Icon="@Icons.Material.Filled.Email" style="margin-right: 8px;" />
-                <MudText Typo="Typo.body2">@Client.Email</MudText>
-            </div>
-            <div style="display: flex; align-items: center; margin-top: 8px;">
-                <MudIcon Icon="@Icons.Material.Filled.Phone" style="margin-right: 8px;" />
-                <MudText Typo="Typo.body2">@Client.PhoneNumber</MudText>
-            </div>
+            <MudText Typo="Typo.h6">
+                @if (Client.IsCompany)
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.Business" Color="Color.Info" Style="vertical-align: middle; margin-right: 8px;" />
+                    @Client.CompanyName
+                }
+                else
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.Person" Color="Color.Primary" Style="vertical-align: middle; margin-right: 8px;" />
+                    @Client.FullName
+                }
+            </MudText>
+            @if (Client.Email is not null)
+            {
+                <div style="display: flex; align-items: center; margin-top: 8px;">
+                    <MudIcon Icon="@Icons.Material.Filled.Email" style="margin-right: 8px;" />
+                    <MudText Typo="Typo.body2">@Client.Email</MudText>
+                </div>
+            }
+            @if (Client.PhoneNumber is not null)
+            {
+                <div style="display: flex; align-items: center; margin-top: 8px;">
+                    <MudIcon Icon="@Icons.Material.Filled.Phone" style="margin-right: 8px;" />
+                    <MudText Typo="Typo.body2">@Client.PhoneNumber</MudText>
+                </div>
+            }
             <div style="display: flex; align-items: flex-start; margin-top: 8px;">
                 <MudIcon Icon="@Icons.Material.Filled.LocationOn" style="margin-right: 8px; margin-top: 2px;" />
                 <div>

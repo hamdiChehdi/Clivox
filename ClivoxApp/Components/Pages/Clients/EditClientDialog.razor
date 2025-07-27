@@ -1,0 +1,149 @@
+﻿<MudDialog>
+    <TitleContent>Add/Edit Client</TitleContent>
+    <DialogContent>
+        <MudGrid GutterSize="2">
+            <MudItem xs="12" sm="12">
+                <MudSwitch T="bool" value="@Client.IsCompany" ValueChanged="CompanyChanged" Color="Color.Primary" Label="@Resource.client_IsCompany" />
+            </MudItem>
+            @if (Client.IsCompany)
+            {
+                <MudItem xs="12" sm="12">
+                    <MudTextField @bind-Value="@Client.CompanyName" Label="@Resource.client_CompanyName" Variant="Variant.Outlined" Required="true" />
+                </MudItem>
+            }
+            else
+            {
+                <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="@Client.FirstName" Label="@Resource.client_FirstName" Variant="Variant.Outlined" Required="true" />
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="@Client.LastName" Label="@Resource.client_LastName" Variant="Variant.Outlined" Required="true" />
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudSelect @bind-Value="@Client.Gender" Label="@Resource.client_Gender" AdornmentColor="Color.Secondary">
+                        @foreach (Gender item in Enum.GetValues(typeof(Gender)))
+                        {
+                            <MudSelectItem Value="@((Gender?)item)">@(item == Gender.Male ? Resource.client_GenderMale : Resource.client_GenderFemale) </MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+            }
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="@Client.Email"
+                              Label="@Resource.client_Email"
+                              Variant="Variant.Outlined"
+                              Required="false"
+                              Immediate="true"
+                              Validation="@(new Func<string, string?>(ValidateEmail))" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="@Client.PhoneNumber"
+                              Label="@Resource.client_PhoneNumber"
+                              Variant="Variant.Outlined"
+                              Immediate="true"
+                              Validation="@(new Func<string, string?>(ValidateGermanPhone))" />
+            </MudItem>
+        </MudGrid>
+        <MudDivider Class="my-2" />
+        <MudText Typo="Typo.subtitle2">@Resource.client_Address</MudText>
+        <MudGrid GutterSize="2">
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="@Client.Address.CompanyOrPerson" Label="@Resource.client_Address_CompanyOrPerson" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="@Client.Address.Street" Label="@Resource.client_Address_Street" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="@Client.Address.PostalCode" Label="@Resource.client_Address_PostalCode" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="@Client.Address.City" Label="@Resource.client_Address_City" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudSelect T="Countries" @bind-Value="@Client.Address.Country" Label="@Resource.client_Address_Country" Variant="Variant.Outlined">
+                    @foreach (Countries country in Enum.GetValues(typeof(Countries)))
+                    {
+                        <MudSelectItem Value="@country">@GetCountryResource(country)</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Submit" Color="Color.Primary">Save</MudButton>
+        <MudButton OnClick="Cancel" Color="Color.Secondary">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public Client Client { get; set; } = new();
+
+    public bool IsCompany;
+
+
+    private void CompanyChanged(bool value)
+    {
+        IsCompany = value;
+        Client.IsCompany = value;
+        if (value)
+        {
+            Client.FirstName = string.Empty;
+            Client.LastName = string.Empty;
+            Client.Gender = null;
+        } 
+        else
+        {
+            Client.CompanyName = string.Empty;
+        }
+    }
+
+    private void Submit() => MudDialog.Close(DialogResult.Ok(true));
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private string? ValidateEmail(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email)) return "Email is required.";
+        try
+        {
+            var addr = new System.Net.Mail.MailAddress(email);
+            return addr.Address == email ? null : "Invalid email format.";
+        }
+        catch
+        {
+            return "Invalid email format.";
+        }
+    }
+
+    private string? ValidateGermanPhone(string phone)
+    {
+        if (string.IsNullOrWhiteSpace(phone)) return null;
+        // German phone numbers: +49 or 0, 5-15 digits, allow spaces, dashes, parentheses
+        var cleaned = phone.Replace(" ", "").Replace("-", "").Replace("(", "").Replace(")", "");
+        if (System.Text.RegularExpressions.Regex.IsMatch(cleaned, @"^(\+49|0)[1-9][0-9]{4,14}$"))
+            return null;
+        return "Invalid German phone number.";
+    }
+
+    private string GetCountryResource(Countries country)
+    {
+        return country switch
+        {
+            Countries.Germany => Resource.country_Germany,
+            Countries.Austria => Resource.country_Austria,
+            Countries.Belgium => Resource.country_Belgium,
+            Countries.CzechRepublic => Resource.country_CzechRepublic,
+            Countries.Denmark => Resource.country_Denmark,
+            Countries.France => Resource.country_France,
+            Countries.Luxembourg => Resource.country_Luxembourg,
+            Countries.Netherlands => Resource.country_Netherlands,
+            Countries.Poland => Resource.country_Poland,
+            Countries.Switzerland => Resource.country_Switzerland,
+            _ => country.ToString()
+        };
+    }
+}

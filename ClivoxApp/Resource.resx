@@ -132,4 +132,64 @@
   <data name="client_GenderFemale" xml:space="preserve">
     <value>Female</value>
   </data>
+  <data name="client_CompanyName" xml:space="preserve">
+    <value>Company Name</value>
+  </data>
+  <data name="client_IsCompany" xml:space="preserve">
+    <value>Is Company?</value>
+  </data>
+  <data name="client_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="client_PhoneNumber" xml:space="preserve">
+    <value>Phone Number</value>
+  </data>
+  <data name="client_Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="client_Address_CompanyOrPerson" xml:space="preserve">
+    <value>Company or Person</value>
+  </data>
+  <data name="client_Address_Street" xml:space="preserve">
+    <value>Street</value>
+  </data>
+  <data name="client_Address_PostalCode" xml:space="preserve">
+    <value>Postal Code</value>
+  </data>
+  <data name="client_Address_City" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="client_Address_Country" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="country_Germany" xml:space="preserve">
+    <value>Germany</value>
+  </data>
+  <data name="country_Austria" xml:space="preserve">
+    <value>Austria</value>
+  </data>
+  <data name="country_Belgium" xml:space="preserve">
+    <value>Belgium</value>
+  </data>
+  <data name="country_CzechRepublic" xml:space="preserve">
+    <value>Czech Republic</value>
+  </data>
+  <data name="country_Denmark" xml:space="preserve">
+    <value>Denmark</value>
+  </data>
+  <data name="country_France" xml:space="preserve">
+    <value>France</value>
+  </data>
+  <data name="country_Luxembourg" xml:space="preserve">
+    <value>Luxembourg</value>
+  </data>
+  <data name="country_Netherlands" xml:space="preserve">
+    <value>Netherlands</value>
+  </data>
+  <data name="country_Poland" xml:space="preserve">
+    <value>Poland</value>
+  </data>
+  <data name="country_Switzerland" xml:space="preserve">
+    <value>Switzerland</value>
+  </data>
 </root>

@@ -1,4 +1,5 @@
 ﻿using ClivoxApp.Models.Clients;
+using ClivoxApp.Models.Invoice;
 using JasperFx.Events.Projections;
 using Marten;
 using Microsoft.Extensions.Logging;
@@ -32,6 +33,7 @@ namespace ClivoxApp
             builder.Services.AddMarten(options =>
             {
                 options.Projections.Add<ClientProjection>(ProjectionLifecycle.Inline);
+                options.Projections.Add<InvoiceProjection>(ProjectionLifecycle.Inline);
             })
             // This is recommended in new development projects
             .UseLightweightSessions()
@@ -39,6 +41,7 @@ namespace ClivoxApp
             // string to Marten
             .UseNpgsqlDataSource();
             builder.Services.AddSingleton<ClientRepository>();
+            builder.Services.AddSingleton<InvoiceRepository>();
             builder.Services.AddMudServices();
 
             return builder.Build();

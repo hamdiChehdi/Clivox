@@ -1,4 +1,4 @@
-﻿using ClivoxApp.Models.Shared;
+﻿using ClivoxApp.EventSourcingInfrastucture;
 
 namespace ClivoxApp.Models.Clients;
 

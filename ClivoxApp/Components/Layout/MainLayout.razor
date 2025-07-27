@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 
 
-<MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
+<MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -9,27 +9,45 @@
 <div class="page">
     <div class="sidebar">
         <MudGrid>
-            <MudItem xs="9">
+            <MudItem xs="3">
+                <MudButton StartIcon="@Icons.Material.Filled.AccountBox" Color="Color.Primary" Variant="Variant.Filled" Class="mt-2 ml-4" OnClick="OpenBusinessOwnerDialog">
+                    Business Owner  
+                </MudButton>
+            </MudItem>
+            <MudItem xs="6">
             </MudItem>
             <MudItem xs="3">
-                <MudSelect T="string"
-                           Label="Language"
-                           Variant="Variant.Outlined"
-                           ValueChanged="ChangeLanguage"
-                           class="mr-10">
-                    <MudSelectItem Value="@("en")">
-                        <div style="display: flex; align-items: center; margin-top: 8px;">
-                            <MudImage Src="images/en.jpg" alt="English" class="mr-5" Width="25" Height="25" />
-                            English
-                        </div>
-                    </MudSelectItem>
-                    <MudSelectItem Value="@("de")">
-                        <div style="display: flex; align-items: center; margin-top: 8px;">
-                            <MudImage Src="images/de.jpg" alt="German" class="mr-5" Width="25" Height="25" />
-                            German
-                        </div>
-                    </MudSelectItem>
-                </MudSelect>
+                <MudStack Row="true" Spacing="2">
+                    <MudSwitch @bind-Value="_isDarkMode" Color="Color.Primary" Class="ma-4" T="bool">
+                            @if (_isDarkMode)
+                            {
+                                <MudIcon Icon="@Icons.Material.Filled.DarkMode" />
+                            }
+                            else
+                            {
+                                <MudIcon Icon="@Icons.Material.Filled.LightMode" />
+                            }
+                        </MudSwitch>
+                    
+                        <MudSelect T="string"
+                                   Label="Language"
+                                   Variant="Variant.Outlined"
+                                   ValueChanged="ChangeLanguage"
+                                   class="mr-10">
+                            <MudSelectItem Value="@("en")">
+                                <div style="display: flex; align-items: center; margin-top: 8px;">
+                                    <MudImage Src="images/en.jpg" alt="English" class="mr-5" Width="25" Height="25" />
+                                    English
+                                </div>
+                            </MudSelectItem>
+                            <MudSelectItem Value="@("de")">
+                                <div style="display: flex; align-items: center; margin-top: 8px;">
+                                    <MudImage Src="images/de.jpg" alt="German" class="mr-5" Width="25" Height="25" />
+                                    German
+                                </div>
+                            </MudSelectItem>
+                        </MudSelect>
+                </MudStack>
             </MudItem>
         </MudGrid>
     </div>
@@ -53,5 +71,15 @@
         var culture = new System.Globalization.CultureInfo(language);
         System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
         System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
+    }
+    [Inject]
+    private MudBlazor.IDialogService DialogService { get; set; }
+
+
+    private async Task OpenBusinessOwnerDialog()
+    {
+        var parameters = new MudBlazor.DialogParameters();
+        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true };
+        await DialogService.ShowAsync<BusinessOwnerDialog>("Business Owner", parameters, options);
     }
 }

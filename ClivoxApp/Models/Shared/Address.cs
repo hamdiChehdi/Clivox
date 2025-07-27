@@ -1,4 +1,6 @@
-namespace ClivoxApp.Models.Clients;
+using ClivoxApp.Models.Clients;
+
+namespace ClivoxApp.Models.Shared;
 
 public class Address
 {

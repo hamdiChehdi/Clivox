@@ -1,4 +1,4 @@
-﻿namespace ClivoxApp.Models.Shared;
+﻿namespace ClivoxApp.EventSourcingInfrastucture;
 
 public abstract record DomainEvent
 {

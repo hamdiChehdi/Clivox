@@ -5,14 +5,43 @@
     Add invoice
 </MudButton>
 
+<MudGrid GutterSize="3" Class="mt-4">
+    @if (invoices is not null)
+    {
+        @foreach (var invoice in invoices)
+        {
+            <MudItem xs="12" sm="6" md="4">
+                <MudCard>
+                    <MudCardContent>
+                        <MudText Typo="Typo.h6">@invoice.InvoiceNumber</MudText>
+                        <MudText Typo="Typo.body2">Date: @invoice.InvoiceDate.Value.ToShortDateString()</MudText>
+                        <MudText Typo="Typo.body2">Due: @invoice.DueDate.Value.ToShortDateString()</MudText>
+                        <MudText Typo="Typo.body2">Total: @invoice.TotalAmount.ToString("C")</MudText>
+                        <MudText Typo="Typo.body2">Items: @invoice.Items.Count</MudText>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="@(() => EditInvoice(invoice))" />
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => DeleteInvoice(invoice))" />
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        }
+    }
+</MudGrid>
+
 @inject ClivoxApp.Models.Invoice.InvoiceRepository InvoiceRepository
 @inject MudBlazor.IDialogService DialogService
 
 @code {
-
     [Parameter]
     public Guid Id { get; set; }
 
+    private List<Invoice> invoices = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        invoices = (await InvoiceRepository.GetInvoicesByClientIdAsync(Id)).ToList();
+    }
 
     private async Task AddNewInvoice()
     {
@@ -25,6 +54,24 @@
         if (result is null || result.Canceled)
             return;
         await InvoiceRepository.AddInvoiceAsync(invoice);
-        // Optionally: show a snackbar or refresh UI
+        invoices = (await InvoiceRepository.GetInvoicesByClientIdAsync(Id)).ToList();
+    }
+
+    private async Task EditInvoice(Invoice invoice)
+    {
+        var parameters = new MudBlazor.DialogParameters { ["Invoice"] = invoice };
+        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true };
+        var dialog = await DialogService.ShowAsync<EditInvoiceDialog>("Edit Invoice", parameters, options);
+        var result = await dialog.Result;
+        if (result is null || result.Canceled)
+            return;
+        await InvoiceRepository.UpdateInvoiceAsync(invoice);
+        invoices = (await InvoiceRepository.GetInvoicesByClientIdAsync(Id)).ToList();
+    }
+
+    private async Task DeleteInvoice(Invoice invoice)
+    {
+        await InvoiceRepository.DeleteInvoiceAsync(invoice.Id);
+        invoices = (await InvoiceRepository.GetInvoicesByClientIdAsync(Id)).ToList();
     }
 }

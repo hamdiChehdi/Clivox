@@ -6,6 +6,57 @@
         <MudDatePicker @bind-Value="Invoice.InvoiceDate" Label="@Resource.invoice_InvoiceDate" />
         <MudDatePicker @bind-Value="Invoice.DueDate" Label="@Resource.invoice_DueDate" />
         <MudDatePicker @bind-Value="Invoice.ServiceDate" Label="@Resource.invoice_ServiceDate" />
+        <MudDivider Class="my-2" />
+        @if (Invoice.Items.Count > 0)
+        {
+        <MudText Typo="Typo.subtitle2">Invoice Items</MudText>
+        <MudTable Items="@Invoice.Items" Hover="true">
+            <HeaderContent>
+                <MudTh>Description</MudTh>
+                <MudTh>Details</MudTh>
+                <MudTh>Total</MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>
+                    <MudTextField @bind-Value="@context.Description" Immediate="true" />
+                </MudTd>
+                <MudTd>
+                    @if (context.BillingType == BillingType.PerHour)
+                    {
+                        <MudNumericField T="decimal" Label="Hours" @bind-Value="@context.Quantity" Immediate="true" Style="width:80px;display:inline-block;" />
+                        <MudNumericField T="decimal" Label="Price/Hour" @bind-Value="@context.UnitPrice" Immediate="true" Style="width:100px;display:inline-block;" />
+                    }
+                    else if (context.BillingType == BillingType.PerSquareMeter)
+                    {
+                        <MudNumericField T="decimal" Label="Area (m²)" @bind-Value="@context.Area" Immediate="true" Style="width:80px;display:inline-block;" />
+                        <MudNumericField T="decimal" Label="Price/m²" @bind-Value="@context.PricePerSquareMeter" Immediate="true" Style="width:100px;display:inline-block;" />
+                    }
+                    else if (context.BillingType == BillingType.FixedPrice)
+                    {
+                        <MudNumericField T="decimal" Label="Fixed Amount" @bind-Value="@context.FixedAmount" Immediate="true" Style="width:120px;display:inline-block;" />
+                    }
+                    else if (context.BillingType == BillingType.PerObject)
+                    {
+                        <MudNumericField T="decimal" Label="Objects" @bind-Value="@context.Quantity" Immediate="true" Style="width:80px;display:inline-block;" />
+                        <MudNumericField T="decimal" Label="Price/Object" @bind-Value="@context.UnitPrice" Immediate="true" Style="width:100px;display:inline-block;" />
+                    }
+                </MudTd>
+                <MudTd>
+                    @context.Total
+                </MudTd>
+                <MudTd>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => RemoveItem(context)" />
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+        }
+        <MudStack Row="true" Spacing="2" Class="mb-2 mt-4" Style="flex-wrap:nowrap;">
+            <MudButton Color="Color.Primary" Variant="Variant.Outlined" OnClick="@(() => AddItem(BillingType.PerHour))" Style="white-space:nowrap;">Add Per Hour</MudButton>
+            <MudButton Color="Color.Primary" Variant="Variant.Outlined" OnClick="@(() => AddItem(BillingType.PerSquareMeter))" Style="white-space:nowrap;">Add Per m²</MudButton>
+            <MudButton Color="Color.Primary" Variant="Variant.Outlined" OnClick="@(() => AddItem(BillingType.FixedPrice))" Style="white-space:nowrap;">Add Fixed Price</MudButton>
+            <MudButton Color="Color.Primary" Variant="Variant.Outlined" OnClick="@(() => AddItem(BillingType.PerObject))" Style="white-space:nowrap;">Add Per Object</MudButton>
+        </MudStack>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Submit" Color="Color.Primary">Save</MudButton>
@@ -19,6 +70,16 @@
 
     [Parameter]
     public Invoice Invoice { get; set; } = new();
+
+    private void AddItem(BillingType type)
+    {
+        Invoice.Items.Add(new InvoiceItem { BillingType = type });
+    }
+
+    private void RemoveItem(InvoiceItem item)
+    {
+        Invoice.Items.Remove(item);
+    }
 
     private void Submit() => MudDialog.Close(MudBlazor.DialogResult.Ok(Invoice));
     private void Cancel() => MudDialog.Cancel();

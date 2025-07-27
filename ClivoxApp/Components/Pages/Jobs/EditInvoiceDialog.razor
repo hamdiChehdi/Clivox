@@ -7,56 +7,85 @@
         <MudDatePicker @bind-Value="Invoice.DueDate" Label="@Resource.invoice_DueDate" />
         <MudDatePicker @bind-Value="Invoice.ServiceDate" Label="@Resource.invoice_ServiceDate" />
         <MudDivider Class="my-2" />
-        @if (Invoice.Items.Count > 0)
-        {
         <MudText Typo="Typo.subtitle2">Invoice Items</MudText>
-        <MudTable Items="@Invoice.Items" Hover="true">
+        <!-- Per Hour Table -->
+        <MudText Typo="Typo.subtitle2" Class="mt-2 mb-1">Per Hour</MudText>
+        <MudTable Items="@Invoice.Items.Where(i => i.BillingType == BillingType.PerHour)" Hover="true">
             <HeaderContent>
                 <MudTh>Description</MudTh>
-                <MudTh>Details</MudTh>
+                <MudTh>Hours</MudTh>
+                <MudTh>Price/Hour</MudTh>
                 <MudTh>Total</MudTh>
-                <MudTh></MudTh>
+                <MudTh>
+                    <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="@(() => AddItem(BillingType.PerHour))" />
+                </MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd>
-                    <MudTextField @bind-Value="@context.Description" Immediate="true" />
-                </MudTd>
-                <MudTd>
-                    @if (context.BillingType == BillingType.PerHour)
-                    {
-                        <MudNumericField T="decimal" Label="Hours" @bind-Value="@context.Quantity" Immediate="true" Style="width:80px;display:inline-block;" />
-                        <MudNumericField T="decimal" Label="Price/Hour" @bind-Value="@context.UnitPrice" Immediate="true" Style="width:100px;display:inline-block;" />
-                    }
-                    else if (context.BillingType == BillingType.PerSquareMeter)
-                    {
-                        <MudNumericField T="decimal" Label="Area (m²)" @bind-Value="@context.Area" Immediate="true" Style="width:80px;display:inline-block;" />
-                        <MudNumericField T="decimal" Label="Price/m²" @bind-Value="@context.PricePerSquareMeter" Immediate="true" Style="width:100px;display:inline-block;" />
-                    }
-                    else if (context.BillingType == BillingType.FixedPrice)
-                    {
-                        <MudNumericField T="decimal" Label="Fixed Amount" @bind-Value="@context.FixedAmount" Immediate="true" Style="width:120px;display:inline-block;" />
-                    }
-                    else if (context.BillingType == BillingType.PerObject)
-                    {
-                        <MudNumericField T="decimal" Label="Objects" @bind-Value="@context.Quantity" Immediate="true" Style="width:80px;display:inline-block;" />
-                        <MudNumericField T="decimal" Label="Price/Object" @bind-Value="@context.UnitPrice" Immediate="true" Style="width:100px;display:inline-block;" />
-                    }
-                </MudTd>
-                <MudTd>
-                    @context.Total
-                </MudTd>
-                <MudTd>
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => RemoveItem(context)" />
-                </MudTd>
+                <MudTd><MudTextField @bind-Value="@context.Description" Immediate="true" /></MudTd>
+                <MudTd><MudNumericField T="decimal" @bind-Value="@context.Quantity" Immediate="true" /></MudTd>
+                <MudTd><MudNumericField T="decimal" @bind-Value="@context.UnitPrice" Immediate="true" /></MudTd>
+                <MudTd>@context.Total</MudTd>
+                <MudTd><MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => RemoveItem(context))" /></MudTd>
             </RowTemplate>
         </MudTable>
-        }
-        <MudStack Row="true" Spacing="2" Class="mb-2 mt-4" Style="flex-wrap:nowrap;">
-            <MudButton Color="Color.Primary" Variant="Variant.Outlined" OnClick="@(() => AddItem(BillingType.PerHour))" Style="white-space:nowrap;">Add Per Hour</MudButton>
-            <MudButton Color="Color.Primary" Variant="Variant.Outlined" OnClick="@(() => AddItem(BillingType.PerSquareMeter))" Style="white-space:nowrap;">Add Per m²</MudButton>
-            <MudButton Color="Color.Primary" Variant="Variant.Outlined" OnClick="@(() => AddItem(BillingType.FixedPrice))" Style="white-space:nowrap;">Add Fixed Price</MudButton>
-            <MudButton Color="Color.Primary" Variant="Variant.Outlined" OnClick="@(() => AddItem(BillingType.PerObject))" Style="white-space:nowrap;">Add Per Object</MudButton>
-        </MudStack>
+        <!-- Per Square Meter Table -->
+        <MudText Typo="Typo.subtitle2" Class="mt-4 mb-1">Per Square Meter</MudText>
+        <MudTable Items="@Invoice.Items.Where(i => i.BillingType == BillingType.PerSquareMeter)" Hover="true">
+            <HeaderContent>
+                <MudTh>Description</MudTh>
+                <MudTh>Area (m²)</MudTh>
+                <MudTh>Price/m²</MudTh>
+                <MudTh>Total</MudTh>
+                <MudTh>
+                    <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="@(() => AddItem(BillingType.PerSquareMeter))" />
+                </MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd><MudTextField @bind-Value="@context.Description" Immediate="true" /></MudTd>
+                <MudTd><MudNumericField T="decimal" @bind-Value="@context.Area" Immediate="true" /></MudTd>
+                <MudTd><MudNumericField T="decimal" @bind-Value="@context.PricePerSquareMeter" Immediate="true" /></MudTd>
+                <MudTd>@context.Total</MudTd>
+                <MudTd><MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => RemoveItem(context))" /></MudTd>
+            </RowTemplate>
+        </MudTable>
+        <!-- Fixed Price Table -->
+        <MudText Typo="Typo.subtitle2" Class="mt-4 mb-1">Fixed Price</MudText>
+        <MudTable Items="@Invoice.Items.Where(i => i.BillingType == BillingType.FixedPrice)" Hover="true">
+            <HeaderContent>
+                <MudTh>Description</MudTh>
+                <MudTh>Fixed Amount</MudTh>
+                <MudTh>Total</MudTh>
+                <MudTh>
+                    <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="@(() => AddItem(BillingType.FixedPrice))" />
+                </MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd><MudTextField @bind-Value="@context.Description" Immediate="true" /></MudTd>
+                <MudTd><MudNumericField T="decimal" @bind-Value="@context.FixedAmount" Immediate="true" /></MudTd>
+                <MudTd>@context.Total</MudTd>
+                <MudTd><MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => RemoveItem(context))" /></MudTd>
+            </RowTemplate>
+        </MudTable>
+        <!-- Per Object Table -->
+        <MudText Typo="Typo.subtitle2" Class="mt-4 mb-1">Per Object</MudText>
+        <MudTable Items="@Invoice.Items.Where(i => i.BillingType == BillingType.PerObject)" Hover="true">
+            <HeaderContent>
+                <MudTh>Description</MudTh>
+                <MudTh>Objects</MudTh>
+                <MudTh>Price/Object</MudTh>
+                <MudTh>Total</MudTh>
+                <MudTh>
+                    <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="@(() => AddItem(BillingType.PerObject))" />
+                </MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd><MudTextField @bind-Value="@context.Description" Immediate="true" /></MudTd>
+                <MudTd><MudNumericField T="decimal" @bind-Value="@context.Quantity" Immediate="true" /></MudTd>
+                <MudTd><MudNumericField T="decimal" @bind-Value="@context.UnitPrice" Immediate="true" /></MudTd>
+                <MudTd>@context.Total</MudTd>
+                <MudTd><MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => RemoveItem(context))" /></MudTd>
+            </RowTemplate>
+        </MudTable>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Submit" Color="Color.Primary">Save</MudButton>

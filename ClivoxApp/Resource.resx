@@ -228,4 +228,55 @@
   <data name="jobs_AddInvoice" xml:space="preserve">
     <value>Add invoice</value>
   </data>
+  <data name="editInvoiceDialog_Title" xml:space="preserve">
+    <value>Add/Edit Invoice</value>
+  </data>
+  <data name="editInvoiceDialog_InvoiceItems" xml:space="preserve">
+    <value>Invoice Items</value>
+  </data>
+  <data name="editInvoiceDialog_PerHour" xml:space="preserve">
+    <value>Per Hour</value>
+  </data>
+  <data name="editInvoiceDialog_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="editInvoiceDialog_Hours" xml:space="preserve">
+    <value>Hours</value>
+  </data>
+  <data name="editInvoiceDialog_PricePerHour" xml:space="preserve">
+    <value>Price/Hour</value>
+  </data>
+  <data name="editInvoiceDialog_Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="editInvoiceDialog_PerSquareMeter" xml:space="preserve">
+    <value>Per Square Meter</value>
+  </data>
+  <data name="editInvoiceDialog_Area" xml:space="preserve">
+    <value>Area (m²)</value>
+  </data>
+  <data name="editInvoiceDialog_PricePerSquareMeter" xml:space="preserve">
+    <value>Price/m²</value>
+  </data>
+  <data name="editInvoiceDialog_FixedPrice" xml:space="preserve">
+    <value>Fixed Price</value>
+  </data>
+  <data name="editInvoiceDialog_FixedAmount" xml:space="preserve">
+    <value>Fixed Amount</value>
+  </data>
+  <data name="editInvoiceDialog_PerObject" xml:space="preserve">
+    <value>Per Object</value>
+  </data>
+  <data name="editInvoiceDialog_Objects" xml:space="preserve">
+    <value>Objects</value>
+  </data>
+  <data name="editInvoiceDialog_PricePerObject" xml:space="preserve">
+    <value>Price/Object</value>
+  </data>
+  <data name="editInvoiceDialog_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="editInvoiceDialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
 </root>

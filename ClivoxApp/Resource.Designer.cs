@@ -359,5 +359,141 @@ namespace ClivoxApp {
                 return ResourceManager.GetString("jobs_ExportToExcel", resourceCulture);
             }
         }
+        /// <summary>
+        ///   Looks up a localized string similar to Add/Edit Invoice.
+        /// </summary>
+        public static string editInvoiceDialog_Title {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_Title", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Invoice Items.
+        /// </summary>
+        public static string editInvoiceDialog_InvoiceItems {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_InvoiceItems", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Per Hour.
+        /// </summary>
+        public static string editInvoiceDialog_PerHour {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_PerHour", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        public static string editInvoiceDialog_Description {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_Description", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Hours.
+        /// </summary>
+        public static string editInvoiceDialog_Hours {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_Hours", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Price/Hour.
+        /// </summary>
+        public static string editInvoiceDialog_PricePerHour {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_PricePerHour", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Total.
+        /// </summary>
+        public static string editInvoiceDialog_Total {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_Total", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Per Square Meter.
+        /// </summary>
+        public static string editInvoiceDialog_PerSquareMeter {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_PerSquareMeter", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Area (m²).
+        /// </summary>
+        public static string editInvoiceDialog_Area {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_Area", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Price/m².
+        /// </summary>
+        public static string editInvoiceDialog_PricePerSquareMeter {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_PricePerSquareMeter", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Fixed Price.
+        /// </summary>
+        public static string editInvoiceDialog_FixedPrice {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_FixedPrice", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Fixed Amount.
+        /// </summary>
+        public static string editInvoiceDialog_FixedAmount {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_FixedAmount", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Per Object.
+        /// </summary>
+        public static string editInvoiceDialog_PerObject {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_PerObject", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Objects.
+        /// </summary>
+        public static string editInvoiceDialog_Objects {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_Objects", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Price/Object.
+        /// </summary>
+        public static string editInvoiceDialog_PricePerObject {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_PricePerObject", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string editInvoiceDialog_Save {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_Save", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string editInvoiceDialog_Cancel {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_Cancel", resourceCulture);
+            }
+        }
     }
 }

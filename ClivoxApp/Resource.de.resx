@@ -228,4 +228,55 @@
   <data name="jobs_ExportToExcel" xml:space="preserve">
     <value>Export nach Excel</value>
   </data>
+  <data name="editInvoiceDialog_Title" xml:space="preserve">
+    <value>Rechnung bearbeiten/Hinzufügen</value>
+  </data>
+  <data name="editInvoiceDialog_InvoiceItems" xml:space="preserve">
+    <value>Rechnungspositionen</value>
+  </data>
+  <data name="editInvoiceDialog_PerHour" xml:space="preserve">
+    <value>Pro Stunde</value>
+  </data>
+  <data name="editInvoiceDialog_Description" xml:space="preserve">
+    <value>Beschreibung</value>
+  </data>
+  <data name="editInvoiceDialog_Hours" xml:space="preserve">
+    <value>Stunden</value>
+  </data>
+  <data name="editInvoiceDialog_PricePerHour" xml:space="preserve">
+    <value>Preis/Stunde</value>
+  </data>
+  <data name="editInvoiceDialog_Total" xml:space="preserve">
+    <value>Gesamt</value>
+  </data>
+  <data name="editInvoiceDialog_PerSquareMeter" xml:space="preserve">
+    <value>Pro Quadratmeter</value>
+  </data>
+  <data name="editInvoiceDialog_Area" xml:space="preserve">
+    <value>Fläche (m²)</value>
+  </data>
+  <data name="editInvoiceDialog_PricePerSquareMeter" xml:space="preserve">
+    <value>Preis/m²</value>
+  </data>
+  <data name="editInvoiceDialog_FixedPrice" xml:space="preserve">
+    <value>Festpreis</value>
+  </data>
+  <data name="editInvoiceDialog_FixedAmount" xml:space="preserve">
+    <value>Festbetrag</value>
+  </data>
+  <data name="editInvoiceDialog_PerObject" xml:space="preserve">
+    <value>Pro Objekt</value>
+  </data>
+  <data name="editInvoiceDialog_Objects" xml:space="preserve">
+    <value>Objekte</value>
+  </data>
+  <data name="editInvoiceDialog_PricePerObject" xml:space="preserve">
+    <value>Preis/Objekt</value>
+  </data>
+  <data name="editInvoiceDialog_Save" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="editInvoiceDialog_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
 </root>

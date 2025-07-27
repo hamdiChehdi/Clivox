@@ -1,9 +1,13 @@
 @page "/jobs/{id:guid}"
+@using ClivoxApp.Models
 @using ClivoxApp.Models.Invoice
 @using ClivoxApp.Models.Clients
+@using ClivoxApp.Services;
+@using CommunityToolkit.Maui.Storage
+@using Marten
 
 <MudPaper Class="pa-4 mb-4" Elevation="2" Style="display:flex;align-items:center;gap:16px;">
-    @if (_clientIsCompany)
+    @if (CurrentClient is not null && CurrentClient.IsCompany)
     {
         <MudIcon Icon="@Icons.Material.Filled.Business" Color="Color.Info" Size="Size.Large" />
     }
@@ -12,10 +16,14 @@
         <MudIcon Icon="@Icons.Material.Filled.Person" Color="Color.Secondary" Size="Size.Large" />
     }
     <div>
-        <MudText Typo="Typo.h6">@(_clientDisplayName ?? Resource.jobs_ClientLoading)</MudText>
-        @if (!string.IsNullOrWhiteSpace(_clientEmail))
+        @if (CurrentClient is not null)
         {
-            <MudText Typo="Typo.body2" Color="Color.Secondary">@_clientEmail</MudText>
+            <MudText Typo="Typo.h6">@((CurrentClient.IsCompany ? CurrentClient.CompanyName : CurrentClient.FullName) ?? Resource.jobs_ClientLoading
+            )</MudText>
+        }
+        @if (CurrentClient is not null && !string.IsNullOrWhiteSpace(CurrentClient.Email))
+        {
+            <MudText Typo="Typo.body2" Color="Color.Secondary">@CurrentClient.Email</MudText>
         }
     </div>
 </MudPaper>
@@ -60,34 +68,19 @@
 @inject ClivoxApp.Models.Invoice.InvoiceRepository InvoiceRepository
 @inject MudBlazor.IDialogService DialogService
 @inject ClientRepository ClientRepository
+@inject IQuerySession QuerySession
 
 @code {
     [Parameter]
     public Guid Id { get; set; }
 
     private List<Invoice> invoices = new();
-    private string? _clientDisplayName;
-    private string? _clientEmail;
-    private bool _clientIsCompany;
+    private Client CurrentClient;
 
     protected override async Task OnInitializedAsync()
     {
         invoices = (await InvoiceRepository.GetInvoicesByClientIdAsync(Id)).ToList();
-        var client = await ClientRepository.GetClientByIdAsync(Id);
-        if (client is not null)
-        {
-            _clientDisplayName = client.IsCompany && !string.IsNullOrWhiteSpace(client.CompanyName)
-                ? client.CompanyName
-                : client.FullName;
-            _clientEmail = client.Email;
-            _clientIsCompany = client.IsCompany;
-        }
-        else
-        {
-            _clientDisplayName = Resource.jobs_ClientUnknown;
-            _clientEmail = null;
-            _clientIsCompany = false;
-        }
+        CurrentClient = await ClientRepository.GetClientByIdAsync(Id);
     }
 
     private async Task AddNewInvoice()
@@ -124,6 +117,8 @@
 
     private async Task ExportInvoice(Invoice invoice)
     {
-        await Task.CompletedTask;
+        var bo = QuerySession.Query<BusinessOwner>().FirstOrDefault();
+        var stream = ExportInvoiceFile.ExportToExcel(invoice, CurrentClient, bo);
+        await FileSaver.Default.SaveAsync("invoice.xlsx", stream, default);
     }
 }

@@ -36,15 +36,20 @@
                         <div style="display: flex; flex-direction: column;">
                             <MudText Typo="Typo.h6">@invoice.InvoiceNumber</MudText>
                             <MudText Typo="Typo.body2">Date: @invoice.InvoiceDate.Value.ToShortDateString()</MudText>
-                            <MudText Typo="Typo.body2">Due: @invoice.DueDate.Value.ToShortDateString()</MudText>
-                            <MudText Typo="Typo.body2">Total: @invoice.TotalAmount.ToString("C")</MudText>
+                            <MudText Typo="Typo.body2">Due date: @invoice.DueDate.Value.ToShortDateString()</MudText>
+                            <MudText Typo="Typo.body2">Service date: @invoice.ServiceDate.Value.ToShortDateString()</MudText>
+                            <MudText Typo="Typo.body2">Total: @invoice.Items.Sum(x => x.Total).ToString("C")</MudText>
                             <MudText Typo="Typo.body2">Items: @invoice.Items.Count</MudText>
                         </div>
                     </MudCardContent>
-                    <MudCardActions>
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="@(() => EditInvoice(invoice))" />
-                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => DeleteInvoice(invoice))" />
-                        <MudImage class="mr-5" Width="30" Height="30" Src="images/xlsx.png"  OnClick="@(() => ExportInvoice(invoice))" />
+                    <MudCardActions Style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="@(() => EditInvoice(invoice))" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => DeleteInvoice(invoice))" />
+                        </div>
+                        <MudIconButton Style="padding:0; border-radius:50%;" OnClick="@(() => ExportInvoice(invoice))">
+                            <MudImage Src="images/xlsx.png" Width="30" Height="30" Alt="Export to Excel" />
+                        </MudIconButton>
                     </MudCardActions>
                 </MudCard>
             </MudItem>

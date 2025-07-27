@@ -1,5 +1,24 @@
 @page "/jobs/{id:guid}"
 @using ClivoxApp.Models.Invoice
+@using ClivoxApp.Models.Clients
+
+<MudPaper Class="pa-4 mb-4" Elevation="2" Style="display:flex;align-items:center;gap:16px;">
+    @if (_clientIsCompany)
+    {
+        <MudIcon Icon="@Icons.Material.Filled.Business" Color="Color.Info" Size="Size.Large" />
+    }
+    else
+    {
+        <MudIcon Icon="@Icons.Material.Filled.Person" Color="Color.Secondary" Size="Size.Large" />
+    }
+    <div>
+        <MudText Typo="Typo.h6">@(_clientDisplayName ?? "Loading client...")</MudText>
+        @if (!string.IsNullOrWhiteSpace(_clientEmail))
+        {
+            <MudText Typo="Typo.body2" Color="Color.Secondary">@_clientEmail</MudText>
+        }
+    </div>
+</MudPaper>
 
 <MudButton StartIcon="@Icons.Material.Filled.PostAdd" Color="Color.Primary" Variant="Variant.Filled" Class="mt-2 ml-4" OnClick="AddNewInvoice">
     Add invoice
@@ -12,16 +31,20 @@
         {
             <MudItem xs="12" sm="6" md="4">
                 <MudCard>
-                    <MudCardContent>
-                        <MudText Typo="Typo.h6">@invoice.InvoiceNumber</MudText>
-                        <MudText Typo="Typo.body2">Date: @invoice.InvoiceDate.Value.ToShortDateString()</MudText>
-                        <MudText Typo="Typo.body2">Due: @invoice.DueDate.Value.ToShortDateString()</MudText>
-                        <MudText Typo="Typo.body2">Total: @invoice.TotalAmount.ToString("C")</MudText>
-                        <MudText Typo="Typo.body2">Items: @invoice.Items.Count</MudText>
+                    <MudCardContent Style="display: flex; align-items: center; gap: 12px;">
+                        <MudImage Src="images/invoice.png" class="mr-5" Width="50" Height="50" />
+                        <div style="display: flex; flex-direction: column;">
+                            <MudText Typo="Typo.h6">@invoice.InvoiceNumber</MudText>
+                            <MudText Typo="Typo.body2">Date: @invoice.InvoiceDate.Value.ToShortDateString()</MudText>
+                            <MudText Typo="Typo.body2">Due: @invoice.DueDate.Value.ToShortDateString()</MudText>
+                            <MudText Typo="Typo.body2">Total: @invoice.TotalAmount.ToString("C")</MudText>
+                            <MudText Typo="Typo.body2">Items: @invoice.Items.Count</MudText>
+                        </div>
                     </MudCardContent>
                     <MudCardActions>
                         <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="@(() => EditInvoice(invoice))" />
                         <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => DeleteInvoice(invoice))" />
+                        <MudImage class="mr-5" Width="30" Height="30" Src="images/xlsx.png"  OnClick="@(() => ExportInvoice(invoice))" />
                     </MudCardActions>
                 </MudCard>
             </MudItem>
@@ -31,16 +54,35 @@
 
 @inject ClivoxApp.Models.Invoice.InvoiceRepository InvoiceRepository
 @inject MudBlazor.IDialogService DialogService
+@inject ClientRepository ClientRepository
 
 @code {
     [Parameter]
     public Guid Id { get; set; }
 
     private List<Invoice> invoices = new();
+    private string? _clientDisplayName;
+    private string? _clientEmail;
+    private bool _clientIsCompany;
 
     protected override async Task OnInitializedAsync()
     {
         invoices = (await InvoiceRepository.GetInvoicesByClientIdAsync(Id)).ToList();
+        var client = await ClientRepository.GetClientByIdAsync(Id);
+        if (client is not null)
+        {
+            _clientDisplayName = client.IsCompany && !string.IsNullOrWhiteSpace(client.CompanyName)
+                ? client.CompanyName
+                : client.FullName;
+            _clientEmail = client.Email;
+            _clientIsCompany = client.IsCompany;
+        }
+        else
+        {
+            _clientDisplayName = "Unknown client";
+            _clientEmail = null;
+            _clientIsCompany = false;
+        }
     }
 
     private async Task AddNewInvoice()
@@ -73,5 +115,10 @@
     {
         await InvoiceRepository.DeleteInvoiceAsync(invoice.Id);
         invoices = (await InvoiceRepository.GetInvoicesByClientIdAsync(Id)).ToList();
+    }
+
+    private async Task ExportInvoice(Invoice invoice)
+    {
+        await Task.CompletedTask;
     }
 }

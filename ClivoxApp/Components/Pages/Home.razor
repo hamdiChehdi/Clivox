@@ -1,8 +1,6 @@
 ﻿@page "/"
 @using ClivoxApp.Components.Pages.Clients
 
-@inject ClientRepository ClientRepository
-
 <MudTextField @bind-Value="searchQuery" Placeholder="Search clients..." Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mb-4" Style="height: 40px;" Icon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Immediate="true" />
 
 <MudFab StartIcon="@Icons.Material.Filled.Add" Color="Color.Tertiary" OnClick="OpenAddClientDialog" DropShadow="false" Style="position: fixed; bottom: 16px; right: 16px;" />
@@ -14,58 +12,3 @@
         </MudItem>
     }
 </MudGrid>
-
-
-
-@code {
-    @inject IDialogService DialogService
-    private List<Client> clients = new();
-    private string searchQuery = string.Empty;
-    private Client client = new();
-
-    private IEnumerable<Client> filteredClients => string.IsNullOrWhiteSpace(searchQuery)
-        ? clients
-        : clients.Where(c =>
-            (c.IsCompany && !string.IsNullOrWhiteSpace(c.CompanyName) && c.CompanyName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)) ||
-            (!c.IsCompany && c.FullName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)) ||
-            (c.Email is not null && c.Email.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)));
-
-    protected override async Task OnInitializedAsync()
-    {
-        clients = (await ClientRepository.GetAllClientsAsync()).ToList();
-    }
-
-    private async Task DeleteClient(Guid clientId)
-    {
-        await ClientRepository.DeleteClientAsync(clientId);
-        clients = clients.Where(c => c.Id != clientId).ToList();
-    }
-
-    private async Task EditClient(Client client)
-    {
-        var options = new DialogOptions { CloseOnEscapeKey = true };
-        var parameters = new DialogParameters { ["Client"] = client };
-        var dialog = await DialogService.ShowAsync<EditClientDialog>("Edit Client", parameters, options);
-        var result = await dialog.Result;
-        if (result is null || result.Canceled)
-            return;
-        // Update the client in the repository
-        await ClientRepository.UpdateClientAsync(client);
-        // Refresh the client list
-        clients = (await ClientRepository.GetAllClientsAsync()).ToList();
-    }
-
-    private async Task OpenAddClientDialog()
-    {
-        //ExcelExporter.ExportToExcel();
-        client = new Client(); // Reset client
-        var options = new DialogOptions { CloseOnEscapeKey = true };
-        var parameters = new DialogParameters { ["Client"] = client };
-        var dialog = await DialogService.ShowAsync<EditClientDialog>("New Client", parameters, options);
-        var result = await dialog.Result;
-        if (result is null || result.Canceled)
-            return;
-        await ClientRepository.AddClientAsync(client);
-        clients = (await ClientRepository.GetAllClientsAsync()).ToList();
-    }
-}

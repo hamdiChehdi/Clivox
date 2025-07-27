@@ -295,5 +295,69 @@ namespace ClivoxApp {
                 return ResourceManager.GetString("invoice_ServiceDate", resourceCulture);
             }
         }
+        /// <summary>
+        ///   Looks up a localized string similar to Add invoice.
+        /// </summary>
+        public static string jobs_AddInvoice {
+            get {
+                return ResourceManager.GetString("jobs_AddInvoice", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to New Invoice.
+        /// </summary>
+        public static string jobs_NewInvoice {
+            get {
+                return ResourceManager.GetString("jobs_NewInvoice", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Invoice.
+        /// </summary>
+        public static string jobs_EditInvoice {
+            get {
+                return ResourceManager.GetString("jobs_EditInvoice", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Loading client....
+        /// </summary>
+        public static string jobs_ClientLoading {
+            get {
+                return ResourceManager.GetString("jobs_ClientLoading", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown client.
+        /// </summary>
+        public static string jobs_ClientUnknown {
+            get {
+                return ResourceManager.GetString("jobs_ClientUnknown", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Total.
+        /// </summary>
+        public static string jobs_Total {
+            get {
+                return ResourceManager.GetString("jobs_Total", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Items.
+        /// </summary>
+        public static string jobs_Items {
+            get {
+                return ResourceManager.GetString("jobs_Items", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Export to Excel.
+        /// </summary>
+        public static string jobs_ExportToExcel {
+            get {
+                return ResourceManager.GetString("jobs_ExportToExcel", resourceCulture);
+            }
+        }
     }
 }

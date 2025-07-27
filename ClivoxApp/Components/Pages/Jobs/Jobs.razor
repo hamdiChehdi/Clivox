@@ -12,7 +12,7 @@
         <MudIcon Icon="@Icons.Material.Filled.Person" Color="Color.Secondary" Size="Size.Large" />
     }
     <div>
-        <MudText Typo="Typo.h6">@(_clientDisplayName ?? "Loading client...")</MudText>
+        <MudText Typo="Typo.h6">@(_clientDisplayName ?? Resource.jobs_ClientLoading)</MudText>
         @if (!string.IsNullOrWhiteSpace(_clientEmail))
         {
             <MudText Typo="Typo.body2" Color="Color.Secondary">@_clientEmail</MudText>
@@ -21,7 +21,7 @@
 </MudPaper>
 
 <MudButton StartIcon="@Icons.Material.Filled.PostAdd" Color="Color.Primary" Variant="Variant.Filled" Class="mt-2 ml-4" OnClick="AddNewInvoice">
-    Add invoice
+    @Resource.jobs_AddInvoice
 </MudButton>
 
 <MudGrid GutterSize="3" Class="mt-4">
@@ -35,11 +35,11 @@
                         <MudImage Src="images/invoice.png" class="mr-5" Width="50" Height="50" />
                         <div style="display: flex; flex-direction: column;">
                             <MudText Typo="Typo.h6">@invoice.InvoiceNumber</MudText>
-                            <MudText Typo="Typo.body2">Date: @invoice.InvoiceDate.Value.ToShortDateString()</MudText>
-                            <MudText Typo="Typo.body2">Due date: @invoice.DueDate.Value.ToShortDateString()</MudText>
-                            <MudText Typo="Typo.body2">Service date: @invoice.ServiceDate.Value.ToShortDateString()</MudText>
-                            <MudText Typo="Typo.body2">Total: @invoice.Items.Sum(x => x.Total).ToString("C")</MudText>
-                            <MudText Typo="Typo.body2">Items: @invoice.Items.Count</MudText>
+                            <MudText Typo="Typo.body2">@Resource.invoice_InvoiceDate: @invoice.InvoiceDate.Value.ToShortDateString()</MudText>
+                            <MudText Typo="Typo.body2">@Resource.invoice_DueDate: @invoice.DueDate.Value.ToShortDateString()</MudText>
+                            <MudText Typo="Typo.body2">@Resource.invoice_ServiceDate: @invoice.ServiceDate.Value.ToShortDateString()</MudText>
+                            <MudText Typo="Typo.body2">@Resource.jobs_Total: @invoice.Items.Sum(x => x.Total).ToString("C")</MudText>
+                            <MudText Typo="Typo.body2">@Resource.jobs_Items: @invoice.Items.Count</MudText>
                         </div>
                     </MudCardContent>
                     <MudCardActions Style="display: flex; justify-content: space-between; align-items: center;">
@@ -48,7 +48,7 @@
                             <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => DeleteInvoice(invoice))" />
                         </div>
                         <MudIconButton Style="padding:0; border-radius:50%;" OnClick="@(() => ExportInvoice(invoice))">
-                            <MudImage Src="images/xlsx.png" Width="30" Height="30" Alt="Export to Excel" />
+                            <MudImage Src="images/xlsx.png" Width="30" Height="30" Alt="@Resource.jobs_ExportToExcel" />
                         </MudIconButton>
                     </MudCardActions>
                 </MudCard>
@@ -84,7 +84,7 @@
         }
         else
         {
-            _clientDisplayName = "Unknown client";
+            _clientDisplayName = Resource.jobs_ClientUnknown;
             _clientEmail = null;
             _clientIsCompany = false;
         }
@@ -96,7 +96,7 @@
         invoice.ClientId = Id;
         var parameters = new MudBlazor.DialogParameters { ["Invoice"] = invoice };
         var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true };
-        var dialog = await DialogService.ShowAsync<EditInvoiceDialog>("New Invoice", parameters, options);
+        var dialog = await DialogService.ShowAsync<EditInvoiceDialog>(Resource.jobs_NewInvoice, parameters, options);
         var result = await dialog.Result;
         if (result is null || result.Canceled)
             return;
@@ -108,7 +108,7 @@
     {
         var parameters = new MudBlazor.DialogParameters { ["Invoice"] = invoice };
         var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true };
-        var dialog = await DialogService.ShowAsync<EditInvoiceDialog>("Edit Invoice", parameters, options);
+        var dialog = await DialogService.ShowAsync<EditInvoiceDialog>(Resource.jobs_EditInvoice, parameters, options);
         var result = await dialog.Result;
         if (result is null || result.Canceled)
             return;

@@ -204,4 +204,28 @@
   <data name="invoice_ServiceDate" xml:space="preserve">
     <value>Leistungsdatum</value>
   </data>
+  <data name="jobs_AddInvoice" xml:space="preserve">
+    <value>Rechnung hinzufügen</value>
+  </data>
+  <data name="jobs_NewInvoice" xml:space="preserve">
+    <value>Neue Rechnung</value>
+  </data>
+  <data name="jobs_EditInvoice" xml:space="preserve">
+    <value>Rechnung bearbeiten</value>
+  </data>
+  <data name="jobs_ClientLoading" xml:space="preserve">
+    <value>Kunde wird geladen...</value>
+  </data>
+  <data name="jobs_ClientUnknown" xml:space="preserve">
+    <value>Unbekannter Kunde</value>
+  </data>
+  <data name="jobs_Total" xml:space="preserve">
+    <value>Gesamt</value>
+  </data>
+  <data name="jobs_Items" xml:space="preserve">
+    <value>Positionen</value>
+  </data>
+  <data name="jobs_ExportToExcel" xml:space="preserve">
+    <value>Export nach Excel</value>
+  </data>
 </root>

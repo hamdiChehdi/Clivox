@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
 namespace ClivoxApp.Components.Layout;
-public partial class MainLayout
+
+public partial class MainLayout : LayoutComponentBase
 {
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = null!;
+
+    [Inject]
+    private IDialogService DialogService { get; set; } = null!;
+
     //private MudTheme _theme = new();
     private bool _isDarkMode = true;
     private MudThemeProvider? _mudThemeProvider;
@@ -46,9 +54,24 @@ public partial class MainLayout
         }
     }
 
-    protected override async Task OnInitializedAsync()
+    private void NavigateToHome()
     {
+        NavigationManager.NavigateTo("/");
+    }
 
+    private void ChangeLanguage(string language)
+    {
+        var culture = new System.Globalization.CultureInfo(language);
+        System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
+        System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    }
+
+    private async Task OpenBusinessOwnerDialog()
+    {
+        var parameters = new DialogParameters();
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        await DialogService.ShowAsync<BusinessOwnerDialog>("Business Owner", parameters, options);
     }
 
     public string DarkLightModeButtonIcon => _isDarkMode switch

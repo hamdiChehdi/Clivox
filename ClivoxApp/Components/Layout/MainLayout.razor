@@ -66,31 +66,3 @@
         </article>
     </main>
 </div>
-
-
-@code {
-    [Inject]
-    private NavigationManager NavigationManager { get; set; } = null!;
-
-    private void NavigateToHome()
-    {
-        NavigationManager.NavigateTo("/");
-    }
-
-    private void ChangeLanguage(string language)
-    {
-        var culture = new System.Globalization.CultureInfo(language);
-        System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
-        System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
-    }
-    [Inject]
-    private MudBlazor.IDialogService DialogService { get; set; }
-
-
-    private async Task OpenBusinessOwnerDialog()
-    {
-        var parameters = new MudBlazor.DialogParameters();
-        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true };
-        await DialogService.ShowAsync<BusinessOwnerDialog>("Business Owner", parameters, options);
-    }
-}

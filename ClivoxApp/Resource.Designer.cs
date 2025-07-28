@@ -495,5 +495,21 @@ namespace ClivoxApp {
                 return ResourceManager.GetString("editInvoiceDialog_Cancel", resourceCulture);
             }
         }
+        /// <summary>
+        ///   Looks up a localized string similar to Business Owner.
+        /// </summary>
+        public static string businessOwner_Button {
+            get {
+                return ResourceManager.GetString("businessOwner_Button", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Search clients....
+        /// </summary>
+        public static string home_SearchClients {
+            get {
+                return ResourceManager.GetString("home_SearchClients", resourceCulture);
+            }
+        }
     }
 }

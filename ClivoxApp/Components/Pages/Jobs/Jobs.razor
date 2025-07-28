@@ -46,7 +46,7 @@
                             <MudText Typo="Typo.body2">@Resource.invoice_InvoiceDate: @invoice.InvoiceDate.Value.ToShortDateString()</MudText>
                             <MudText Typo="Typo.body2">@Resource.invoice_DueDate: @invoice.DueDate.Value.ToShortDateString()</MudText>
                             <MudText Typo="Typo.body2">@Resource.invoice_ServiceDate: @invoice.ServiceDate.Value.ToShortDateString()</MudText>
-                            <MudText Typo="Typo.body2">@Resource.jobs_Total: @invoice.Items.Sum(x => x.Total).ToString("C")</MudText>
+                            <MudText Typo="Typo.body2">@Resource.jobs_Total: @invoice.Items.Sum(x => x.Total).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("de-DE"))</MudText>
                             <MudText Typo="Typo.body2">@Resource.jobs_Items: @invoice.Items.Count</MudText>
                         </div>
                     </MudCardContent>

@@ -14,9 +14,9 @@ public class Invoice : IAggregateRoot
     public DateTime CreatedOn { get; set; }
     public DateTime ModifiedOn { get; set; }
 
-    public string InvoiceNumber { get; set; } = null!;
+    public string InvoiceNumber { get; set; } = "RN-";
     public DateTime? InvoiceDate { get; set; } = DateTime.UtcNow;
-    public DateTime? DueDate { get; set; } = DateTime.UtcNow.AddDays(30);
+    public DateTime? DueDate { get; set; } = DateTime.UtcNow.AddDays(14);
     public DateTime? ServiceDate { get; set; } // Optional, e.g. date when service was provided
     public decimal TotalAmount { get; set; } = 0.0m;
     // Navigation properties

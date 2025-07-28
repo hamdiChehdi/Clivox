@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36310.24 d17.14
+VisualStudioVersion = 17.14.36310.24
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClivoxApp", "ClivoxApp\ClivoxApp.csproj", "{A1CF886C-C0EB-4391-ADE3-4E194EF81164}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clivox.Tests", "Clivox.Tests\Clivox.Tests.csproj", "{CF9C6D37-1DD1-4A55-872F-7FB109A19E65}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClivoxApp.Domain", "ClivoxApp.Domain\ClivoxApp.Domain.csproj", "{EC7C7EEF-59BD-4083-9E1B-57E78BC43244}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{A1CF886C-C0EB-4391-ADE3-4E194EF81164}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1CF886C-C0EB-4391-ADE3-4E194EF81164}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1CF886C-C0EB-4391-ADE3-4E194EF81164}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF9C6D37-1DD1-4A55-872F-7FB109A19E65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF9C6D37-1DD1-4A55-872F-7FB109A19E65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF9C6D37-1DD1-4A55-872F-7FB109A19E65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF9C6D37-1DD1-4A55-872F-7FB109A19E65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC7C7EEF-59BD-4083-9E1B-57E78BC43244}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC7C7EEF-59BD-4083-9E1B-57E78BC43244}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC7C7EEF-59BD-4083-9E1B-57E78BC43244}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC7C7EEF-59BD-4083-9E1B-57E78BC43244}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

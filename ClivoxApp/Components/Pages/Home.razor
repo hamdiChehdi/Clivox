@@ -1,7 +1,7 @@
 ﻿@page "/"
 @using ClivoxApp.Components.Pages.Clients
 
-<MudTextField @bind-Value="searchQuery" Placeholder="Search clients..." Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mb-4" Style="height: 40px;" Icon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Immediate="true" />
+<MudTextField @bind-Value="searchQuery" Placeholder="@Resource.home_SearchClients" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mb-4" Style="height: 40px;" Icon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Immediate="true" />
 
 <MudFab StartIcon="@Icons.Material.Filled.Add" Color="Color.Tertiary" OnClick="OpenAddClientDialog" DropShadow="false" Style="position: fixed; bottom: 16px; right: 16px;" />
 <MudGrid GutterSize="3">

@@ -279,4 +279,10 @@
   <data name="editInvoiceDialog_Cancel" xml:space="preserve">
     <value>Abbrechen</value>
   </data>
+  <data name="businessOwner_Button" xml:space="preserve">
+    <value>Geschäftsinhaber</value>
+  </data>
+  <data name="home_SearchClients" xml:space="preserve">
+    <value>Kunden suchen...</value>
+  </data>
 </root>

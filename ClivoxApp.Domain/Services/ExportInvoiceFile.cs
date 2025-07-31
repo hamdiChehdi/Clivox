@@ -171,49 +171,55 @@ totalRightStyle.BorderTop = BorderStyle.Thin;
 
 // Table header
         rowIdx++;
+        // Merge header cells for each logical column
+        sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowIdx, rowIdx, 1, 2)); // Beschreibung (B+C)
         SetStringCellValue(sheet, "Position", rowIdx, 0);
         SetStringCellValue(sheet, "Beschreibung", rowIdx, 1);
-        SetStringCellValue(sheet, "Menge", rowIdx, 2);
-        SetStringCellValue(sheet, "Einzelpreis/€", rowIdx, 3);
-        SetStringCellValue(sheet, "Gesamt/€", rowIdx, 4);
-        for (int col = 0; col <= 4; col++)
+        SetStringCellValue(sheet, "Menge", rowIdx, 3);
+        SetStringCellValue(sheet, "Einzelpreis/€", rowIdx, 4);
+        SetStringCellValue(sheet, "Gesamt/€", rowIdx, 5);
+        // Style header
+        for (int col = 0; col <= 5; col++)
         {
             var cell = sheet.GetRow(rowIdx).GetCell(col);
             if (cell != null)
                 cell.CellStyle = headerStyle;
         }
 
-// Table items
+        // Table items
         int pos = 1;
         int firstTableRow = rowIdx + 1;
         foreach (var item in invoice.Items)
         {
             rowIdx++;
             SetDecimalCellValue(sheet, pos++, rowIdx, 0);
+            // Merge description cells (B+C)
+            sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowIdx, rowIdx, 1, 2));
             SetStringCellValue(sheet, item.Description, rowIdx, 1);
+            // Quantity/Area in D
             switch (item.BillingType)
             {
                 case BillingType.PerHour:
-                    SetDecimalCellValue(sheet, item.Quantity, rowIdx, 2);
-                    SetDecimalCellValue(sheet, item.UnitPrice, rowIdx, 3);
+                    SetDecimalCellValue(sheet, item.Quantity, rowIdx, 3);
+                    SetDecimalCellValue(sheet, item.UnitPrice, rowIdx, 4);
                     break;
                 case BillingType.PerSquareMeter:
-                    SetDecimalCellValue(sheet, item.Area, rowIdx, 2);
-                    SetDecimalCellValue(sheet, item.PricePerSquareMeter, rowIdx, 3);
+                    SetDecimalCellValue(sheet, item.Area, rowIdx, 3);
+                    SetDecimalCellValue(sheet, item.PricePerSquareMeter, rowIdx, 4);
                     break;
                 case BillingType.PerObject:
-                    SetDecimalCellValue(sheet, item.Quantity, rowIdx, 2);
-                    SetDecimalCellValue(sheet, item.UnitPrice, rowIdx, 3);
+                    SetDecimalCellValue(sheet, item.Quantity, rowIdx, 3);
+                    SetDecimalCellValue(sheet, item.UnitPrice, rowIdx, 4);
                     break;
                 case BillingType.FixedPrice:
-                    SetStringCellValue(sheet, "", rowIdx, 2);
                     SetStringCellValue(sheet, "", rowIdx, 3);
+                    SetStringCellValue(sheet, "", rowIdx, 4);
                     break;
             }
-            SetDecimalCellValue(sheet, item.Total, rowIdx, 4);
+            SetDecimalCellValue(sheet, item.Total, rowIdx, 5);
 
             // Apply body style to all cells in this row, except description (col 1)
-            for (int col = 0; col <= 4; col++)
+            for (int col = 0; col <= 5; col++)
             {
                 var cell = sheet.GetRow(rowIdx).GetCell(col);
                 if (cell != null)
@@ -227,7 +233,7 @@ totalRightStyle.BorderTop = BorderStyle.Thin;
         }
 
 // Add bottom border to the last table row
-for (int col = 0; col <= 4; col++)
+for (int col = 0; col <= 5; col++)
 {
     var cell = sheet.GetRow(rowIdx).GetCell(col);
     if (cell != null)
@@ -237,7 +243,8 @@ for (int col = 0; col <= 4; col++)
 // Rechnungsbetrag row
 rowIdx++;
 SetStringCellValue(sheet, "Rechnungsbetrag", rowIdx, 0);
-SetDecimalCellValue(sheet, invoice.Items.Sum(i => i.Total), rowIdx, 4);
+sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowIdx, rowIdx, 0, 4));
+SetDecimalCellValue(sheet, invoice.Items.Sum(i => i.Total), rowIdx, 5);
 // Create a style with all borders and bold for the total cell
 var totalCellStyle = workbook.CreateCellStyle();
 totalCellStyle.SetFont(boldFont);
@@ -246,7 +253,7 @@ totalCellStyle.BorderTop = BorderStyle.Thin;
 totalCellStyle.BorderBottom = BorderStyle.Thin;
 totalCellStyle.BorderLeft = BorderStyle.Thin;
 totalCellStyle.BorderRight = BorderStyle.Thin;
-sheet.GetRow(rowIdx).GetCell(4).CellStyle = totalCellStyle;
+sheet.GetRow(rowIdx).GetCell(5).CellStyle = totalCellStyle;
 sheet.GetRow(rowIdx).GetCell(0).CellStyle = totalLeftStyle;
 
 // Payment instructions

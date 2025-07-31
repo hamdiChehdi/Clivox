@@ -56,8 +56,8 @@ public class ExportInvoiceFile
         sheet.SetColumnWidth(1, 18 * 256);
         sheet.SetColumnWidth(2, 18 * 256);
         sheet.SetColumnWidth(3, 16 * 256);
-        sheet.SetColumnWidth(4, 15 * 256);
-        sheet.SetColumnWidth(5, 15 * 256);
+        sheet.SetColumnWidth(4, 14 * 256);
+        sheet.SetColumnWidth(5, 14 * 256);
 
         // Business owner info (right)
         SetStringCellValue(sheet, businessOwner.Email ?? "", 3, 3);
@@ -101,12 +101,14 @@ public class ExportInvoiceFile
         // Set the value (possibly with line break)
         SetStringCellValue(sheet, street, 10, 0);
 
-        // Ensure the merged cell wraps text
+        // Ensure the merged cell wraps text and set row height
         var row10 = sheet.GetRow(10) ?? sheet.CreateRow(10);
         var cellStreet = row10.GetCell(0) ?? row10.CreateCell(0);
         var wrapStyle = sheet.Workbook.CreateCellStyle();
         wrapStyle.WrapText = true;
         cellStreet.CellStyle = wrapStyle;
+        // Set row height to accommodate two lines of text
+        row10.HeightInPoints = 2 * sheet.DefaultRowHeightInPoints;
         SetStringCellValue(sheet, $"{client.Address.PostalCode} {client.Address.City}", 11, 0);
 
         int rowIdx = 11;
@@ -149,11 +151,13 @@ bodyStyle.BorderLeft = BorderStyle.Thin;
 bodyStyle.BorderRight = BorderStyle.Thin;
 bodyStyle.Alignment = HorizontalAlignment.Center;
 
-// Body style for description: only left/right borders, left aligned
+// Body style for description: only left/right borders, left aligned, wrap text
 var bodyLeftStyle = workbook.CreateCellStyle();
 bodyLeftStyle.BorderLeft = BorderStyle.Thin;
 bodyLeftStyle.BorderRight = BorderStyle.Thin;
 bodyLeftStyle.Alignment = HorizontalAlignment.Left;
+bodyLeftStyle.VerticalAlignment = VerticalAlignment.Top;
+bodyLeftStyle.WrapText = true;
 
 // Bottom border style: all borders thin
 var bottomStyle = workbook.CreateCellStyle();
@@ -211,8 +215,36 @@ totalRightStyle.BorderTop = BorderStyle.Thin;
         {
             rowIdx++;
             lastItemRow = rowIdx;
+            var currentRow = sheet.GetRow(rowIdx) ?? sheet.CreateRow(rowIdx);
+
             SetDecimalCellValue(sheet, pos++, rowIdx, 0);
-            SetStringCellValue(sheet, item.Description, rowIdx, 1);
+
+            // Wrap description text if it's too long
+            string description = item.Description;
+            int lineCount = 1;
+            if (!string.IsNullOrEmpty(description) && description.Length > 40) // Threshold for description column
+            {
+                var lines = description.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+                var wrappedDescription = new System.Text.StringBuilder();
+                foreach(var line in lines)
+                {
+                    string currentLine = line;
+                    while(currentLine.Length > 40)
+                    {
+                        int breakPos = currentLine.LastIndexOf(' ', 40);
+                        if (breakPos <= 0) breakPos = 40;
+                        wrappedDescription.AppendLine(currentLine.Substring(0, breakPos).Trim());
+                        currentLine = currentLine.Substring(breakPos).Trim();
+                        lineCount++;
+                    }
+                    wrappedDescription.AppendLine(currentLine);
+                }
+                description = wrappedDescription.ToString().Trim();
+                lineCount = description.Split('\n').Length;
+            }
+            
+            SetStringCellValue(sheet, description, rowIdx, 1);
+
             // Quantity/Area in D
             switch (item.BillingType)
             {
@@ -275,6 +307,12 @@ totalRightStyle.BorderTop = BorderStyle.Thin;
             }
             // Merge description cells (B+C) AFTER setting styles
             sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowIdx, rowIdx, 1, 2));
+
+            // Adjust row height if text is wrapped
+            if (lineCount > 1)
+            {
+                currentRow.HeightInPoints = lineCount * sheet.DefaultRowHeightInPoints;
+            }
         }
 
 // Add bottom border to the last table row

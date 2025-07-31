@@ -52,11 +52,12 @@ public class ExportInvoiceFile
         // Add invoice details here
         // Set column widths for better appearance
         int cellWidth = 18 * 256; // 18 characters wide
-        sheet.SetColumnWidth(0, 10 * 256);
-        sheet.SetColumnWidth(1, 26 * 256);
-        sheet.SetColumnWidth(2, cellWidth / 2);
-        sheet.SetColumnWidth(3, 15 * 256);
+        sheet.SetColumnWidth(0, 18 * 256);
+        sheet.SetColumnWidth(1, 18 * 256);
+        sheet.SetColumnWidth(2, 18 * 256);
+        sheet.SetColumnWidth(3, 16 * 256);
         sheet.SetColumnWidth(4, 15 * 256);
+        sheet.SetColumnWidth(5, 15 * 256);
 
         // Business owner info (right)
         SetStringCellValue(sheet, businessOwner.Email ?? "", 3, 3);
@@ -171,30 +172,46 @@ totalRightStyle.BorderTop = BorderStyle.Thin;
 
 // Table header
         rowIdx++;
-        // Merge header cells for each logical column
-        sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowIdx, rowIdx, 1, 2)); // Beschreibung (B+C)
+        // Merge header cells for Beschreibung (B+C)
+        sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowIdx, rowIdx, 1, 2));
         SetStringCellValue(sheet, "Position", rowIdx, 0);
         SetStringCellValue(sheet, "Beschreibung", rowIdx, 1);
         SetStringCellValue(sheet, "Menge", rowIdx, 3);
         SetStringCellValue(sheet, "Einzelpreis/€", rowIdx, 4);
         SetStringCellValue(sheet, "Gesamt/€", rowIdx, 5);
-        // Style header
+        // Style header, ensure right border on both B and C
         for (int col = 0; col <= 5; col++)
         {
             var cell = sheet.GetRow(rowIdx).GetCell(col);
+            if (cell == null)
+            {
+                cell = SetStringCellValue(sheet, "", rowIdx, col);
+            }
             if (cell != null)
-                cell.CellStyle = headerStyle;
+            {
+                if (col == 1 || col == 2) {
+                    var headerMergedStyle = workbook.CreateCellStyle();
+                    headerMergedStyle.CloneStyleFrom(headerStyle);
+                    headerMergedStyle.BorderRight = BorderStyle.Thin;
+                    headerMergedStyle.BorderTop = BorderStyle.Thin;
+                    headerMergedStyle.BorderBottom = BorderStyle.Thin;
+                    headerMergedStyle.BorderLeft = BorderStyle.Thin;
+                    headerMergedStyle.SetFont(boldFont);
+                    cell.CellStyle = headerMergedStyle;
+                } else {
+                    cell.CellStyle = headerStyle;
+                }
+            }
         }
 
         // Table items
         int pos = 1;
-        int firstTableRow = rowIdx + 1;
+        int lastItemRow = 0;
         foreach (var item in invoice.Items)
         {
             rowIdx++;
+            lastItemRow = rowIdx;
             SetDecimalCellValue(sheet, pos++, rowIdx, 0);
-            // Merge description cells (B+C)
-            sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowIdx, rowIdx, 1, 2));
             SetStringCellValue(sheet, item.Description, rowIdx, 1);
             // Quantity/Area in D
             switch (item.BillingType)
@@ -218,30 +235,66 @@ totalRightStyle.BorderTop = BorderStyle.Thin;
             }
             SetDecimalCellValue(sheet, item.Total, rowIdx, 5);
 
-            // Apply body style to all cells in this row, except description (col 1)
+            // Apply body style to all cells in this row
             for (int col = 0; col <= 5; col++)
             {
                 var cell = sheet.GetRow(rowIdx).GetCell(col);
+                if (cell == null)
+                {
+                    cell = SetStringCellValue(sheet, "", rowIdx, col);
+                }
                 if (cell != null)
                 {
                     if (col == 1)
-                        cell.CellStyle = bodyLeftStyle;
+                    {
+                        // Description column B: left border, top/bottom, no right
+                        var descLeftStyle = workbook.CreateCellStyle();
+                        descLeftStyle.CloneStyleFrom(bodyLeftStyle);
+                        descLeftStyle.BorderLeft = BorderStyle.Thin;
+                        descLeftStyle.BorderTop = BorderStyle.Thin;
+                        descLeftStyle.BorderBottom = BorderStyle.Thin;
+                        descLeftStyle.BorderRight = BorderStyle.None;
+                        cell.CellStyle = descLeftStyle;
+                    }
+                    else if (col == 2)
+                    {
+                        // Description column C: right border, top/bottom, no left  
+                        var descRightStyle = workbook.CreateCellStyle();
+                        descRightStyle.CloneStyleFrom(bodyLeftStyle);
+                        descRightStyle.BorderLeft = BorderStyle.None;
+                        descRightStyle.BorderTop = BorderStyle.Thin;
+                        descRightStyle.BorderBottom = BorderStyle.Thin;
+                        descRightStyle.BorderRight = BorderStyle.Thin;
+                        cell.CellStyle = descRightStyle;
+                    }
                     else
+                    {
                         cell.CellStyle = bodyStyle;
+                    }
                 }
             }
+            // Merge description cells (B+C) AFTER setting styles
+            sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowIdx, rowIdx, 1, 2));
         }
 
 // Add bottom border to the last table row
 for (int col = 0; col <= 5; col++)
 {
-    var cell = sheet.GetRow(rowIdx).GetCell(col);
+    var cell = sheet.GetRow(lastItemRow).GetCell(col);
+    if (cell == null)
+            {
+                cell = SetStringCellValue(sheet, "", lastItemRow, col);
+            }
     if (cell != null)
-        cell.CellStyle = bottomStyle;
+    {
+        var bottomCellStyle = workbook.CreateCellStyle();
+        bottomCellStyle.CloneStyleFrom(cell.CellStyle);
+        bottomCellStyle.BorderBottom = BorderStyle.Thin;
+        cell.CellStyle = bottomCellStyle;
+    }
 }
-
-// Rechnungsbetrag row
-rowIdx++;
+        // Rechnungsbetrag row
+        rowIdx++;
 SetStringCellValue(sheet, "Rechnungsbetrag", rowIdx, 0);
 sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowIdx, rowIdx, 0, 4));
 SetDecimalCellValue(sheet, invoice.Items.Sum(i => i.Total), rowIdx, 5);
@@ -285,11 +338,12 @@ sheet.GetRow(rowIdx).GetCell(0).CellStyle = totalLeftStyle;
         return ms;
     }
 
-    public static void SetStringCellValue(ISheet sheet, string value, int row, int col)
+    public static ICell SetStringCellValue(ISheet sheet, string value, int row, int col)
     {
         var r = sheet.GetRow(row) ?? sheet.CreateRow(row);
         var cell = r.GetCell(col) ?? r.CreateCell(col);
         cell.SetCellValue(value);
+        return cell;
     }
 
     public static void SetDecimalCellValue(ISheet sheet, decimal value, int row, int col)

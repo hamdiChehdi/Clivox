@@ -51,8 +51,12 @@ public class ExportInvoiceFile
 
         // Add invoice details here
         // Set column widths for better appearance
-        for (int i = 0; i <= 7; i++)
-            sheet.SetColumnWidth(i, 18 * 256);
+        int cellWidth = 18 * 256; // 18 characters wide
+        sheet.SetColumnWidth(0, 10 * 256);
+        sheet.SetColumnWidth(1, 26 * 256);
+        sheet.SetColumnWidth(2, cellWidth / 2);
+        sheet.SetColumnWidth(3, 15 * 256);
+        sheet.SetColumnWidth(4, 15 * 256);
 
         // Business owner info (right)
         SetStringCellValue(sheet, businessOwner.Email ?? "", 3, 3);
@@ -75,7 +79,33 @@ public class ExportInvoiceFile
             salutation = "Frau";
         SetStringCellValue(sheet, salutation, 8, 0);
         SetStringCellValue(sheet, client.FullName, 9, 0);
-        SetStringCellValue(sheet, client.Address.Street, 10, 0);
+
+        // Merge cells for the street (columns 0 and 1 in row 10)
+        sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(10, 10, 0, 1));
+        // Pseudocode plan:
+        // 1. Check if the street text length exceeds a threshold (e.g., 30 chars).
+        // 2. If so, insert a line break at the last space before the threshold.
+        // 3. Set the cell value with the possibly multi-line string.
+        // 4. Set the cell style to wrap text for the merged cell.
+
+        string street = client.Address.Street;
+        int wrapThreshold = 30;
+        if (!string.IsNullOrEmpty(street) && street.Length > wrapThreshold)
+        {
+            int breakPos = street.LastIndexOf(' ', wrapThreshold);
+            if (breakPos > 0)
+                street = street.Substring(0, breakPos) + "\n" + street.Substring(breakPos + 1);
+        }
+
+        // Set the value (possibly with line break)
+        SetStringCellValue(sheet, street, 10, 0);
+
+        // Ensure the merged cell wraps text
+        var row10 = sheet.GetRow(10) ?? sheet.CreateRow(10);
+        var cellStreet = row10.GetCell(0) ?? row10.CreateCell(0);
+        var wrapStyle = sheet.Workbook.CreateCellStyle();
+        wrapStyle.WrapText = true;
+        cellStreet.CellStyle = wrapStyle;
         SetStringCellValue(sheet, $"{client.Address.PostalCode} {client.Address.City}", 11, 0);
 
         int rowIdx = 11;
@@ -95,34 +125,72 @@ public class ExportInvoiceFile
         SetStringCellValue(sheet, "für die Erledigung der von Ihnen beauftragten Tätigkeiten berechne ich Ihnen wie folgt:", rowIdx, 0);
         rowIdx++;
 
-        // Table header
-        rowIdx++;
-        SetStringCellValue(sheet, $"Rechnung Nr.   {invoice.InvoiceNumber}", rowIdx, 0);
-        rowIdx++;
-        SetStringCellValue(sheet, "Position", rowIdx, 0);
         // Create a centered cell style for the Position column
         var centerStyle = workbook.CreateCellStyle();
         centerStyle.Alignment = HorizontalAlignment.Center;
-        sheet.GetRow(rowIdx).GetCell(0).CellStyle = centerStyle;
-        SetStringCellValue(sheet, "Beschreibung", rowIdx, 1);
-        sheet.GetRow(rowIdx).GetCell(1).CellStyle = centerStyle;
-        SetStringCellValue(sheet, "Menge", rowIdx, 2);
-        sheet.GetRow(rowIdx).GetCell(2).CellStyle = centerStyle;
-        SetStringCellValue(sheet, "Einzelpreis/€", rowIdx, 3);
-        sheet.GetRow(rowIdx).GetCell(3).CellStyle = centerStyle;
-        SetStringCellValue(sheet, "Gesamt/€", rowIdx, 4);
-        sheet.GetRow(rowIdx).GetCell(4).CellStyle = centerStyle;
+        
+        // Create fonts
+var boldFont = workbook.CreateFont();
+boldFont.IsBold = true;
 
-        // Table items
+// Header style: all borders, bold
+var headerStyle = workbook.CreateCellStyle();
+headerStyle.Alignment = HorizontalAlignment.Center;
+headerStyle.BorderTop = BorderStyle.Thin;
+headerStyle.BorderBottom = BorderStyle.Thin;
+headerStyle.BorderLeft = BorderStyle.Thin;
+headerStyle.BorderRight = BorderStyle.Thin;
+headerStyle.SetFont(boldFont);
+
+// Body style: only left/right borders, centered
+var bodyStyle = workbook.CreateCellStyle();
+bodyStyle.BorderLeft = BorderStyle.Thin;
+bodyStyle.BorderRight = BorderStyle.Thin;
+bodyStyle.Alignment = HorizontalAlignment.Center;
+
+// Body style for description: only left/right borders, left aligned
+var bodyLeftStyle = workbook.CreateCellStyle();
+bodyLeftStyle.BorderLeft = BorderStyle.Thin;
+bodyLeftStyle.BorderRight = BorderStyle.Thin;
+bodyLeftStyle.Alignment = HorizontalAlignment.Left;
+
+// Bottom border style: all borders thin
+var bottomStyle = workbook.CreateCellStyle();
+bottomStyle.BorderTop = BorderStyle.None;
+bottomStyle.BorderBottom = BorderStyle.Thin;
+bottomStyle.BorderLeft = BorderStyle.Thin;
+bottomStyle.BorderRight = BorderStyle.Thin;
+
+// Rechnungsbetrag left: bold, no border
+var totalLeftStyle = workbook.CreateCellStyle();
+totalLeftStyle.SetFont(boldFont);
+
+// Rechnungsbetrag right: top border
+var totalRightStyle = workbook.CreateCellStyle();
+totalRightStyle.BorderTop = BorderStyle.Thin;
+
+// Table header
+        rowIdx++;
+        SetStringCellValue(sheet, "Position", rowIdx, 0);
+        SetStringCellValue(sheet, "Beschreibung", rowIdx, 1);
+        SetStringCellValue(sheet, "Menge", rowIdx, 2);
+        SetStringCellValue(sheet, "Einzelpreis/€", rowIdx, 3);
+        SetStringCellValue(sheet, "Gesamt/€", rowIdx, 4);
+        for (int col = 0; col <= 4; col++)
+        {
+            var cell = sheet.GetRow(rowIdx).GetCell(col);
+            if (cell != null)
+                cell.CellStyle = headerStyle;
+        }
+
+// Table items
         int pos = 1;
+        int firstTableRow = rowIdx + 1;
         foreach (var item in invoice.Items)
         {
             rowIdx++;
             SetDecimalCellValue(sheet, pos++, rowIdx, 0);
-            sheet.GetRow(rowIdx).GetCell(0).CellStyle = centerStyle;
-            
             SetStringCellValue(sheet, item.Description, rowIdx, 1);
-            sheet.GetRow(rowIdx).GetCell(1).CellStyle = centerStyle;
             switch (item.BillingType)
             {
                 case BillingType.PerHour:
@@ -142,20 +210,46 @@ public class ExportInvoiceFile
                     SetStringCellValue(sheet, "", rowIdx, 3);
                     break;
             }
-            sheet.GetRow(rowIdx).GetCell(2).CellStyle = centerStyle;
-            sheet.GetRow(rowIdx).GetCell(3).CellStyle = centerStyle;
-            
             SetDecimalCellValue(sheet, item.Total, rowIdx, 4);
-            sheet.GetRow(rowIdx).GetCell(4).CellStyle = centerStyle;
+
+            // Apply body style to all cells in this row, except description (col 1)
+            for (int col = 0; col <= 4; col++)
+            {
+                var cell = sheet.GetRow(rowIdx).GetCell(col);
+                if (cell != null)
+                {
+                    if (col == 1)
+                        cell.CellStyle = bodyLeftStyle;
+                    else
+                        cell.CellStyle = bodyStyle;
+                }
+            }
         }
 
-        // Total row
-        rowIdx++;
-        SetStringCellValue(sheet, "Rechnungsbetrag", rowIdx, 0);
-        SetDecimalCellValue(sheet, invoice.Items.Sum(i => i.Total), rowIdx, 4);
-        sheet.GetRow(rowIdx).GetCell(4).CellStyle = centerStyle;
+// Add bottom border to the last table row
+for (int col = 0; col <= 4; col++)
+{
+    var cell = sheet.GetRow(rowIdx).GetCell(col);
+    if (cell != null)
+        cell.CellStyle = bottomStyle;
+}
 
-        // Payment instructions
+// Rechnungsbetrag row
+rowIdx++;
+SetStringCellValue(sheet, "Rechnungsbetrag", rowIdx, 0);
+SetDecimalCellValue(sheet, invoice.Items.Sum(i => i.Total), rowIdx, 4);
+// Create a style with all borders and bold for the total cell
+var totalCellStyle = workbook.CreateCellStyle();
+totalCellStyle.SetFont(boldFont);
+totalCellStyle.Alignment = HorizontalAlignment.Center;
+totalCellStyle.BorderTop = BorderStyle.Thin;
+totalCellStyle.BorderBottom = BorderStyle.Thin;
+totalCellStyle.BorderLeft = BorderStyle.Thin;
+totalCellStyle.BorderRight = BorderStyle.Thin;
+sheet.GetRow(rowIdx).GetCell(4).CellStyle = totalCellStyle;
+sheet.GetRow(rowIdx).GetCell(0).CellStyle = totalLeftStyle;
+
+// Payment instructions
         rowIdx += 2;
         SetStringCellValue(sheet, "Vielen Dank für Ihren Auftrag!", rowIdx, 0);
         rowIdx++;

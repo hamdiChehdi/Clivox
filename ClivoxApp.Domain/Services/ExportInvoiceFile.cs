@@ -198,6 +198,7 @@ public class ExportInvoiceFile
         sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowIndex, rowIndex, 0, 1));
         
         var wrappedStreet = WrapTextAtThreshold(street, TextWrapThreshold);
+        var hasWrapped = wrappedStreet.Contains('\n');
         SetStringCellValue(sheet, wrappedStreet, rowIndex, 0);
 
         var row = sheet.GetRow(rowIndex) ?? sheet.CreateRow(rowIndex);
@@ -205,7 +206,12 @@ public class ExportInvoiceFile
         var wrapStyle = sheet.Workbook.CreateCellStyle();
         wrapStyle.WrapText = true;
         cell.CellStyle = wrapStyle;
-        row.HeightInPoints = 2 * sheet.DefaultRowHeightInPoints;
+        
+        // Only increase height if text was actually wrapped
+        if (hasWrapped)
+        {
+            row.HeightInPoints = 2 * sheet.DefaultRowHeightInPoints;
+        }
     }
 
     private static int PopulateGreeting(ISheet sheet, Client client, int startRowIdx)

@@ -29,10 +29,10 @@
             @if (Invoice.ExpenseProofFiles?.Any() == true)
             {
                 <MudText Typo="Typo.subtitle2" Class="mb-2">Attached Files:</MudText>
-                <MudList T="string">
-                    @foreach (var file in Invoice.ExpenseProofFiles)
-                    {
-                        <MudListItem>
+                @foreach (var file in Invoice.ExpenseProofFiles)
+                {
+                    <MudCard Class="mb-2" Elevation="1">
+                        <MudCardContent>
                             <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Style="width: 100%;">
                                 <MudIcon Icon="@GetFileIcon(file.ContentType)" />
                                 <MudStack Spacing="0" Style="flex-grow: 1;">
@@ -42,13 +42,23 @@
                                     </MudText>
                                     @if (!string.IsNullOrEmpty(file.Description))
                                     {
-                                        <MudText Typo="Typo.caption" Color="Color.Primary">@file.Description</MudText>
+                                        <MudText Typo="Typo.caption" Color="Color.Primary">
+                                            <MudIcon Icon="@Icons.Material.Filled.Description" Size="Size.Small" Style="vertical-align: middle; margin-right: 4px;" />
+                                            @file.Description
+                                        </MudText>
+                                    }
+                                    @if (file.Amount > 0)
+                                    {
+                                        <MudText Typo="Typo.caption" Color="Color.Success">
+                                            <MudIcon Icon="@Icons.Material.Filled.Euro" Size="Size.Small" Style="vertical-align: middle; margin-right: 4px;" />
+                                            €@file.Amount.ToString("F2")
+                                        </MudText>
                                     }
                                 </MudStack>
                                 <MudIconButton Icon="@Icons.Material.Filled.Edit" 
                                              Size="Size.Small" 
-                                             OnClick="@(() => EditFileDescription(file))" 
-                                             Title="Edit description" />
+                                             OnClick="@(() => EditFileDetails(file))" 
+                                             Title="Edit details" />
                                 <MudIconButton Icon="@Icons.Material.Filled.Download" 
                                              Size="Size.Small" 
                                              OnClick="@(() => DownloadFile(file))" 
@@ -59,9 +69,19 @@
                                              OnClick="@(() => RemoveFile(file))" 
                                              Title="Remove file" />
                             </MudStack>
-                        </MudListItem>
-                    }
-                </MudList>
+                        </MudCardContent>
+                    </MudCard>
+                }
+                
+                @if (TotalExpenseAmount > 0)
+                {
+                    <MudDivider Class="my-2" />
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.FlexEnd" Spacing="2">
+                        <MudText Typo="Typo.subtitle2" Color="Color.Primary">
+                            Total Expense Amount: €@TotalExpenseAmount.ToString("F2")
+                        </MudText>
+                    </MudStack>
+                }
             }
             else
             {

@@ -15,6 +15,8 @@ namespace ClivoxApp.Components.Pages.Jobs
         [Parameter]
         public Invoice Invoice { get; set; } = new();
 
+        public decimal TotalExpenseAmount => Invoice.ExpenseProofFiles.Sum(f => f.Amount);
+
         [Inject]
         private ISnackbar Snackbar { get; set; } = null!;
 
@@ -67,6 +69,7 @@ namespace ClivoxApp.Components.Pages.Jobs
                 Snackbar.Add($"Error uploading files: {ex.Message}", Severity.Error);
             }
         }
+        
         private void RemoveFile(ExpenseProofFile file)
         {
             Invoice.ExpenseProofFiles.Remove(file);
@@ -74,19 +77,21 @@ namespace ClivoxApp.Components.Pages.Jobs
             StateHasChanged();
         }
 
-        private async Task EditFileDescription(ExpenseProofFile file)
+        private async Task EditFileDetails(ExpenseProofFile file)
         {
             var parameters = new DialogParameters
             {
-                ["CurrentDescription"] = file.Description
+                ["CurrentDescription"] = file.Description,
+                ["CurrentAmount"] = file.Amount
             };
 
-            var dialog = await DialogService.ShowAsync<FileDescriptionDialog>("Edit File Description", parameters);
+            var dialog = await DialogService.ShowAsync<FileDetailsDialog>("Edit File Details", parameters);
             var result = await dialog.Result;
 
-            if (!result.Canceled && result.Data is string newDescription)
+            if (!result.Canceled && result.Data is FileDetailsResult fileDetails)
             {
-                file.Description = newDescription;
+                file.Description = fileDetails.Description;
+                file.Amount = fileDetails.Amount;
                 StateHasChanged();
             }
         }
@@ -128,8 +133,15 @@ namespace ClivoxApp.Components.Pages.Jobs
         private void Cancel() => MudDialog.Cancel();
     }
 
-    // Simple dialog for editing file descriptions
-    public partial class FileDescriptionDialog : ComponentBase
+    // Result class for file details dialog
+    public class FileDetailsResult
+    {
+        public string Description { get; set; } = string.Empty;
+        public decimal Amount { get; set; } = 0.0m;
+    }
+
+    // Enhanced dialog for editing file details (description and amount)
+    public partial class FileDetailsDialog : ComponentBase
     {
         [CascadingParameter]
         private IMudDialogInstance MudDialog { get; set; } = null!;
@@ -137,14 +149,28 @@ namespace ClivoxApp.Components.Pages.Jobs
         [Parameter]
         public string CurrentDescription { get; set; } = string.Empty;
 
+        [Parameter]
+        public decimal CurrentAmount { get; set; } = 0.0m;
+
         private string _description = string.Empty;
+        private decimal _amount = 0.0m;
 
         protected override void OnInitialized()
         {
             _description = CurrentDescription;
+            _amount = CurrentAmount;
         }
 
-        private void Submit() => MudDialog.Close(DialogResult.Ok(_description));
+        private void Submit()
+        {
+            var result = new FileDetailsResult
+            {
+                Description = _description,
+                Amount = _amount
+            };
+            MudDialog.Close(DialogResult.Ok(result));
+        }
+
         private void Cancel() => MudDialog.Cancel();
     }
 }

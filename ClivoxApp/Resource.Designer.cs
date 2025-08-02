@@ -10,9 +10,8 @@
 
 namespace ClivoxApp {
     using System;
-    using System.Reflection;
     
-
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -20,7 +19,7 @@ namespace ClivoxApp {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public partial class Resource {
@@ -40,7 +39,7 @@ namespace ClivoxApp {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ClivoxApp.Resource", typeof(Resource).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ClivoxApp.Resource", typeof(Resource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -62,6 +61,69 @@ namespace ClivoxApp {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Business Owner.
+        /// </summary>
+        public static string businessOwner_Button {
+            get {
+                return ResourceManager.GetString("businessOwner_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Address.
+        /// </summary>
+        public static string client_Address {
+            get {
+                return ResourceManager.GetString("client_Address", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to City.
+        /// </summary>
+        public static string client_Address_City {
+            get {
+                return ResourceManager.GetString("client_Address_City", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Company or Person.
+        /// </summary>
+        public static string client_Address_CompanyOrPerson {
+            get {
+                return ResourceManager.GetString("client_Address_CompanyOrPerson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Country.
+        /// </summary>
+        public static string client_Address_Country {
+            get {
+                return ResourceManager.GetString("client_Address_Country", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Postal Code.
+        /// </summary>
+        public static string client_Address_PostalCode {
+            get {
+                return ResourceManager.GetString("client_Address_PostalCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Street.
+        /// </summary>
+        public static string client_Address_Street {
+            get {
+                return ResourceManager.GetString("client_Address_Street", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Company Name.
         /// </summary>
         public static string client_CompanyName {
@@ -69,14 +131,16 @@ namespace ClivoxApp {
                 return ResourceManager.GetString("client_CompanyName", resourceCulture);
             }
         }
+        
         /// <summary>
-        ///   Looks up a localized string similar to Is Company?.
+        ///   Looks up a localized string similar to Email.
         /// </summary>
-        public static string client_IsCompany {
+        public static string client_Email {
             get {
-                return ResourceManager.GetString("client_IsCompany", resourceCulture);
+                return ResourceManager.GetString("client_Email", resourceCulture);
             }
         }
+        
         /// <summary>
         ///   Looks up a localized string similar to First Name.
         /// </summary>
@@ -87,19 +151,20 @@ namespace ClivoxApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Last Name.
-        /// </summary>
-        public static string client_LastName {
-            get {
-                return ResourceManager.GetString("client_LastName", resourceCulture);
-            }
-        }
-        /// <summary>
         ///   Looks up a localized string similar to Gender.
         /// </summary>
         public static string client_Gender {
             get {
                 return ResourceManager.GetString("client_Gender", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Female.
+        /// </summary>
+        public static string client_GenderFemale {
+            get {
+                return ResourceManager.GetString("client_GenderFemale", resourceCulture);
             }
         }
         
@@ -111,22 +176,25 @@ namespace ClivoxApp {
                 return ResourceManager.GetString("client_GenderMale", resourceCulture);
             }
         }
+        
         /// <summary>
-        ///   Looks up a localized string similar to Female.
+        ///   Looks up a localized string similar to Is Company?.
         /// </summary>
-        public static string client_GenderFemale {
+        public static string client_IsCompany {
             get {
-                return ResourceManager.GetString("client_GenderFemale", resourceCulture);
+                return ResourceManager.GetString("client_IsCompany", resourceCulture);
             }
         }
+        
         /// <summary>
-        ///   Looks up a localized string similar to Email.
+        ///   Looks up a localized string similar to Last Name.
         /// </summary>
-        public static string client_Email {
+        public static string client_LastName {
             get {
-                return ResourceManager.GetString("client_Email", resourceCulture);
+                return ResourceManager.GetString("client_LastName", resourceCulture);
             }
         }
+        
         /// <summary>
         ///   Looks up a localized string similar to Phone Number.
         /// </summary>
@@ -135,62 +203,7 @@ namespace ClivoxApp {
                 return ResourceManager.GetString("client_PhoneNumber", resourceCulture);
             }
         }
-        /// <summary>
-        ///   Looks up a localized string similar to Address.
-        /// </summary>
-        public static string client_Address {
-            get {
-                return ResourceManager.GetString("client_Address", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Company or Person.
-        /// </summary>
-        public static string client_Address_CompanyOrPerson {
-            get {
-                return ResourceManager.GetString("client_Address_CompanyOrPerson", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Street.
-        /// </summary>
-        public static string client_Address_Street {
-            get {
-                return ResourceManager.GetString("client_Address_Street", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Postal Code.
-        /// </summary>
-        public static string client_Address_PostalCode {
-            get {
-                return ResourceManager.GetString("client_Address_PostalCode", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to City.
-        /// </summary>
-        public static string client_Address_City {
-            get {
-                return ResourceManager.GetString("client_Address_City", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Country.
-        /// </summary>
-        public static string client_Address_Country {
-            get {
-                return ResourceManager.GetString("client_Address_Country", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Germany.
-        /// </summary>
-        public static string country_Germany {
-            get {
-                return ResourceManager.GetString("country_Germany", resourceCulture);
-            }
-        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Austria.
         /// </summary>
@@ -199,6 +212,7 @@ namespace ClivoxApp {
                 return ResourceManager.GetString("country_Austria", resourceCulture);
             }
         }
+        
         /// <summary>
         ///   Looks up a localized string similar to Belgium.
         /// </summary>
@@ -207,6 +221,7 @@ namespace ClivoxApp {
                 return ResourceManager.GetString("country_Belgium", resourceCulture);
             }
         }
+        
         /// <summary>
         ///   Looks up a localized string similar to Czech Republic.
         /// </summary>
@@ -215,6 +230,7 @@ namespace ClivoxApp {
                 return ResourceManager.GetString("country_CzechRepublic", resourceCulture);
             }
         }
+        
         /// <summary>
         ///   Looks up a localized string similar to Denmark.
         /// </summary>
@@ -223,6 +239,7 @@ namespace ClivoxApp {
                 return ResourceManager.GetString("country_Denmark", resourceCulture);
             }
         }
+        
         /// <summary>
         ///   Looks up a localized string similar to France.
         /// </summary>
@@ -231,6 +248,16 @@ namespace ClivoxApp {
                 return ResourceManager.GetString("country_France", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Germany.
+        /// </summary>
+        public static string country_Germany {
+            get {
+                return ResourceManager.GetString("country_Germany", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Luxembourg.
         /// </summary>
@@ -239,6 +266,7 @@ namespace ClivoxApp {
                 return ResourceManager.GetString("country_Luxembourg", resourceCulture);
             }
         }
+        
         /// <summary>
         ///   Looks up a localized string similar to Netherlands.
         /// </summary>
@@ -247,6 +275,7 @@ namespace ClivoxApp {
                 return ResourceManager.GetString("country_Netherlands", resourceCulture);
             }
         }
+        
         /// <summary>
         ///   Looks up a localized string similar to Poland.
         /// </summary>
@@ -255,6 +284,7 @@ namespace ClivoxApp {
                 return ResourceManager.GetString("country_Poland", resourceCulture);
             }
         }
+        
         /// <summary>
         ///   Looks up a localized string similar to Switzerland.
         /// </summary>
@@ -263,166 +293,7 @@ namespace ClivoxApp {
                 return ResourceManager.GetString("country_Switzerland", resourceCulture);
             }
         }
-        /// <summary>
-        ///   Looks up a localized string similar to Invoice Number.
-        /// </summary>
-        public static string invoice_InvoiceNumber {
-            get {
-                return ResourceManager.GetString("invoice_InvoiceNumber", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Invoice Date.
-        /// </summary>
-        public static string invoice_InvoiceDate {
-            get {
-                return ResourceManager.GetString("invoice_InvoiceDate", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Due Date.
-        /// </summary>
-        public static string invoice_DueDate {
-            get {
-                return ResourceManager.GetString("invoice_DueDate", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Service Date.
-        /// </summary>
-        public static string invoice_ServiceDate {
-            get {
-                return ResourceManager.GetString("invoice_ServiceDate", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Add invoice.
-        /// </summary>
-        public static string jobs_AddInvoice {
-            get {
-                return ResourceManager.GetString("jobs_AddInvoice", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to New Invoice.
-        /// </summary>
-        public static string jobs_NewInvoice {
-            get {
-                return ResourceManager.GetString("jobs_NewInvoice", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Edit Invoice.
-        /// </summary>
-        public static string jobs_EditInvoice {
-            get {
-                return ResourceManager.GetString("jobs_EditInvoice", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Loading client....
-        /// </summary>
-        public static string jobs_ClientLoading {
-            get {
-                return ResourceManager.GetString("jobs_ClientLoading", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Unknown client.
-        /// </summary>
-        public static string jobs_ClientUnknown {
-            get {
-                return ResourceManager.GetString("jobs_ClientUnknown", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Total.
-        /// </summary>
-        public static string jobs_Total {
-            get {
-                return ResourceManager.GetString("jobs_Total", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Items.
-        /// </summary>
-        public static string jobs_Items {
-            get {
-                return ResourceManager.GetString("jobs_Items", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Export to Excel.
-        /// </summary>
-        public static string jobs_ExportToExcel {
-            get {
-                return ResourceManager.GetString("jobs_ExportToExcel", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Add/Edit Invoice.
-        /// </summary>
-        public static string editInvoiceDialog_Title {
-            get {
-                return ResourceManager.GetString("editInvoiceDialog_Title", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Invoice Items.
-        /// </summary>
-        public static string editInvoiceDialog_InvoiceItems {
-            get {
-                return ResourceManager.GetString("editInvoiceDialog_InvoiceItems", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Per Hour.
-        /// </summary>
-        public static string editInvoiceDialog_PerHour {
-            get {
-                return ResourceManager.GetString("editInvoiceDialog_PerHour", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Description.
-        /// </summary>
-        public static string editInvoiceDialog_Description {
-            get {
-                return ResourceManager.GetString("editInvoiceDialog_Description", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Hours.
-        /// </summary>
-        public static string editInvoiceDialog_Hours {
-            get {
-                return ResourceManager.GetString("editInvoiceDialog_Hours", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Price/Hour.
-        /// </summary>
-        public static string editInvoiceDialog_PricePerHour {
-            get {
-                return ResourceManager.GetString("editInvoiceDialog_PricePerHour", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Total.
-        /// </summary>
-        public static string editInvoiceDialog_Total {
-            get {
-                return ResourceManager.GetString("editInvoiceDialog_Total", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Per Square Meter.
-        /// </summary>
-        public static string editInvoiceDialog_PerSquareMeter {
-            get {
-                return ResourceManager.GetString("editInvoiceDialog_PerSquareMeter", resourceCulture);
-            }
-        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Area (m²).
         /// </summary>
@@ -431,62 +302,7 @@ namespace ClivoxApp {
                 return ResourceManager.GetString("editInvoiceDialog_Area", resourceCulture);
             }
         }
-        /// <summary>
-        ///   Looks up a localized string similar to Price/m².
-        /// </summary>
-        public static string editInvoiceDialog_PricePerSquareMeter {
-            get {
-                return ResourceManager.GetString("editInvoiceDialog_PricePerSquareMeter", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Fixed Price.
-        /// </summary>
-        public static string editInvoiceDialog_FixedPrice {
-            get {
-                return ResourceManager.GetString("editInvoiceDialog_FixedPrice", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Fixed Amount.
-        /// </summary>
-        public static string editInvoiceDialog_FixedAmount {
-            get {
-                return ResourceManager.GetString("editInvoiceDialog_FixedAmount", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Per Object.
-        /// </summary>
-        public static string editInvoiceDialog_PerObject {
-            get {
-                return ResourceManager.GetString("editInvoiceDialog_PerObject", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Objects.
-        /// </summary>
-        public static string editInvoiceDialog_Objects {
-            get {
-                return ResourceManager.GetString("editInvoiceDialog_Objects", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Price/Object.
-        /// </summary>
-        public static string editInvoiceDialog_PricePerObject {
-            get {
-                return ResourceManager.GetString("editInvoiceDialog_PricePerObject", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Save.
-        /// </summary>
-        public static string editInvoiceDialog_Save {
-            get {
-                return ResourceManager.GetString("editInvoiceDialog_Save", resourceCulture);
-            }
-        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
@@ -495,20 +311,553 @@ namespace ClivoxApp {
                 return ResourceManager.GetString("editInvoiceDialog_Cancel", resourceCulture);
             }
         }
+        
         /// <summary>
-        ///   Looks up a localized string similar to Business Owner.
+        ///   Looks up a localized string similar to Description.
         /// </summary>
-        public static string businessOwner_Button {
+        public static string editInvoiceDialog_Description {
             get {
-                return ResourceManager.GetString("businessOwner_Button", resourceCulture);
+                return ResourceManager.GetString("editInvoiceDialog_Description", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fixed Amount.
+        /// </summary>
+        public static string editInvoiceDialog_FixedAmount {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_FixedAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fixed Price.
+        /// </summary>
+        public static string editInvoiceDialog_FixedPrice {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_FixedPrice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hours.
+        /// </summary>
+        public static string editInvoiceDialog_Hours {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_Hours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invoice Items.
+        /// </summary>
+        public static string editInvoiceDialog_InvoiceItems {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_InvoiceItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Objects.
+        /// </summary>
+        public static string editInvoiceDialog_Objects {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_Objects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Per Hour.
+        /// </summary>
+        public static string editInvoiceDialog_PerHour {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_PerHour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Per Object.
+        /// </summary>
+        public static string editInvoiceDialog_PerObject {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_PerObject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Per Square Meter.
+        /// </summary>
+        public static string editInvoiceDialog_PerSquareMeter {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_PerSquareMeter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Price/Hour.
+        /// </summary>
+        public static string editInvoiceDialog_PricePerHour {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_PricePerHour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Price/Object.
+        /// </summary>
+        public static string editInvoiceDialog_PricePerObject {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_PricePerObject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Price/m².
+        /// </summary>
+        public static string editInvoiceDialog_PricePerSquareMeter {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_PricePerSquareMeter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string editInvoiceDialog_Save {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add/Edit Invoice.
+        /// </summary>
+        public static string editInvoiceDialog_Title {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total.
+        /// </summary>
+        public static string editInvoiceDialog_Total {
+            get {
+                return ResourceManager.GetString("editInvoiceDialog_Total", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Search clients....
         /// </summary>
         public static string home_SearchClients {
             get {
                 return ResourceManager.GetString("home_SearchClients", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Due Date.
+        /// </summary>
+        public static string invoice_DueDate {
+            get {
+                return ResourceManager.GetString("invoice_DueDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invoice Date.
+        /// </summary>
+        public static string invoice_InvoiceDate {
+            get {
+                return ResourceManager.GetString("invoice_InvoiceDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invoice Number.
+        /// </summary>
+        public static string invoice_InvoiceNumber {
+            get {
+                return ResourceManager.GetString("invoice_InvoiceNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service Date.
+        /// </summary>
+        public static string invoice_ServiceDate {
+            get {
+                return ResourceManager.GetString("invoice_ServiceDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add invoice.
+        /// </summary>
+        public static string jobs_AddInvoice {
+            get {
+                return ResourceManager.GetString("jobs_AddInvoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading client....
+        /// </summary>
+        public static string jobs_ClientLoading {
+            get {
+                return ResourceManager.GetString("jobs_ClientLoading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown client.
+        /// </summary>
+        public static string jobs_ClientUnknown {
+            get {
+                return ResourceManager.GetString("jobs_ClientUnknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Invoice.
+        /// </summary>
+        public static string jobs_EditInvoice {
+            get {
+                return ResourceManager.GetString("jobs_EditInvoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export to Excel.
+        /// </summary>
+        public static string jobs_ExportToExcel {
+            get {
+                return ResourceManager.GetString("jobs_ExportToExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Items.
+        /// </summary>
+        public static string jobs_Items {
+            get {
+                return ResourceManager.GetString("jobs_Items", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Invoice.
+        /// </summary>
+        public static string jobs_NewInvoice {
+            get {
+                return ResourceManager.GetString("jobs_NewInvoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total.
+        /// </summary>
+        public static string jobs_Total {
+            get {
+                return ResourceManager.GetString("jobs_Total", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expenses.
+        /// </summary>
+        public static string jobs_Expenses {
+            get {
+                return ResourceManager.GetString("jobs_Expenses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attachments.
+        /// </summary>
+        public static string jobs_Attachments {
+            get {
+                return ResourceManager.GetString("jobs_Attachments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invoice data updated.
+        /// </summary>
+        public static string jobs_InvoiceUpdatedSuccess {
+            get {
+                return ResourceManager.GetString("jobs_InvoiceUpdatedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expense proof files updated.
+        /// </summary>
+        public static string jobs_ExpenseFilesUpdatedSuccess {
+            get {
+                return ResourceManager.GetString("jobs_ExpenseFilesUpdatedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No changes detected. Invoice was not updated..
+        /// </summary>
+        public static string jobs_NoChangesDetected {
+            get {
+                return ResourceManager.GetString("jobs_NoChangesDetected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to successfully..
+        /// </summary>
+        public static string jobs_UpdatedSuccessfully {
+            get {
+                return ResourceManager.GetString("jobs_UpdatedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expense Proof Files.
+        /// </summary>
+        public static string expenseProofFiles_Title {
+            get {
+                return ResourceManager.GetString("expenseProofFiles_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload Proof Files.
+        /// </summary>
+        public static string expenseProofFiles_UploadButton {
+            get {
+                return ResourceManager.GetString("expenseProofFiles_UploadButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Supported: PDF, Images (JPG, PNG), Word, Excel files.
+        /// </summary>
+        public static string expenseProofFiles_SupportedFormats {
+            get {
+                return ResourceManager.GetString("expenseProofFiles_SupportedFormats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attached Files:.
+        /// </summary>
+        public static string expenseProofFiles_AttachedFiles {
+            get {
+                return ResourceManager.GetString("expenseProofFiles_AttachedFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No expense proof files attached. Upload files to provide documentation for your expenses..
+        /// </summary>
+        public static string expenseProofFiles_NoFiles {
+            get {
+                return ResourceManager.GetString("expenseProofFiles_NoFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Expense Amount:.
+        /// </summary>
+        public static string expenseProofFiles_TotalAmount {
+            get {
+                return ResourceManager.GetString("expenseProofFiles_TotalAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit details.
+        /// </summary>
+        public static string expenseProofFiles_EditDetails {
+            get {
+                return ResourceManager.GetString("expenseProofFiles_EditDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download file.
+        /// </summary>
+        public static string expenseProofFiles_DownloadFile {
+            get {
+                return ResourceManager.GetString("expenseProofFiles_DownloadFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove file.
+        /// </summary>
+        public static string expenseProofFiles_RemoveFile {
+            get {
+                return ResourceManager.GetString("expenseProofFiles_RemoveFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit File Details.
+        /// </summary>
+        public static string fileDetailsDialog_Title {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add File Details.
+        /// </summary>
+        public static string fileDetailsDialog_AddTitle {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_AddTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File Description.
+        /// </summary>
+        public static string fileDetailsDialog_FileDescription {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_FileDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter a description for this expense proof file....
+        /// </summary>
+        public static string fileDetailsDialog_DescriptionPlaceholder {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_DescriptionPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Describe what this expense proof file contains (e.g., 'Restaurant receipt for client dinner', 'Gas station receipt for project travel').
+        /// </summary>
+        public static string fileDetailsDialog_DescriptionHelper {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_DescriptionHelper", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expense Amount (€).
+        /// </summary>
+        public static string fileDetailsDialog_ExpenseAmount {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_ExpenseAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter the total expense amount documented in this file.
+        /// </summary>
+        public static string fileDetailsDialog_AmountHelper {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_AmountHelper", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 💡 Tip: Adding description and amount helps you track expenses better and makes invoice management easier..
+        /// </summary>
+        public static string fileDetailsDialog_Tip {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_Tip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save Details.
+        /// </summary>
+        public static string fileDetailsDialog_Save {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip (Add Later).
+        /// </summary>
+        public static string fileDetailsDialog_Skip {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_Skip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File uploaded successfully! Please add details below:.
+        /// </summary>
+        public static string fileDetailsDialog_FileUploadedSuccess {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_FileUploadedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File {0} is too large. Maximum size is 10 MB..
+        /// </summary>
+        public static string fileUpload_FileTooLarge {
+            get {
+                return ResourceManager.GetString("fileUpload_FileTooLarge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successfully uploaded file with details..
+        /// </summary>
+        public static string fileUpload_SuccessWithDetails {
+            get {
+                return ResourceManager.GetString("fileUpload_SuccessWithDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File uploaded. You can add details later by clicking the edit button..
+        /// </summary>
+        public static string fileUpload_SuccessAddLater {
+            get {
+                return ResourceManager.GetString("fileUpload_SuccessAddLater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error uploading files: {0}.
+        /// </summary>
+        public static string fileUpload_Error {
+            get {
+                return ResourceManager.GetString("fileUpload_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File removed successfully..
+        /// </summary>
+        public static string fileUpload_RemoveSuccess {
+            get {
+                return ResourceManager.GetString("fileUpload_RemoveSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File downloaded successfully..
+        /// </summary>
+        public static string fileUpload_DownloadSuccess {
+            get {
+                return ResourceManager.GetString("fileUpload_DownloadSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error downloading file: {0}.
+        /// </summary>
+        public static string fileUpload_DownloadError {
+            get {
+                return ResourceManager.GetString("fileUpload_DownloadError", resourceCulture);
             }
         }
     }

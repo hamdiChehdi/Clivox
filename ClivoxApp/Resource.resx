@@ -285,4 +285,107 @@
   <data name="home_SearchClients" xml:space="preserve">
     <value>Search clients...</value>
   </data>
+  <!-- Expense Proof Files Section -->
+  <data name="expenseProofFiles_Title" xml:space="preserve">
+    <value>Expense Proof Files</value>
+  </data>
+  <data name="expenseProofFiles_UploadButton" xml:space="preserve">
+    <value>Upload Proof Files</value>
+  </data>
+  <data name="expenseProofFiles_SupportedFormats" xml:space="preserve">
+    <value>Supported: PDF, Images (JPG, PNG), Word, Excel files</value>
+  </data>
+  <data name="expenseProofFiles_AttachedFiles" xml:space="preserve">
+    <value>Attached Files:</value>
+  </data>
+  <data name="expenseProofFiles_NoFiles" xml:space="preserve">
+    <value>No expense proof files attached. Upload files to provide documentation for your expenses.</value>
+  </data>
+  <data name="expenseProofFiles_TotalAmount" xml:space="preserve">
+    <value>Total Expense Amount:</value>
+  </data>
+  <data name="expenseProofFiles_EditDetails" xml:space="preserve">
+    <value>Edit details</value>
+  </data>
+  <data name="expenseProofFiles_DownloadFile" xml:space="preserve">
+    <value>Download file</value>
+  </data>
+  <data name="expenseProofFiles_RemoveFile" xml:space="preserve">
+    <value>Remove file</value>
+  </data>
+  <!-- File Details Dialog -->
+  <data name="fileDetailsDialog_Title" xml:space="preserve">
+    <value>Edit File Details</value>
+  </data>
+  <data name="fileDetailsDialog_AddTitle" xml:space="preserve">
+    <value>Add File Details</value>
+  </data>
+  <data name="fileDetailsDialog_FileDescription" xml:space="preserve">
+    <value>File Description</value>
+  </data>
+  <data name="fileDetailsDialog_DescriptionPlaceholder" xml:space="preserve">
+    <value>Enter a description for this expense proof file...</value>
+  </data>
+  <data name="fileDetailsDialog_DescriptionHelper" xml:space="preserve">
+    <value>Describe what this expense proof file contains (e.g., 'Restaurant receipt for client dinner', 'Gas station receipt for project travel')</value>
+  </data>
+  <data name="fileDetailsDialog_ExpenseAmount" xml:space="preserve">
+    <value>Expense Amount (€)</value>
+  </data>
+  <data name="fileDetailsDialog_AmountHelper" xml:space="preserve">
+    <value>Enter the total expense amount documented in this file</value>
+  </data>
+  <data name="fileDetailsDialog_Tip" xml:space="preserve">
+    <value>💡 Tip: Adding description and amount helps you track expenses better and makes invoice management easier.</value>
+  </data>
+  <data name="fileDetailsDialog_Save" xml:space="preserve">
+    <value>Save Details</value>
+  </data>
+  <data name="fileDetailsDialog_Skip" xml:space="preserve">
+    <value>Skip (Add Later)</value>
+  </data>
+  <data name="fileDetailsDialog_FileUploadedSuccess" xml:space="preserve">
+    <value>File uploaded successfully! Please add details below:</value>
+  </data>
+  <!-- Jobs Messages -->
+  <data name="jobs_Expenses" xml:space="preserve">
+    <value>Expenses</value>
+  </data>
+  <data name="jobs_Attachments" xml:space="preserve">
+    <value>Attachments</value>
+  </data>
+  <data name="jobs_InvoiceUpdatedSuccess" xml:space="preserve">
+    <value>Invoice data updated</value>
+  </data>
+  <data name="jobs_ExpenseFilesUpdatedSuccess" xml:space="preserve">
+    <value>Expense proof files updated</value>
+  </data>
+  <data name="jobs_NoChangesDetected" xml:space="preserve">
+    <value>No changes detected. Invoice was not updated.</value>
+  </data>
+  <data name="jobs_UpdatedSuccessfully" xml:space="preserve">
+    <value>successfully.</value>
+  </data>
+  <!-- File Upload Messages -->
+  <data name="fileUpload_FileTooLarge" xml:space="preserve">
+    <value>File {0} is too large. Maximum size is 10 MB.</value>
+  </data>
+  <data name="fileUpload_SuccessWithDetails" xml:space="preserve">
+    <value>Successfully uploaded file with details.</value>
+  </data>
+  <data name="fileUpload_SuccessAddLater" xml:space="preserve">
+    <value>File uploaded. You can add details later by clicking the edit button.</value>
+  </data>
+  <data name="fileUpload_Error" xml:space="preserve">
+    <value>Error uploading files: {0}</value>
+  </data>
+  <data name="fileUpload_RemoveSuccess" xml:space="preserve">
+    <value>File removed successfully.</value>
+  </data>
+  <data name="fileUpload_DownloadSuccess" xml:space="preserve">
+    <value>File downloaded successfully.</value>
+  </data>
+  <data name="fileUpload_DownloadError" xml:space="preserve">
+    <value>Error downloading file: {0}</value>
+  </data>
 </root>

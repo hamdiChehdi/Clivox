@@ -285,4 +285,107 @@
   <data name="home_SearchClients" xml:space="preserve">
     <value>Kunden suchen...</value>
   </data>
+  <!-- Expense Proof Files Section -->
+  <data name="expenseProofFiles_Title" xml:space="preserve">
+    <value>Ausgabenbelege</value>
+  </data>
+  <data name="expenseProofFiles_UploadButton" xml:space="preserve">
+    <value>Belege hochladen</value>
+  </data>
+  <data name="expenseProofFiles_SupportedFormats" xml:space="preserve">
+    <value>Unterstützt: PDF, Bilder (JPG, PNG), Word, Excel-Dateien</value>
+  </data>
+  <data name="expenseProofFiles_AttachedFiles" xml:space="preserve">
+    <value>Angehängte Dateien:</value>
+  </data>
+  <data name="expenseProofFiles_NoFiles" xml:space="preserve">
+    <value>Keine Ausgabenbelege angehängt. Laden Sie Dateien hoch, um Ihre Ausgaben zu dokumentieren.</value>
+  </data>
+  <data name="expenseProofFiles_TotalAmount" xml:space="preserve">
+    <value>Gesamtausgabenbetrag:</value>
+  </data>
+  <data name="expenseProofFiles_EditDetails" xml:space="preserve">
+    <value>Details bearbeiten</value>
+  </data>
+  <data name="expenseProofFiles_DownloadFile" xml:space="preserve">
+    <value>Datei herunterladen</value>
+  </data>
+  <data name="expenseProofFiles_RemoveFile" xml:space="preserve">
+    <value>Datei entfernen</value>
+  </data>
+  <!-- File Details Dialog -->
+  <data name="fileDetailsDialog_Title" xml:space="preserve">
+    <value>Dateidetails bearbeiten</value>
+  </data>
+  <data name="fileDetailsDialog_AddTitle" xml:space="preserve">
+    <value>Dateidetails hinzufügen</value>
+  </data>
+  <data name="fileDetailsDialog_FileDescription" xml:space="preserve">
+    <value>Dateibeschreibung</value>
+  </data>
+  <data name="fileDetailsDialog_DescriptionPlaceholder" xml:space="preserve">
+    <value>Geben Sie eine Beschreibung für diese Ausgabenbeleg-Datei ein...</value>
+  </data>
+  <data name="fileDetailsDialog_DescriptionHelper" xml:space="preserve">
+    <value>Beschreiben Sie, was diese Ausgabenbeleg-Datei enthält (z.B. 'Restaurantrechnung für Kundenessen', 'Tankstellenrechnung für Projektreise')</value>
+  </data>
+  <data name="fileDetailsDialog_ExpenseAmount" xml:space="preserve">
+    <value>Ausgabenbetrag (€)</value>
+  </data>
+  <data name="fileDetailsDialog_AmountHelper" xml:space="preserve">
+    <value>Geben Sie den in dieser Datei dokumentierten Gesamtausgabenbetrag ein</value>
+  </data>
+  <data name="fileDetailsDialog_Tip" xml:space="preserve">
+    <value>💡 Tipp: Das Hinzufügen von Beschreibung und Betrag hilft Ihnen, Ausgaben besser zu verfolgen und macht die Rechnungsverwaltung einfacher.</value>
+  </data>
+  <data name="fileDetailsDialog_Save" xml:space="preserve">
+    <value>Details speichern</value>
+  </data>
+  <data name="fileDetailsDialog_Skip" xml:space="preserve">
+    <value>Überspringen (Später hinzufügen)</value>
+  </data>
+  <data name="fileDetailsDialog_FileUploadedSuccess" xml:space="preserve">
+    <value>Datei erfolgreich hochgeladen! Bitte fügen Sie unten Details hinzu:</value>
+  </data>
+  <!-- Jobs Messages -->
+  <data name="jobs_Expenses" xml:space="preserve">
+    <value>Ausgaben</value>
+  </data>
+  <data name="jobs_Attachments" xml:space="preserve">
+    <value>Anhänge</value>
+  </data>
+  <data name="jobs_InvoiceUpdatedSuccess" xml:space="preserve">
+    <value>Rechnungsdaten aktualisiert</value>
+  </data>
+  <data name="jobs_ExpenseFilesUpdatedSuccess" xml:space="preserve">
+    <value>Ausgabenbelege aktualisiert</value>
+  </data>
+  <data name="jobs_NoChangesDetected" xml:space="preserve">
+    <value>Keine Änderungen erkannt. Rechnung wurde nicht aktualisiert.</value>
+  </data>
+  <data name="jobs_UpdatedSuccessfully" xml:space="preserve">
+    <value>erfolgreich.</value>
+  </data>
+  <!-- File Upload Messages -->
+  <data name="fileUpload_FileTooLarge" xml:space="preserve">
+    <value>Datei {0} ist zu groß. Maximale Größe beträgt 10 MB.</value>
+  </data>
+  <data name="fileUpload_SuccessWithDetails" xml:space="preserve">
+    <value>Datei erfolgreich mit Details hochgeladen.</value>
+  </data>
+  <data name="fileUpload_SuccessAddLater" xml:space="preserve">
+    <value>Datei hochgeladen. Sie können Details später hinzufügen, indem Sie auf die Bearbeiten-Schaltfläche klicken.</value>
+  </data>
+  <data name="fileUpload_Error" xml:space="preserve">
+    <value>Fehler beim Hochladen der Dateien: {0}</value>
+  </data>
+  <data name="fileUpload_RemoveSuccess" xml:space="preserve">
+    <value>Datei erfolgreich entfernt.</value>
+  </data>
+  <data name="fileUpload_DownloadSuccess" xml:space="preserve">
+    <value>Datei erfolgreich heruntergeladen.</value>
+  </data>
+  <data name="fileUpload_DownloadError" xml:space="preserve">
+    <value>Fehler beim Herunterladen der Datei: {0}</value>
+  </data>
 </root>

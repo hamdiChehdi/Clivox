@@ -13,6 +13,6 @@ public class ExpenseProofFile
     public long FileSize { get; set; }
     public byte[] FileContent { get; set; } = Array.Empty<byte>();
     public DateTime UploadedAt { get; set; } = DateTime.UtcNow;
-    public string Description { get; set; } = string.Empty; // Optional description for the file
+    public string Description { get; set; } = string.Empty; // description for the file
     public decimal Amount { get; set; } = 0.0m; // Expense amount for this proof file
 }

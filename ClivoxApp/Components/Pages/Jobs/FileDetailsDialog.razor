@@ -1,31 +1,54 @@
 @using ClivoxApp.Models.Invoice
 
 <MudDialog>
-    <TitleContent>Edit File Details</TitleContent>
+    <TitleContent>
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+            <MudIcon Icon="@Icons.Material.Filled.AttachFile" />
+            <MudText Typo="Typo.h6">@Resource.fileDetailsDialog_AddTitle</MudText>
+        </MudStack>
+    </TitleContent>
     <DialogContent>
+        <MudAlert Severity="Severity.Info" Variant="Variant.Outlined" Class="mb-4">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                <MudIcon Icon="@Icons.Material.Filled.CloudUpload" />
+                <MudText>@Resource.fileDetailsDialog_FileUploadedSuccess</MudText>
+            </MudStack>
+        </MudAlert>
+        
         <MudTextField @bind-Value="_description" 
-                      Label="File Description" 
+                      Label="@Resource.fileDetailsDialog_FileDescription" 
                       Variant="Variant.Outlined" 
-                      Placeholder="Enter a description for this expense proof file..."
+                      Placeholder="@Resource.fileDetailsDialog_DescriptionPlaceholder"
                       Lines="3"
-                      Class="mb-4" />
+                      Class="mb-4"
+                      HelperText="@Resource.fileDetailsDialog_DescriptionHelper" />
         
         <MudNumericField @bind-Value="_amount" 
-                         Label="Expense Amount (€)" 
+                         Label="@Resource.fileDetailsDialog_ExpenseAmount" 
                          Variant="Variant.Outlined"
                          Format="F2"
                          Placeholder="0.00"
                          Min="0"
                          T="decimal"
                          Adornment="Adornment.Start"
-                         AdornmentIcon="@Icons.Material.Filled.Euro" />
+                         AdornmentIcon="@Icons.Material.Filled.Euro"
+                         HelperText="@Resource.fileDetailsDialog_AmountHelper" />
         
         <MudText Typo="Typo.caption" Color="Color.Secondary" Class="mt-2">
-            Enter the description and amount for this expense proof file. The amount should reflect the expense value documented in this file.
+            @Resource.fileDetailsDialog_Tip
         </MudText>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Submit" Color="Color.Primary" Variant="Variant.Filled">Save</MudButton>
-        <MudButton OnClick="Cancel" Color="Color.Secondary">Cancel</MudButton>
+        <MudButton OnClick="Submit" 
+                   Color="Color.Primary" 
+                   Variant="Variant.Filled"
+                   StartIcon="@Icons.Material.Filled.Save">
+            @Resource.fileDetailsDialog_Save
+        </MudButton>
+        <MudButton OnClick="Cancel" 
+                   Color="Color.Secondary"
+                   StartIcon="@Icons.Material.Filled.Close">
+            @Resource.fileDetailsDialog_Skip
+        </MudButton>
     </DialogActions>
 </MudDialog>

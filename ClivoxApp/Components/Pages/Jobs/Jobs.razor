@@ -48,6 +48,23 @@
                             <MudText Typo="Typo.body2">@Resource.invoice_ServiceDate: @invoice.ServiceDate.Value.ToShortDateString()</MudText>
                             <MudText Typo="Typo.body2">@Resource.jobs_Total: @invoice.Items.Sum(x => x.Total).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("de-DE"))</MudText>
                             <MudText Typo="Typo.body2">@Resource.jobs_Items: @invoice.Items.Count</MudText>
+                            @{
+                                var totalExpenseAmount = invoice.ExpenseProofFiles.Sum(x => x.Amount);
+                            }
+                            @if (totalExpenseAmount > 0)
+                            {
+                                <MudText Typo="Typo.body2" Color="Color.Success">
+                                    <MudIcon Icon="@Icons.Material.Filled.Receipt" Size="Size.Small" Style="vertical-align: middle; margin-right: 4px;" />
+                                    @Resource.jobs_Expenses: @totalExpenseAmount.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("de-DE"))
+                                </MudText>
+                            }
+                            @if (invoice.ExpenseProofFiles?.Count > 0)
+                            {
+                                <MudText Typo="Typo.body2" Color="Color.Info">
+                                    <MudIcon Icon="@Icons.Material.Filled.AttachFile" Size="Size.Small" Style="vertical-align: middle; margin-right: 4px;" />
+                                    @Resource.jobs_Attachments: @invoice.ExpenseProofFiles.Count
+                                </MudText>
+                            }
                         </div>
                     </MudCardContent>
                     <MudCardActions Style="display: flex; justify-content: space-between; align-items: center;">
@@ -69,6 +86,7 @@
 @inject MudBlazor.IDialogService DialogService
 @inject ClientRepository ClientRepository
 @inject IQuerySession QuerySession
+@inject ISnackbar Snackbar
 
 @code {
     [Parameter]
@@ -88,7 +106,12 @@
         var invoice = new Invoice();
         invoice.ClientId = Id;
         var parameters = new MudBlazor.DialogParameters { ["Invoice"] = invoice };
-        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true };
+        var options = new MudBlazor.DialogOptions 
+        { 
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true
+        };
         var dialog = await DialogService.ShowAsync<EditInvoiceDialog>(Resource.jobs_NewInvoice, parameters, options);
         var result = await dialog.Result;
         if (result is null || result.Canceled)
@@ -99,14 +122,74 @@
 
     private async Task EditInvoice(Invoice invoice)
     {
+        // Create a deep copy of the original invoice for comparison
+        var originalInvoice = invoice.DeepCopy();
+        
         var parameters = new MudBlazor.DialogParameters { ["Invoice"] = invoice };
-        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true };
+        var options = new MudBlazor.DialogOptions 
+        { 
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true
+        };
         var dialog = await DialogService.ShowAsync<EditInvoiceDialog>(Resource.jobs_EditInvoice, parameters, options);
         var result = await dialog.Result;
         if (result is null || result.Canceled)
             return;
-        await InvoiceRepository.UpdateInvoiceAsync(invoice);
-        invoices = (await InvoiceRepository.GetInvoicesByClientIdAsync(Id)).ToList();
+
+        // Check what changed and apply appropriate events
+        var hasInvoiceDataChanged = invoice.HasInvoiceDataChangedFrom(originalInvoice);
+        var hasExpenseFilesChanged = invoice.HasExpenseProofFilesChangedFrom(originalInvoice);
+
+        if (hasInvoiceDataChanged || hasExpenseFilesChanged)
+        {
+            // Apply invoice data changes if needed
+            if (hasInvoiceDataChanged)
+            {
+                await InvoiceRepository.UpdateInvoiceAsync(invoice);
+            }
+
+            // Apply expense proof file changes if needed
+            if (hasExpenseFilesChanged)
+            {
+                var fileChanges = invoice.GetExpenseProofFileChanges(originalInvoice);
+                
+                // Apply added files
+                if (fileChanges.Added.Any())
+                {
+                    await InvoiceRepository. AddExpenseProofFilesAsync(invoice.Id, fileChanges.Added);
+                }
+
+                // Apply modified files
+                if (fileChanges.Modified.Any())
+                {
+                    await InvoiceRepository.ModifyExpenseProofFilesAsync(invoice.Id, fileChanges.Modified);
+                }
+
+                // Apply deleted files
+                if (fileChanges.Deleted.Any())
+                {
+                    await InvoiceRepository.DeleteExpenseProofFilesAsync(invoice.Id, fileChanges.Deleted);
+                }
+            }
+
+            // Refresh the invoice list
+            invoices = (await InvoiceRepository.GetInvoicesByClientIdAsync(Id)).ToList();
+
+            // Provide appropriate feedback
+            var messages = new List<string>();
+            if (hasInvoiceDataChanged)
+                messages.Add("Invoice data updated");
+            if (hasExpenseFilesChanged)
+                messages.Add("Expense proof files updated");
+
+            Snackbar.Add($"{string.Join(" and ", messages)} successfully.", Severity.Success);
+        }
+        else
+        {
+            // No changes detected
+            Snackbar.Add("No changes detected. Invoice was not updated.", Severity.Info);
+        }
     }
 
     private async Task DeleteInvoice(Invoice invoice)

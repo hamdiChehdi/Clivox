@@ -58,10 +58,32 @@ namespace ClivoxApp.Components.Pages.Jobs
                     UploadedAt = DateTime.UtcNow
                 };
 
-                Invoice.ExpenseProofFiles.Add(expenseProofFile);
+                // Immediately show dialog to enter description and amount
+                var parameters = new DialogParameters
+                {
+                    ["CurrentDescription"] = "",
+                    ["CurrentAmount"] = 0.0m,
+                    ["FileName"] = file.Name
+                };
 
+                var dialog = await DialogService.ShowAsync<FileDetailsDialog>("Add File Details", parameters);
+                var result = await dialog.Result;
 
-                Snackbar.Add($"Successfully uploaded file.", Severity.Success);
+                if (!result.Canceled && result.Data is FileDetailsResult fileDetails)
+                {
+                    expenseProofFile.Description = fileDetails.Description;
+                    expenseProofFile.Amount = fileDetails.Amount;
+                    
+                    Invoice.ExpenseProofFiles.Add(expenseProofFile);
+                    Snackbar.Add($"Successfully uploaded file with details.", Severity.Success);
+                }
+                else
+                {
+                    // User canceled - still add file but without description/amount
+                    Invoice.ExpenseProofFiles.Add(expenseProofFile);
+                    Snackbar.Add($"File uploaded. You can add details later by clicking the edit button.", Severity.Info);
+                }
+
                 StateHasChanged();
             }
             catch (Exception ex)
@@ -130,47 +152,6 @@ namespace ClivoxApp.Components.Pages.Jobs
         }
 
         private void Submit() => MudDialog.Close(DialogResult.Ok(Invoice));
-        private void Cancel() => MudDialog.Cancel();
-    }
-
-    // Result class for file details dialog
-    public class FileDetailsResult
-    {
-        public string Description { get; set; } = string.Empty;
-        public decimal Amount { get; set; } = 0.0m;
-    }
-
-    // Enhanced dialog for editing file details (description and amount)
-    public partial class FileDetailsDialog : ComponentBase
-    {
-        [CascadingParameter]
-        private IMudDialogInstance MudDialog { get; set; } = null!;
-
-        [Parameter]
-        public string CurrentDescription { get; set; } = string.Empty;
-
-        [Parameter]
-        public decimal CurrentAmount { get; set; } = 0.0m;
-
-        private string _description = string.Empty;
-        private decimal _amount = 0.0m;
-
-        protected override void OnInitialized()
-        {
-            _description = CurrentDescription;
-            _amount = CurrentAmount;
-        }
-
-        private void Submit()
-        {
-            var result = new FileDetailsResult
-            {
-                Description = _description,
-                Amount = _amount
-            };
-            MudDialog.Close(DialogResult.Ok(result));
-        }
-
         private void Cancel() => MudDialog.Cancel();
     }
 }

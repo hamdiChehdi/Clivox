@@ -97,4 +97,52 @@ public class InvoiceRepository
         session.StoreEvents<Invoice>(invoice.Id, evt, null);
         await session.SaveChangesAsync();
     }
+
+    /// <summary>
+    /// Adds one or more expense proof files to an invoice
+    /// </summary>
+    public async Task AddExpenseProofFilesAsync(Guid invoiceId, List<ExpenseProofFile> expenseProofFiles)
+    {
+        if (expenseProofFiles == null || !expenseProofFiles.Any()) 
+            throw new ArgumentException("Expense proof files list cannot be null or empty", nameof(expenseProofFiles));
+
+        _logger.LogInformation("Adding {Count} expense proof files to invoice: {InvoiceId}", expenseProofFiles.Count, invoiceId);
+        
+        var evt = new AddExpenseProofFiles(invoiceId, expenseProofFiles);
+        using var session = _documentStore.LightweightSession();
+        session.StoreEvents<Invoice>(invoiceId, evt, null);
+        await session.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Deletes one or more expense proof files from an invoice
+    /// </summary>
+    public async Task DeleteExpenseProofFilesAsync(Guid invoiceId, List<Guid> expenseProofFileIds)
+    {
+        if (expenseProofFileIds == null || !expenseProofFileIds.Any()) 
+            throw new ArgumentException("Expense proof file IDs list cannot be null or empty", nameof(expenseProofFileIds));
+
+        _logger.LogInformation("Deleting {Count} expense proof files from invoice: {InvoiceId}", expenseProofFileIds.Count, invoiceId);
+        
+        var evt = new DeleteExpenseProofFiles(invoiceId, expenseProofFileIds);
+        using var session = _documentStore.LightweightSession();
+        session.StoreEvents<Invoice>(invoiceId, evt, null);
+        await session.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Modifies one or more expense proof files in an invoice
+    /// </summary>
+    public async Task ModifyExpenseProofFilesAsync(Guid invoiceId, List<ExpenseProofFile> expenseProofFiles)
+    {
+        if (expenseProofFiles == null || !expenseProofFiles.Any()) 
+            throw new ArgumentException("Expense proof files list cannot be null or empty", nameof(expenseProofFiles));
+
+        _logger.LogInformation("Modifying {Count} expense proof files in invoice: {InvoiceId}", expenseProofFiles.Count, invoiceId);
+        
+        var evt = new ModifyExpenseProofFiles(invoiceId, expenseProofFiles);
+        using var session = _documentStore.LightweightSession();
+        session.StoreEvents<Invoice>(invoiceId, evt, null);
+        await session.SaveChangesAsync();
+    }
 }

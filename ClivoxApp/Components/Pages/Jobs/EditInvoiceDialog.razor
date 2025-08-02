@@ -10,25 +10,25 @@
         <MudDivider Class="my-4" />
         
         <!-- Expense Proof Files Section -->
-        <MudText Typo="Typo.h6" Class="mb-3">Expense Proof Files</MudText>
+        <MudText Typo="Typo.h6" Class="mb-3">@Resource.expenseProofFiles_Title</MudText>
         
         <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
             <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Class="mb-3">
                 <MudFileUpload T="IBrowserFile" FilesChanged="OnFilesChanged" Accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xlsx,.xls">
                     <ActivatorContent>
                         <MudButton StartIcon="@Icons.Material.Filled.CloudUpload" Variant="Variant.Filled" Color="Color.Primary">
-                            Upload Proof Files
+                            @Resource.expenseProofFiles_UploadButton
                         </MudButton>
                     </ActivatorContent>
                 </MudFileUpload>
                 <MudText Typo="Typo.caption" Color="Color.Secondary">
-                    Supported: PDF, Images (JPG, PNG), Word, Excel files
+                    @Resource.expenseProofFiles_SupportedFormats
                 </MudText>
             </MudStack>
             
             @if (Invoice.ExpenseProofFiles?.Any() == true)
             {
-                <MudText Typo="Typo.subtitle2" Class="mb-2">Attached Files:</MudText>
+                <MudText Typo="Typo.subtitle2" Class="mb-2">@Resource.expenseProofFiles_AttachedFiles</MudText>
                 @foreach (var file in Invoice.ExpenseProofFiles)
                 {
                     <MudCard Class="mb-2" Elevation="1">
@@ -58,16 +58,16 @@
                                 <MudIconButton Icon="@Icons.Material.Filled.Edit" 
                                              Size="Size.Small" 
                                              OnClick="@(() => EditFileDetails(file))" 
-                                             Title="Edit details" />
+                                             Title="@Resource.expenseProofFiles_EditDetails" />
                                 <MudIconButton Icon="@Icons.Material.Filled.Download" 
                                              Size="Size.Small" 
                                              OnClick="@(() => DownloadFile(file))" 
-                                             Title="Download file" />
+                                             Title="@Resource.expenseProofFiles_DownloadFile" />
                                 <MudIconButton Icon="@Icons.Material.Filled.Delete" 
                                              Size="Size.Small" 
                                              Color="Color.Error" 
                                              OnClick="@(() => RemoveFile(file))" 
-                                             Title="Remove file" />
+                                             Title="@Resource.expenseProofFiles_RemoveFile" />
                             </MudStack>
                         </MudCardContent>
                     </MudCard>
@@ -78,7 +78,7 @@
                     <MudDivider Class="my-2" />
                     <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.FlexEnd" Spacing="2">
                         <MudText Typo="Typo.subtitle2" Color="Color.Primary">
-                            Total Expense Amount: €@TotalExpenseAmount.ToString("F2")
+                            @Resource.expenseProofFiles_TotalAmount €@TotalExpenseAmount.ToString("F2")
                         </MudText>
                     </MudStack>
                 }
@@ -86,7 +86,7 @@
             else
             {
                 <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">
-                    No expense proof files attached. Upload files to provide documentation for your expenses.
+                    @Resource.expenseProofFiles_NoFiles
                 </MudAlert>
             }
         </div>

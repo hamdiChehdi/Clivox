@@ -23,6 +23,8 @@ public class Invoice : IAggregateRoot
     public Guid ClientId { get; set; }
     // List of invoice items
     public List<InvoiceItem> Items { get; set; } = new();
+    // List of expense proof files
+    public List<ExpenseProofFile> ExpenseProofFiles { get; set; } = new();
 }
 
 public enum BillingType

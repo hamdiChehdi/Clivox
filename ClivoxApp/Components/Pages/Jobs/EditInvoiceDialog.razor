@@ -6,8 +6,74 @@
         <MudDatePicker @bind-Date="Invoice.InvoiceDate" Label="@Resource.invoice_InvoiceDate" />
         <MudDatePicker @bind-Date="Invoice.DueDate" Label="@Resource.invoice_DueDate" />
         <MudDatePicker @bind-Date="Invoice.ServiceDate" Label="@Resource.invoice_ServiceDate" />
+        
+        <MudDivider Class="my-4" />
+        
+        <!-- Expense Proof Files Section -->
+        <MudText Typo="Typo.h6" Class="mb-3">Expense Proof Files</MudText>
+        
+        <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Class="mb-3">
+                <MudFileUpload T="IBrowserFile" FilesChanged="OnFilesChanged" Accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xlsx,.xls">
+                    <ActivatorContent>
+                        <MudButton StartIcon="@Icons.Material.Filled.CloudUpload" Variant="Variant.Filled" Color="Color.Primary">
+                            Upload Proof Files
+                        </MudButton>
+                    </ActivatorContent>
+                </MudFileUpload>
+                <MudText Typo="Typo.caption" Color="Color.Secondary">
+                    Supported: PDF, Images (JPG, PNG), Word, Excel files
+                </MudText>
+            </MudStack>
+            
+            @if (Invoice.ExpenseProofFiles?.Any() == true)
+            {
+                <MudText Typo="Typo.subtitle2" Class="mb-2">Attached Files:</MudText>
+                <MudList T="string">
+                    @foreach (var file in Invoice.ExpenseProofFiles)
+                    {
+                        <MudListItem>
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Style="width: 100%;">
+                                <MudIcon Icon="@GetFileIcon(file.ContentType)" />
+                                <MudStack Spacing="0" Style="flex-grow: 1;">
+                                    <MudText Typo="Typo.body2">@file.FileName</MudText>
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                        @FormatFileSize(file.FileSize) • @file.UploadedAt.ToString("dd.MM.yyyy HH:mm")
+                                    </MudText>
+                                    @if (!string.IsNullOrEmpty(file.Description))
+                                    {
+                                        <MudText Typo="Typo.caption" Color="Color.Primary">@file.Description</MudText>
+                                    }
+                                </MudStack>
+                                <MudIconButton Icon="@Icons.Material.Filled.Edit" 
+                                             Size="Size.Small" 
+                                             OnClick="@(() => EditFileDescription(file))" 
+                                             Title="Edit description" />
+                                <MudIconButton Icon="@Icons.Material.Filled.Download" 
+                                             Size="Size.Small" 
+                                             OnClick="@(() => DownloadFile(file))" 
+                                             Title="Download file" />
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                                             Size="Size.Small" 
+                                             Color="Color.Error" 
+                                             OnClick="@(() => RemoveFile(file))" 
+                                             Title="Remove file" />
+                            </MudStack>
+                        </MudListItem>
+                    }
+                </MudList>
+            }
+            else
+            {
+                <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">
+                    No expense proof files attached. Upload files to provide documentation for your expenses.
+                </MudAlert>
+            }
+        </div>
+        
         <MudDivider Class="my-2" />
         <MudText Typo="Typo.subtitle2">@Resource.editInvoiceDialog_InvoiceItems</MudText>
+        
         <!-- Per Hour Table -->
         <MudText Typo="Typo.subtitle2" Class="mt-2 mb-1">@Resource.editInvoiceDialog_PerHour</MudText>
         <MudTable Items="@Invoice.Items.Where(i => i.BillingType == BillingType.PerHour)" Hover="true">
@@ -28,6 +94,7 @@
                 <MudTd><MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => RemoveItem(context))" /></MudTd>
             </RowTemplate>
         </MudTable>
+        
         <!-- Per Square Meter Table -->
         <MudText Typo="Typo.subtitle2" Class="mt-4 mb-1">@Resource.editInvoiceDialog_PerSquareMeter</MudText>
         <MudTable Items="@Invoice.Items.Where(i => i.BillingType == BillingType.PerSquareMeter)" Hover="true">
@@ -48,6 +115,7 @@
                 <MudTd><MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => RemoveItem(context))" /></MudTd>
             </RowTemplate>
         </MudTable>
+        
         <!-- Fixed Price Table -->
         <MudText Typo="Typo.subtitle2" Class="mt-4 mb-1">@Resource.editInvoiceDialog_FixedPrice</MudText>
         <MudTable Items="@Invoice.Items.Where(i => i.BillingType == BillingType.FixedPrice)" Hover="true">
@@ -66,6 +134,7 @@
                 <MudTd><MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => RemoveItem(context))" /></MudTd>
             </RowTemplate>
         </MudTable>
+        
         <!-- Per Object Table -->
         <MudText Typo="Typo.subtitle2" Class="mt-4 mb-1">@Resource.editInvoiceDialog_PerObject</MudText>
         <MudTable Items="@Invoice.Items.Where(i => i.BillingType == BillingType.PerObject)" Hover="true">

@@ -87,6 +87,21 @@ namespace ClivoxApp.Components.Pages.Jobs
             {
                 const int maxFileSize = 10 * 1024 * 1024; // 10 MB limit
 
+                // Validate file type - only allow PDF and image files
+                var allowedContentTypes = new[]
+                {
+                    "application/pdf",
+                    "image/jpeg",
+                    "image/jpg", 
+                    "image/png"
+                };
+
+                if (!allowedContentTypes.Contains(file.ContentType.ToLowerInvariant()))
+                {
+                    Snackbar.Add($"File type '{file.ContentType}' is not supported. Only PDF and image files are allowed.", Severity.Error);
+                    return;
+                }
+
                 if (file.Size > maxFileSize)
                 {
                     Snackbar.Add($"File {file.Name} is too large. Maximum size is 10 MB.", Severity.Error);
@@ -186,8 +201,6 @@ namespace ClivoxApp.Components.Pages.Jobs
             {
                 string ct when ct.Contains("pdf") => Icons.Material.Filled.PictureAsPdf,
                 string ct when ct.Contains("image") => Icons.Material.Filled.Image,
-                string ct when ct.Contains("word") || ct.Contains("document") => Icons.Material.Filled.Description,
-                string ct when ct.Contains("excel") || ct.Contains("spreadsheet") => Icons.Material.Filled.TableChart,
                 _ => Icons.Material.Filled.AttachFile
             };
         }

@@ -114,7 +114,7 @@ public class ExportInvoiceFile
         sheet.SetColumnWidth(2, 18 * 256);
         sheet.SetColumnWidth(3, 16 * 256);
         sheet.SetColumnWidth(4, 14 * 256);
-        sheet.SetColumnWidth(5, 14 * 256);
+        sheet.SetColumnWidth(5, 13 * 256);
     }
     
     #endregion

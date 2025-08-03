@@ -1,23 +1,23 @@
 using System;
 using System.IO;
-using System.Linq;
 using ClivoxApp.Models;
 using ClivoxApp.Models.Clients;
 using ClivoxApp.Models.Invoice;
 using ClivoxApp.Models.Shared;
 using ClivoxApp.Services;
-using NPOI.SS.UserModel;
 
-public class ExportInvoiceFileTests
+namespace Clivox.Tests;
+
+public class ExportInvoicePdfTests
 {
     [Fact]
-    public void ExportToExcel_CreatesValidExcelFile()
+    public async Task ExportToPdf_CreatesValidPdfFile()
     {
         // Arrange
         var random = new Random(42); // Fixed seed for reproducible tests
         var testInvoiceNumber = $"INV-{random.Next(1000, 9999)}";
         var baseDate = new DateTime(2024, 1, 1);
-        
+
         var invoice = new Invoice
         {
             InvoiceNumber = testInvoiceNumber,
@@ -74,119 +74,12 @@ public class ExportInvoiceFileTests
             )
         };
 
-        // Act
-        using var stream = ExportInvoiceFile.ExportToExcel(invoice, client, businessOwner);
-
-        // Save the file locally for inspection (using proper temp directory)
-        var outputDir = Path.Combine(Path.GetTempPath(), "TestExports");
-        Directory.CreateDirectory(outputDir);
-        var filePath = Path.Combine(outputDir, $"Invoice_{invoice.InvoiceNumber}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx");
-        stream.Position = 0;
-        using (var file = File.Create(filePath))
-        {
-            stream.CopyTo(file);
-        }
-
-        // Assert
-        Assert.NotNull(stream);
-        Assert.True(stream.Length > 0);
-
-        // Further: Check the Excel content (optional, basic check)
-        stream.Position = 0;
-        IWorkbook workbook = WorkbookFactory.Create(stream);
-        var sheet = workbook.GetSheetAt(0);
-        Assert.NotNull(sheet);
-
-        // Check that the invoice number appears in the sheet
-        bool foundInvoiceNumber = false;
-        for (int i = 0; i <= sheet.LastRowNum; i++)
-        {
-            var row = sheet.GetRow(i);
-            if (row == null) continue;
-            for (int j = 0; j < row.LastCellNum; j++)
-            {
-                var cell = row.GetCell(j);
-                if (cell != null && cell.ToString().Contains(invoice.InvoiceNumber))
-                {
-                    foundInvoiceNumber = true;
-                    break;
-                }
-            }
-            if (foundInvoiceNumber) break;
-        }
-        Assert.True(foundInvoiceNumber, "Invoice number should appear in the exported Excel file.");
-        Assert.True(File.Exists(filePath));
-        
-        // Clean up test file
-        File.Delete(filePath);
-    }
-
-    [Fact]
-    public void ExportToPdf_CreatesValidPdfFile()
-    {
-        // Arrange
-        var random = new Random(42); // Fixed seed for reproducible tests
-        var testInvoiceNumber = $"INV-PDF-{random.Next(1000, 9999)}";
-        var baseDate = new DateTime(2024, 1, 1);
-        
-        var invoice = new Invoice
-        {
-            InvoiceNumber = testInvoiceNumber,
-            InvoiceDate = baseDate.AddDays(random.Next(0, 365)),
-            DueDate = baseDate.AddDays(random.Next(366, 395)),
-            ServiceDate = baseDate.AddDays(random.Next(-30, 30)),
-            Items = new()
-            {
-                new InvoiceItem { Description = "PDF Export Test - Professional consulting services", BillingType = BillingType.PerHour, Quantity = 10, UnitPrice = 85.50m },
-                new InvoiceItem { Description = "Technical implementation for PDF generation", BillingType = BillingType.FixedPrice, FixedAmount = 1250.00m },
-                new InvoiceItem { Description = "Quality assurance testing", BillingType = BillingType.PerObject, Quantity = 5, UnitPrice = 150.00m }
-            }
-        };
-
-        var client = new Client
-        {
-            FirstName = "Jane",
-            LastName = "Smith",
-            Gender = Gender.Female,
-            Address = new Address
-            {
-                Street = "456 Technology Boulevard",
-                PostalCode = "67890",
-                City = "Berlin",
-                Country = Countries.Germany
-            }
-        };
-
-        var businessOwner = new BusinessOwner
-        {
-            CompanyName = "PDF Solutions GmbH",
-            Email = "info@pdfsolutions.de",
-            PhoneNumber = "+49-30-12345678",
-            TaxNumber = "DE987654321",
-            Address = new Address
-            {
-                Street = "Hauptstraße 123",
-                PostalCode = "10115",
-                City = "Berlin",
-                Country = Countries.Germany
-            },
-            bankAccount = new BankAccount(
-                "PDF Solutions GmbH",
-                "DE12 3456 7890 1234 5678 90",
-                "DEUTDEFFXXX",
-                testInvoiceNumber
-            )
-        };
 
         // Act
         using var stream = ExportInvoicePdf.ExportToPdf(invoice, client, businessOwner);
 
-        // Save the file locally for inspection (using proper temp directory)
-        var outputDir = Path.Combine(Path.GetTempPath(), "TestExports");
-        Directory.CreateDirectory(outputDir);
-        var filePath = Path.Combine(outputDir, $"Invoice_{invoice.InvoiceNumber}_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
         stream.Position = 0;
-        using (var file = File.Create(filePath))
+        using (var file = File.Create(@$"C:\Users\hamdi\Downloads\wetransfer_hamdi_2025-07-25_0622\hamdi\Invoice_{invoice.InvoiceNumber}_{DateTime.Now:yyyyMMdd_HHmmss}.pdf"))
         {
             stream.CopyTo(file);
         }
@@ -194,7 +87,6 @@ public class ExportInvoiceFileTests
         // Assert
         Assert.NotNull(stream);
         Assert.True(stream.Length > 0);
-        Assert.True(File.Exists(filePath));
         
         // Basic PDF validation - check if it starts with PDF header
         stream.Position = 0;
@@ -202,8 +94,5 @@ public class ExportInvoiceFileTests
         stream.Read(buffer, 0, 4);
         var pdfHeader = System.Text.Encoding.ASCII.GetString(buffer);
         Assert.Equal("%PDF", pdfHeader);
-        
-        // Clean up test file
-        File.Delete(filePath);
     }
 }

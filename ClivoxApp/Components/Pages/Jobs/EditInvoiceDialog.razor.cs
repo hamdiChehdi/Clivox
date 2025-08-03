@@ -1,9 +1,9 @@
-using System.Linq;
+using ClivoxApp.Models.Invoice;
+using CommunityToolkit.Maui.Storage;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
-using ClivoxApp.Models.Invoice;
-using CommunityToolkit.Maui.Storage;
+using System.Linq;
 
 namespace ClivoxApp.Components.Pages.Jobs
 {
@@ -81,80 +81,6 @@ namespace ClivoxApp.Components.Pages.Jobs
             Invoice.Items.Remove(item);
         }
 
-        private async void OnFilesChanged(IBrowserFile file)
-        {
-            try
-            {
-                const int maxFileSize = 10 * 1024 * 1024; // 10 MB limit
-
-                // Validate file type - only allow PDF and image files
-                var allowedContentTypes = new[]
-                {
-                    "application/pdf",
-                    "image/jpeg",
-                    "image/jpg", 
-                    "image/png"
-                };
-
-                if (!allowedContentTypes.Contains(file.ContentType.ToLowerInvariant()))
-                {
-                    Snackbar.Add($"File type '{file.ContentType}' is not supported. Only PDF and image files are allowed.", Severity.Error);
-                    return;
-                }
-
-                if (file.Size > maxFileSize)
-                {
-                    Snackbar.Add($"File {file.Name} is too large. Maximum size is 10 MB.", Severity.Error);
-                    return;
-                }
-
-                using var stream = file.OpenReadStream(maxFileSize);
-                using var memoryStream = new MemoryStream();
-                await stream.CopyToAsync(memoryStream);
-
-                var expenseProofFile = new ExpenseProofFile
-                {
-                    FileName = file.Name,
-                    ContentType = file.ContentType,
-                    FileSize = file.Size,
-                    FileContent = memoryStream.ToArray(),
-                    UploadedAt = DateTime.UtcNow
-                };
-
-                // Immediately show dialog to enter description and amount
-                var parameters = new DialogParameters
-                {
-                    ["CurrentDescription"] = "",
-                    ["CurrentAmount"] = 0.0m,
-                    ["FileName"] = file.Name
-                };
-
-                var dialog = await DialogService.ShowAsync<FileDetailsDialog>("Add File Details", parameters);
-                var result = await dialog.Result;
-
-                if (!result.Canceled && result.Data is FileDetailsResult fileDetails)
-                {
-                    expenseProofFile.Description = fileDetails.Description;
-                    expenseProofFile.Amount = fileDetails.Amount;
-                    
-                    Invoice.ExpenseProofFiles.Add(expenseProofFile);
-                    Snackbar.Add($"Successfully uploaded file with details.", Severity.Success);
-                }
-                else
-                {
-                    // User canceled - still add file but without description/amount
-                    Invoice.ExpenseProofFiles.Add(expenseProofFile);
-                    Snackbar.Add($"File uploaded. You can add details later by clicking the edit button.", Severity.Info);
-                }
-
-                StateHasChanged();
-            }
-            catch (Exception ex)
-            {
-                Snackbar.Add($"Error uploading files: {ex.Message}", Severity.Error);
-            }
-        }
-        
         private void RemoveFile(ExpenseProofFile file)
         {
             Invoice.ExpenseProofFiles.Remove(file);
@@ -212,7 +138,178 @@ namespace ClivoxApp.Components.Pages.Jobs
             return $"{bytes / (1024 * 1024):F1} MB";
         }
 
+        private async Task OnFilesChanged(FileResult? file)
+        {
+            try
+            {
+                const int maxFileSize = 10 * 1024 * 1024; // 10 MB limit
+
+                // Use CancellationToken with longer timeout for file operations
+                using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(5));
+
+                // Validate file type - only allow PDF and image files
+                var allowedContentTypes = new[]
+                {
+                    "application/pdf",
+                    "image/jpeg",
+                    "image/jpg",
+                    "image/png"
+                };
+
+                if (!allowedContentTypes.Contains(file.ContentType.ToLowerInvariant()))
+                {
+                    Snackbar.Add($"File type '{file.ContentType}' is not supported. Only PDF and image files are allowed.", Severity.Error);
+                    return;
+                }
+
+                
+                // Use longer timeout for file reading with progress indication
+                Snackbar.Add("Processing file...", Severity.Info);
+
+                using var stream = await file.OpenReadAsync();
+                using var memoryStream = new MemoryStream();
+                await stream.CopyToAsync(memoryStream, cts.Token);
+                var fileContent = memoryStream.ToArray();
+
+                if (fileContent.Length > maxFileSize)
+                {
+                    Snackbar.Add($"File {file.FileName} is too large. Maximum size is 10 MB.", Severity.Error);
+                    return;
+                }
+
+                var expenseProofFile = new ExpenseProofFile
+                {
+                    FileName = file.FileName,
+                    ContentType = file.ContentType,
+                    FileSize = fileContent.Length,
+                    FileContent = fileContent,
+                    UploadedAt = DateTime.UtcNow
+                };
+
+                // Immediately show dialog to enter description and amount
+                var parameters = new DialogParameters
+                {
+                    ["CurrentDescription"] = "",
+                    ["CurrentAmount"] = 0.0m,
+                    ["FileName"] = file.FileName
+                };
+
+                var dialog = await DialogService.ShowAsync<FileDetailsDialog>("Add File Details", parameters);
+                var result = await dialog.Result;
+
+                if (!result.Canceled && result.Data is FileDetailsResult fileDetails)
+                {
+                    expenseProofFile.Description = fileDetails.Description;
+                    expenseProofFile.Amount = fileDetails.Amount;
+
+                    Invoice.ExpenseProofFiles.Add(expenseProofFile);
+                    Snackbar.Add($"Successfully uploaded file with details.", Severity.Success);
+                }
+                else
+                {
+                    // User canceled - still add file but without description/amount
+                    Invoice.ExpenseProofFiles.Add(expenseProofFile);
+                    Snackbar.Add($"File uploaded. You can add details later by clicking the edit button.", Severity.Info);
+                }
+
+                StateHasChanged();
+            }
+            catch (OperationCanceledException)
+            {
+                Snackbar.Add("File upload timed out. Please try again with a smaller file or select the file more quickly.", Severity.Warning);
+            }
+            catch (TimeoutException)
+            {
+                Snackbar.Add("File selection took too long. Please try again.", Severity.Warning);
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add($"Error uploading files: {ex.Message}", Severity.Error);
+            }
+        }
+
+        public async void SelectFile()
+        {
+            try
+            {
+                var customFileType = new FilePickerFileType(
+                new Dictionary<DevicePlatform, IEnumerable<string>>
+                {
+                    { DevicePlatform.iOS, new[] { "public.my.comic.extension" } }, // UTType values
+                    { DevicePlatform.Android, new[] { "application/comics" } }, // MIME type
+                    { DevicePlatform.WinUI, new[] { ".jpg", ".pdf", ".png" } }, // file extension
+                    { DevicePlatform.Tizen, new[] { "*/*" } },
+                    { DevicePlatform.macOS, new[] { "cbr", "cbz" } }, // UTType values
+                });
+
+                var result = await FilePicker.Default.PickAsync(new PickOptions
+        {
+                    PickerTitle = "Pick Pdf/Image",
+                    FileTypes = customFileType,
+                });
+
+                if (result != null)
+                {
+                    if (result.FileName.EndsWith("jpg", StringComparison.OrdinalIgnoreCase) ||
+                        result.FileName.EndsWith("png", StringComparison.OrdinalIgnoreCase))
+                    {
+                        //using var stream = await result.OpenReadAsync();
+                        //var image = ImageSource.FromStream(() => stream);
+                        await OnFilesChanged(result);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                // The user canceled or something went wrong
+            }
+
+        }
+
         private void Submit() => MudDialog.Close(DialogResult.Ok(Invoice));
         private void Cancel() => MudDialog.Cancel();
+
+        private async Task ViewFile(ExpenseProofFile file)
+        {
+            var parameters = new DialogParameters
+            {
+                ["File"] = file
+            };
+
+            var options = new DialogOptions
+            {
+                MaxWidth = MaxWidth.Large,
+                FullWidth = true,
+                CloseButton = true,
+                BackdropClick = true
+            };
+
+            await DialogService.ShowAsync<FileViewerDialog>("View File", parameters, options);
+        }
+
+        private bool IsImage(string contentType)
+        {
+            return contentType.ToLowerInvariant().Contains("image");
+        }
+
+        private bool IsPdf(string contentType)
+        {
+            return contentType.ToLowerInvariant().Contains("pdf");
+        }
+
+        private string GetImageDataUrl(ExpenseProofFile file)
+        {
+            if (!IsImage(file.ContentType)) return string.Empty;
+            var base64String = Convert.ToBase64String(file.FileContent);
+            return $"data:{file.ContentType};base64,{base64String}";
+        }
+
+        private string GetPdfDataUrl(ExpenseProofFile file)
+        {
+            if (!IsPdf(file.ContentType)) return string.Empty;
+            var base64String = Convert.ToBase64String(file.FileContent);
+            return $"data:{file.ContentType};base64,{base64String}";
+        }
     }
 }

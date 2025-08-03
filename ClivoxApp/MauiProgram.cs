@@ -1,12 +1,11 @@
 ﻿using ClivoxApp.Models.Clients;
 using ClivoxApp.Models.Invoice;
+using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Storage;
 using JasperFx.Events.Projections;
 using Marten;
 using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
-using CommunityToolkit.Maui.Storage;
-using CommunityToolkit.Maui;
-
 namespace ClivoxApp
 {
     public static class MauiProgram

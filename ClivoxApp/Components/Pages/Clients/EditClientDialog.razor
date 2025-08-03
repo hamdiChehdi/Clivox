@@ -1,76 +1,95 @@
 ﻿<MudDialog>
     <TitleContent>Add/Edit Client</TitleContent>
     <DialogContent>
-        <MudGrid GutterSize="2">
-            <MudItem xs="12" sm="12">
-                <MudSwitch T="bool" value="@Client.IsCompany" ValueChanged="CompanyChanged" Color="Color.Primary" Label="@Resource.client_IsCompany" />
-            </MudItem>
-            @if (Client.IsCompany)
-            {
+        <MudForm @ref="form" @bind-IsValid="@success">
+            <MudGrid GutterSize="2">
                 <MudItem xs="12" sm="12">
-                    <MudTextField @bind-Value="@Client.CompanyName" Label="@Resource.client_CompanyName" Variant="Variant.Outlined" Required="true" />
+                    <MudSwitch T="bool" value="@Client.IsCompany" ValueChanged="CompanyChanged" Color="Color.Primary" Label="@Resource.client_IsCompany" />
                 </MudItem>
-            }
-            else
-            {
+                @if (Client.IsCompany)
+                {
+                    <MudItem xs="12" sm="12">
+                        <MudTextField @bind-Value="@Client.CompanyName" 
+                                      Label="@Resource.client_CompanyName" 
+                                      Variant="Variant.Outlined" 
+                                      Required="true"
+                                      RequiredError="Company name is required"
+                                      Validation="@(new Func<string, string?>(ValidateCompanyName))" />
+                    </MudItem>
+                }
+                else
+                {
+                    <MudItem xs="12" sm="6">
+                        <MudTextField @bind-Value="@Client.FirstName" 
+                                      Label="@Resource.client_FirstName" 
+                                      Variant="Variant.Outlined" 
+                                      Required="true"
+                                      RequiredError="First name is required"
+                                      Validation="@(new Func<string, string?>(ValidateFirstName))" />
+                    </MudItem>
+                    <MudItem xs="12" sm="6">
+                        <MudTextField @bind-Value="@Client.LastName" 
+                                      Label="@Resource.client_LastName" 
+                                      Variant="Variant.Outlined" 
+                                      Required="true"
+                                      RequiredError="Last name is required"
+                                      Validation="@(new Func<string, string?>(ValidateLastName))" />
+                    </MudItem>
+                    <MudItem xs="12" sm="6">
+                        <MudSelect @bind-Value="@Client.Gender" Label="@Resource.client_Gender" AdornmentColor="Color.Secondary">
+                            @foreach (Gender item in Enum.GetValues(typeof(Gender)))
+                            {
+                                <MudSelectItem Value="@((Gender?)item)">@(item == Gender.Male ? Resource.client_GenderMale : Resource.client_GenderFemale) </MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                }
                 <MudItem xs="12" sm="6">
-                    <MudTextField @bind-Value="@Client.FirstName" Label="@Resource.client_FirstName" Variant="Variant.Outlined" Required="true" />
+                    <MudTextField @bind-Value="@Client.Email"
+                                  Label="@Resource.client_Email"
+                                  Variant="Variant.Outlined"
+                                  Required="false"
+                                  Immediate="true"
+                                  Validation="@(new Func<string, string?>(ValidateEmail))" />
                 </MudItem>
                 <MudItem xs="12" sm="6">
-                    <MudTextField @bind-Value="@Client.LastName" Label="@Resource.client_LastName" Variant="Variant.Outlined" Required="true" />
+                    <MudTextField @bind-Value="@Client.PhoneNumber"
+                                  Label="@Resource.client_PhoneNumber"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+                                  RequiredError="Phone number is required"
+                                  Immediate="true"
+                                  Validation="@(new Func<string, string?>(ValidateGermanPhone))" />
+                </MudItem>
+            </MudGrid>
+            <MudDivider Class="my-2" />
+            <MudText Typo="Typo.subtitle2">@Resource.client_Address</MudText>
+            <MudGrid GutterSize="2">
+                <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="@Client.Address.CompanyOrPerson" Label="@Resource.client_Address_CompanyOrPerson" Variant="Variant.Outlined" />
                 </MudItem>
                 <MudItem xs="12" sm="6">
-                    <MudSelect @bind-Value="@Client.Gender" Label="@Resource.client_Gender" AdornmentColor="Color.Secondary">
-                        @foreach (Gender item in Enum.GetValues(typeof(Gender)))
+                    <MudTextField @bind-Value="@Client.Address.Street" Label="@Resource.client_Address_Street" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="@Client.Address.PostalCode" Label="@Resource.client_Address_PostalCode" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="@Client.Address.City" Label="@Resource.client_Address_City" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudSelect T="Countries" @bind-Value="@Client.Address.Country" Label="@Resource.client_Address_Country" Variant="Variant.Outlined">
+                        @foreach (Countries country in Enum.GetValues(typeof(Countries)))
                         {
-                            <MudSelectItem Value="@((Gender?)item)">@(item == Gender.Male ? Resource.client_GenderMale : Resource.client_GenderFemale) </MudSelectItem>
+                            <MudSelectItem Value="@country">@GetCountryResource(country)</MudSelectItem>
                         }
                     </MudSelect>
                 </MudItem>
-            }
-            <MudItem xs="12" sm="6">
-                <MudTextField @bind-Value="@Client.Email"
-                              Label="@Resource.client_Email"
-                              Variant="Variant.Outlined"
-                              Required="false"
-                              Immediate="true"
-                              Validation="@(new Func<string, string?>(ValidateEmail))" />
-            </MudItem>
-            <MudItem xs="12" sm="6">
-                <MudTextField @bind-Value="@Client.PhoneNumber"
-                              Label="@Resource.client_PhoneNumber"
-                              Variant="Variant.Outlined"
-                              Immediate="true"
-                              Validation="@(new Func<string, string?>(ValidateGermanPhone))" />
-            </MudItem>
-        </MudGrid>
-        <MudDivider Class="my-2" />
-        <MudText Typo="Typo.subtitle2">@Resource.client_Address</MudText>
-        <MudGrid GutterSize="2">
-            <MudItem xs="12" sm="6">
-                <MudTextField @bind-Value="@Client.Address.CompanyOrPerson" Label="@Resource.client_Address_CompanyOrPerson" Variant="Variant.Outlined" />
-            </MudItem>
-            <MudItem xs="12" sm="6">
-                <MudTextField @bind-Value="@Client.Address.Street" Label="@Resource.client_Address_Street" Variant="Variant.Outlined" />
-            </MudItem>
-            <MudItem xs="12" sm="6">
-                <MudTextField @bind-Value="@Client.Address.PostalCode" Label="@Resource.client_Address_PostalCode" Variant="Variant.Outlined" />
-            </MudItem>
-            <MudItem xs="12" sm="6">
-                <MudTextField @bind-Value="@Client.Address.City" Label="@Resource.client_Address_City" Variant="Variant.Outlined" />
-            </MudItem>
-            <MudItem xs="12" sm="6">
-                <MudSelect T="Countries" @bind-Value="@Client.Address.Country" Label="@Resource.client_Address_Country" Variant="Variant.Outlined">
-                    @foreach (Countries country in Enum.GetValues(typeof(Countries)))
-                    {
-                        <MudSelectItem Value="@country">@GetCountryResource(country)</MudSelectItem>
-                    }
-                </MudSelect>
-            </MudItem>
-        </MudGrid>
+            </MudGrid>
+        </MudForm>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Submit" Color="Color.Primary">Save</MudButton>
+        <MudButton OnClick="Submit" Color="Color.Primary" Disabled="@(!success)">Save</MudButton>
         <MudButton OnClick="Cancel" Color="Color.Secondary">Cancel</MudButton>
     </DialogActions>
 </MudDialog>
@@ -83,6 +102,8 @@
     public Client Client { get; set; } = new();
 
     public bool IsCompany;
+    private bool success;
+    private MudForm form;
 
     [Inject]
     private MudBlazor.IDialogService DialogService { get; set; }
@@ -103,15 +124,47 @@
         {
             Client.CompanyName = string.Empty;
         }
+        
+        // Revalidate form after company type change
+        form?.Validate();
     }
 
-    private void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    private async Task Submit()
+    {
+        await form.Validate();
+        if (form.IsValid)
+        {
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+    }
 
     private void Cancel() => MudDialog.Cancel();
 
+    private string? ValidateCompanyName(string companyName)
+    {
+        if (Client.IsCompany && string.IsNullOrWhiteSpace(companyName))
+            return "Company name is required for company clients.";
+        return null;
+    }
+
+    private string? ValidateFirstName(string firstName)
+    {
+        if (!Client.IsCompany && string.IsNullOrWhiteSpace(firstName))
+            return "First name is required for individual clients.";
+        return null;
+    }
+
+    private string? ValidateLastName(string lastName)
+    {
+        if (!Client.IsCompany && string.IsNullOrWhiteSpace(lastName))
+            return "Last name is required for individual clients.";
+        return null;
+    }
+
     private string? ValidateEmail(string email)
     {
-        if (string.IsNullOrWhiteSpace(email)) return "Email is required.";
+        // Email is optional, so only validate format if provided
+        if (string.IsNullOrWhiteSpace(email)) return null;
         try
         {
             var addr = new System.Net.Mail.MailAddress(email);
@@ -125,12 +178,12 @@
 
     private string? ValidateGermanPhone(string phone)
     {
-        if (string.IsNullOrWhiteSpace(phone)) return null;
+        if (string.IsNullOrWhiteSpace(phone)) return "Phone number is required.";
         // German phone numbers: +49 or 0, 5-15 digits, allow spaces, dashes, parentheses
         var cleaned = phone.Replace(" ", "").Replace("-", "").Replace("(", "").Replace(")", "");
         if (System.Text.RegularExpressions.Regex.IsMatch(cleaned, @"^(\+49|0)[1-9][0-9]{4,14}$"))
             return null;
-        return "Invalid German phone number.";
+        return "Invalid German phone number format.";
     }
 
     private string GetCountryResource(Countries country)

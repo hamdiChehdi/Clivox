@@ -13,6 +13,7 @@ namespace ClivoxApp.Components.Pages
     {
         [Inject] private ClientRepository ClientRepository { get; set; }
         [Inject] private IDialogService DialogService { get; set; }
+        [Inject] private ISnackbar Snackbar { get; set; }
         private List<Client> clients = new();
         private string searchQuery = string.Empty;
         private Client client = new();
@@ -37,14 +38,31 @@ namespace ClivoxApp.Components.Pages
 
         private async Task EditClient(Client client)
         {
+            // Create a deep copy of the original client for editing
+            var clientCopy = client.DeepCopy();
+            
             var options = new DialogOptions { CloseOnEscapeKey = true };
-            var parameters = new DialogParameters { ["Client"] = client };
+            var parameters = new DialogParameters { ["Client"] = clientCopy };
             var dialog = await DialogService.ShowAsync<EditClientDialog>("Edit Client", parameters, options);
             var result = await dialog.Result;
             if (result is null || result.Canceled)
                 return;
-            await ClientRepository.UpdateClientAsync(client);
-            clients = (await ClientRepository.GetAllClientsAsync()).ToList();
+            
+            try
+            {
+                // Copy the edited values back to the original client ID to maintain identity
+                clientCopy.Id = client.Id;
+                clientCopy.Version = client.Version;
+                clientCopy.CreatedOn = client.CreatedOn;
+                
+                await ClientRepository.UpdateClientAsync(clientCopy);
+                clients = (await ClientRepository.GetAllClientsAsync()).ToList();
+                Snackbar.Add("Client updated successfully", Severity.Success);
+            }
+            catch (ArgumentException ex)
+            {
+                Snackbar.Add($"Failed to update client: {ex.Message}", Severity.Error);
+            }
         }
 
         private async Task OpenAddClientDialog()
@@ -56,8 +74,17 @@ namespace ClivoxApp.Components.Pages
             var result = await dialog.Result;
             if (result is null || result.Canceled)
                 return;
-            await ClientRepository.AddClientAsync(client);
-            clients = (await ClientRepository.GetAllClientsAsync()).ToList();
+            
+            try
+            {
+                await ClientRepository.AddClientAsync(client);
+                clients = (await ClientRepository.GetAllClientsAsync()).ToList();
+                Snackbar.Add("Client added successfully", Severity.Success);
+            }
+            catch (ArgumentException ex)
+            {
+                Snackbar.Add($"Failed to add client: {ex.Message}", Severity.Error);
+            }
         }
     }
 }

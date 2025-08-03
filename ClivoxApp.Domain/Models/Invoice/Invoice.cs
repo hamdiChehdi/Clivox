@@ -15,9 +15,9 @@ public class Invoice : IAggregateRoot
     public DateTime ModifiedOn { get; set; }
 
     public string InvoiceNumber { get; set; } = "RN-";
-    public DateTime? InvoiceDate { get; set; } = DateTime.UtcNow;
-    public DateTime? DueDate { get; set; } = DateTime.UtcNow.AddDays(14);
-    public DateTime? ServiceDate { get; set; } // Optional, e.g. date when service was provided
+    public DateTime InvoiceDate { get; set; } = DateTime.UtcNow;
+    public DateTime DueDate { get; set; } = DateTime.UtcNow.AddDays(14);
+    public DateTime ServiceDate { get; set; } = DateTime.UtcNow.AddDays(-7);
     public decimal TotalAmount { get; set; } = 0.0m;
     // Navigation properties
     public Guid ClientId { get; set; }
@@ -25,6 +25,106 @@ public class Invoice : IAggregateRoot
     public List<InvoiceItem> Items { get; set; } = new();
     // List of expense proof files
     public List<ExpenseProofFile> ExpenseProofFiles { get; set; } = new();
+
+    /// <summary>
+    /// Validates that the invoice has the minimum required information
+    /// </summary>
+    /// <returns>True if invoice is valid, false otherwise</returns>
+    public bool IsValid()
+    {
+        return GetValidationErrors().Count == 0;
+    }
+
+    /// <summary>
+    /// Gets validation errors for the invoice
+    /// </summary>
+    /// <returns>List of validation error messages</returns>
+    public List<string> GetValidationErrors()
+    {
+        var errors = new List<string>();
+
+        // Check if invoice has at least one item
+        if (Items == null || Items.Count == 0)
+        {
+            errors.Add("Invoice must have at least one item.");
+        }
+
+        // Check if invoice number is provided
+        if (string.IsNullOrWhiteSpace(InvoiceNumber) || InvoiceNumber == "RN-")
+        {
+            errors.Add("Invoice number is required.");
+        }
+
+        // Check if client ID is valid
+        if (ClientId == Guid.Empty)
+        {
+            errors.Add("Client is required.");
+        }
+
+        // Check if any invoice items have invalid data
+        if (Items != null)
+        {
+            for (int i = 0; i < Items.Count; i++)
+            {
+                var item = Items[i];
+                var itemErrors = ValidateInvoiceItem(item, i + 1);
+                errors.AddRange(itemErrors);
+            }
+        }
+
+        return errors;
+    }
+
+    /// <summary>
+    /// Validates a single invoice item
+    /// </summary>
+    /// <param name="item">The invoice item to validate</param>
+    /// <param name="itemNumber">The item number for error reporting</param>
+    /// <returns>List of validation errors for the item</returns>
+    private List<string> ValidateInvoiceItem(InvoiceItem item, int itemNumber)
+    {
+        var errors = new List<string>();
+
+        if (string.IsNullOrWhiteSpace(item.Description))
+        {
+            errors.Add($"Item {itemNumber}: Description is required.");
+        }
+
+        switch (item.BillingType)
+        {
+            case BillingType.PerHour:
+            case BillingType.PerObject:
+                if (item.Quantity <= 0)
+                {
+                    errors.Add($"Item {itemNumber}: Quantity must be greater than 0.");
+                }
+                if (item.UnitPrice <= 0)
+                {
+                    errors.Add($"Item {itemNumber}: Unit price must be greater than 0.");
+                }
+                break;
+
+            case BillingType.PerSquareMeter:
+                if (item.Area <= 0)
+                {
+                    errors.Add($"Item {itemNumber}: Area must be greater than 0.");
+                }
+                if (item.PricePerSquareMeter <= 0)
+                {
+                    errors.Add($"Item {itemNumber}: Price per square meter must be greater than 0.");
+                }
+                break;
+
+            case BillingType.FixedPrice:
+                if (item.FixedAmount <= 0)
+                {
+                    errors.Add($"Item {itemNumber}: Fixed amount must be greater than 0.");
+                }
+                break;
+        }
+
+        return errors;
+    }
 
     /// <summary>
     /// Creates a deep copy of the invoice for comparison purposes

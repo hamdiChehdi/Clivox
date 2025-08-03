@@ -61,6 +61,16 @@ public class ClientRepository
     public async Task AddClientAsync(Client client)
     {
         if (client == null) throw new ArgumentNullException(nameof(client));
+        
+        // Validate client has minimum required information
+        if (!client.IsValid())
+        {
+            var errors = client.GetValidationErrors();
+            var errorMessage = string.Join(", ", errors);
+            _logger.LogError("Cannot add client - validation failed: {Errors}", errorMessage);
+            throw new ArgumentException($"Client validation failed: {errorMessage}", nameof(client));
+        }
+        
         _logger.LogInformation("Adding new client: {ClientName}", client.FullName);
         var evt = new ClientCreated(
             client.FirstName,
@@ -86,6 +96,16 @@ public class ClientRepository
     public async Task UpdateClientAsync(Client client)
     {
         if (client == null) throw new ArgumentNullException(nameof(client));
+        
+        // Validate client has minimum required information
+        if (!client.IsValid())
+        {
+            var errors = client.GetValidationErrors();
+            var errorMessage = string.Join(", ", errors);
+            _logger.LogError("Cannot update client - validation failed: {Errors}", errorMessage);
+            throw new ArgumentException($"Client validation failed: {errorMessage}", nameof(client));
+        }
+        
         _logger.LogInformation("Updating client: {ClientName}", client.FullName);
         var evt = new ClientUpdated(
             client.FirstName,

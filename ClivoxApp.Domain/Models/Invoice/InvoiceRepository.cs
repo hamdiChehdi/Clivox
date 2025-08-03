@@ -58,6 +58,14 @@ public class InvoiceRepository
     public async Task AddInvoiceAsync(Invoice invoice)
     {
         if (invoice == null) throw new ArgumentNullException(nameof(invoice));
+        
+        // Validate invoice before saving
+        if (!invoice.IsValid())
+        {
+            var errors = invoice.GetValidationErrors();
+            throw new ArgumentException($"Invoice validation failed: {string.Join(", ", errors)}");
+        }
+        
         _logger.LogInformation("Adding new invoice: {InvoiceNumber}", invoice.InvoiceNumber);
         var evt = new InvoiceCreated(
             invoice.Id,
@@ -83,6 +91,14 @@ public class InvoiceRepository
     public async Task UpdateInvoiceAsync(Invoice invoice)
     {
         if (invoice == null) throw new ArgumentNullException(nameof(invoice));
+        
+        // Validate invoice before saving
+        if (!invoice.IsValid())
+        {
+            var errors = invoice.GetValidationErrors();
+            throw new ArgumentException($"Invoice validation failed: {string.Join(", ", errors)}");
+        }
+        
         _logger.LogInformation("Updating invoice: {InvoiceNumber}", invoice.InvoiceNumber);
         var evt = new InvoiceUpdated(
             invoice.Id,

@@ -168,15 +168,15 @@ public class ExportInvoiceFile
         SetStringCellValue(sheet, "Steuernummer", 6, 3);
         SetStringCellValue(sheet, businessOwner.TaxNumber ?? "", 6, 4);
         SetStringCellValue(sheet, "Rechnungsdatum", 7, 3);
-        SetStringCellValue(sheet, invoice.InvoiceDate?.ToString("dd.MM.yyyy") ?? "", 7, 4);
+        SetStringCellValue(sheet, invoice.InvoiceDate.ToString("dd.MM.yyyy") ?? "", 7, 4);
         SetStringCellValue(sheet, "kundenNummer", 8, 3);
         SetStringCellValue(sheet, invoice.InvoiceNumber, 8, 4);
         SetStringCellValue(sheet, "Fälligkeitsdatum", 9, 3);
-        SetStringCellValue(sheet, invoice.DueDate?.ToString("dd.MM.yyyy") ?? "", 9, 4);
+        SetStringCellValue(sheet, invoice.DueDate.ToString("dd.MM.yyyy") ?? "", 9, 4);
 
         // Set ServiceDate with top vertical alignment
         var serviceDateLabelCell = SetStringCellValue(sheet, "Leistungsdatum", 10, 3);
-        var serviceDateCell = SetStringCellValue(sheet, invoice.ServiceDate?.ToString("dd.MM.yyyy") ?? "", 10, 4);
+        var serviceDateCell = SetStringCellValue(sheet, invoice.ServiceDate.ToString("dd.MM.yyyy") ?? "", 10, 4);
         var topAlignStyle = sheet.Workbook.CreateCellStyle();
         topAlignStyle.VerticalAlignment = VerticalAlignment.Top;
         serviceDateCell.CellStyle = topAlignStyle;

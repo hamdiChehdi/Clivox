@@ -23,6 +23,54 @@ namespace ClivoxApp.Components.Pages.Jobs
         [Inject]
         private IDialogService DialogService { get; set; } = null!;
 
+        // Nullable DateTime properties for MudDatePicker binding
+        private DateTime? _invoiceDate;
+        private DateTime? _dueDate;
+        private DateTime? _serviceDate;
+
+        public DateTime? InvoiceDate
+        {
+            get => _invoiceDate ?? Invoice.InvoiceDate;
+            set
+            {
+                _invoiceDate = value;
+                if (value.HasValue)
+                    Invoice.InvoiceDate = value.Value;
+            }
+        }
+
+        public DateTime? DueDate
+        {
+            get => _dueDate ?? Invoice.DueDate;
+            set
+            {
+                _dueDate = value;
+                if (value.HasValue)
+                    Invoice.DueDate = value.Value;
+            }
+        }
+
+        public DateTime? ServiceDate
+        {
+            get => _serviceDate ?? Invoice.ServiceDate;
+            set
+            {
+                _serviceDate = value;
+                if (value.HasValue)
+                    Invoice.ServiceDate = value.Value;
+            }
+        }
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            
+            // Initialize nullable properties from Invoice
+            _invoiceDate = Invoice.InvoiceDate;
+            _dueDate = Invoice.DueDate;
+            _serviceDate = Invoice.ServiceDate;
+        }
+
         private void AddItem(BillingType type)
         {
             Invoice.Items.Add(new InvoiceItem { BillingType = type });

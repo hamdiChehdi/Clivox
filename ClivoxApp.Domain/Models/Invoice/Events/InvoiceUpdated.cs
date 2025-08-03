@@ -7,9 +7,9 @@ namespace ClivoxApp.Models.Invoice.Events;
 public record InvoiceUpdated(
     Guid Id,
     string InvoiceNumber,
-    DateTime? InvoiceDate,
-    DateTime? DueDate,
-    DateTime? ServiceDate,
+    DateTime InvoiceDate,
+    DateTime DueDate,
+    DateTime ServiceDate,
     decimal TotalAmount,
     Guid ClientId,
     List<InvoiceItem> Items

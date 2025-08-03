@@ -3,9 +3,9 @@
     <TitleContent>@Resource.editInvoiceDialog_Title</TitleContent>
     <DialogContent>
         <MudTextField @bind-Value="Invoice.InvoiceNumber" Label="@Resource.invoice_InvoiceNumber" Variant="Variant.Outlined" />
-        <MudDatePicker @bind-Date="Invoice.InvoiceDate" Label="@Resource.invoice_InvoiceDate" />
-        <MudDatePicker @bind-Date="Invoice.DueDate" Label="@Resource.invoice_DueDate" />
-        <MudDatePicker @bind-Date="Invoice.ServiceDate" Label="@Resource.invoice_ServiceDate" />
+        <MudDatePicker @bind-Date="InvoiceDate" Label="@Resource.invoice_InvoiceDate" />
+        <MudDatePicker @bind-Date="DueDate" Label="@Resource.invoice_DueDate" />
+        <MudDatePicker @bind-Date="ServiceDate" Label="@Resource.invoice_ServiceDate" />
         
         <MudDivider Class="my-4" />
         

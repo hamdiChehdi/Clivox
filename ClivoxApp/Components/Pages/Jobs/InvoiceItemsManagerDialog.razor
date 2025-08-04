@@ -1,0 +1,142 @@
+@using ClivoxApp.Models.Invoice
+
+<MudDialog>
+    <TitleContent>
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+            <MudIcon Icon="@Icons.Material.Filled.List" />
+            <MudText Typo="Typo.h6">Manage Invoice Items</MudText>
+        </MudStack>
+    </TitleContent>
+    <DialogContent>
+        <MudText Typo="Typo.subtitle1" Class="mb-4">
+            Invoice: @InvoiceNumber
+        </MudText>
+        
+        <!-- Add New Item Section -->
+        <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+            <MudText Typo="Typo.subtitle2" Class="mb-3">Add New Item</MudText>
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Class="mb-3">
+                <MudButton OnClick="@(() => AddNewItem(BillingType.PerHour))" 
+                          StartIcon="@Icons.Material.Filled.Schedule" 
+                          Color="Color.Primary" 
+                          Variant="Variant.Outlined">
+                    Per Hour
+                </MudButton>
+                <MudButton OnClick="@(() => AddNewItem(BillingType.PerSquareMeter))" 
+                          StartIcon="@Icons.Material.Filled.SquareFoot" 
+                          Color="Color.Secondary" 
+                          Variant="Variant.Outlined">
+                    Per m²
+                </MudButton>
+                <MudButton OnClick="@(() => AddNewItem(BillingType.FixedPrice))" 
+                          StartIcon="@Icons.Material.Filled.AttachMoney" 
+                          Color="Color.Success" 
+                          Variant="Variant.Outlined">
+                    Fixed Price
+                </MudButton>
+                <MudButton OnClick="@(() => AddNewItem(BillingType.PerObject))" 
+                          StartIcon="@Icons.Material.Filled.Inventory" 
+                          Color="Color.Info" 
+                          Variant="Variant.Outlined">
+                    Per Object
+                </MudButton>
+            </MudStack>
+        </div>
+        
+        <!-- Items List Section -->
+        <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+            @if (InvoiceItems?.Any() == true)
+            {
+                <MudText Typo="Typo.subtitle2" Class="mb-2">Current Items (@InvoiceItems.Count)</MudText>
+                
+                @foreach (var item in InvoiceItems)
+                {
+                    <MudCard Class="mb-3" Elevation="1">
+                        <MudCardContent>
+                            <MudStack Spacing="3">
+                                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                                    <MudIcon Icon="@GetBillingTypeIcon(item.BillingType)" Color="@GetBillingTypeColor(item.BillingType)" />
+                                    <MudText Typo="Typo.subtitle2">@GetBillingTypeDisplayName(item.BillingType)</MudText>
+                                    <MudSpacer />
+                                    <MudText Typo="Typo.h6" Color="Color.Primary">€@item.Total.ToString("F2")</MudText>
+                                </MudStack>
+                                
+                                <MudTextField @bind-Value="item.Description" 
+                                            Label="Description" 
+                                            Variant="Variant.Outlined" 
+                                            Immediate="true" 
+                                            OnKeyUp="@(() => OnItemChanged(item))" />
+                                
+                                @if (item.BillingType == BillingType.PerHour || item.BillingType == BillingType.PerObject)
+                                {
+                                    <MudStack Row="true" Spacing="2">
+                                        <MudNumericField @bind-Value="item.Quantity" 
+                                                       Label="@(item.BillingType == BillingType.PerHour ? "Hours" : "Objects")" 
+                                                       Variant="Variant.Outlined" 
+                                                       Immediate="true"
+                                                       OnBlur="@(() => OnItemChanged(item))" />
+                                        <MudNumericField @bind-Value="item.UnitPrice" 
+                                                       Label="@(item.BillingType == BillingType.PerHour ? "Price per Hour" : "Price per Object")" 
+                                                       Variant="Variant.Outlined" 
+                                                       Format="F2"
+                                                       Immediate="true"
+                                                       OnBlur="@(() => OnItemChanged(item))" />
+                                    </MudStack>
+                                }
+                                else if (item.BillingType == BillingType.PerSquareMeter)
+                                {
+                                    <MudStack Row="true" Spacing="2">
+                                        <MudNumericField @bind-Value="item.Area" 
+                                                       Label="Area (m²)" 
+                                                       Variant="Variant.Outlined" 
+                                                       Immediate="true"
+                                                       OnBlur="@(() => OnItemChanged(item))" />
+                                        <MudNumericField @bind-Value="item.PricePerSquareMeter" 
+                                                       Label="Price per m²" 
+                                                       Variant="Variant.Outlined" 
+                                                       Format="F2"
+                                                       Immediate="true"
+                                                       OnBlur="@(() => OnItemChanged(item))" />
+                                    </MudStack>
+                                }
+                                else if (item.BillingType == BillingType.FixedPrice)
+                                {
+                                    <MudNumericField @bind-Value="item.FixedAmount" 
+                                                   Label="Fixed Amount" 
+                                                   Variant="Variant.Outlined" 
+                                                   Format="F2"
+                                                   Immediate="true"
+                                                   OnBlur="@(() => OnItemChanged(item))" />
+                                }
+                                
+                                <MudStack Row="true" Justify="Justify.FlexEnd">
+                                    <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                                                 Size="Size.Small" 
+                                                 Color="Color.Error" 
+                                                 OnClick="@(() => RemoveItem(item))" 
+                                                 Title="Remove Item" />
+                                </MudStack>
+                            </MudStack>
+                        </MudCardContent>
+                    </MudCard>
+                }
+                
+                <MudDivider Class="my-3" />
+                <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.FlexEnd" Spacing="2">
+                    <MudText Typo="Typo.h6" Color="Color.Primary">
+                        Total: €@TotalAmount.ToString("F2")
+                    </MudText>
+                </MudStack>
+            }
+            else
+            {
+                <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">
+                    No items added yet. Add items using the buttons above.
+                </MudAlert>
+            }
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Close" Color="Color.Primary">Close</MudButton>
+    </DialogActions>
+</MudDialog>

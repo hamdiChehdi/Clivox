@@ -161,4 +161,52 @@ public class InvoiceRepository
         session.StoreEvents<Invoice>(invoiceId, evt, null);
         await session.SaveChangesAsync();
     }
+
+    /// <summary>
+    /// Adds one or more invoice items to an invoice
+    /// </summary>
+    public async Task AddInvoiceItemsAsync(Guid invoiceId, List<InvoiceItem> invoiceItems)
+    {
+        if (invoiceItems == null || !invoiceItems.Any()) 
+            throw new ArgumentException("Invoice items list cannot be null or empty", nameof(invoiceItems));
+
+        _logger.LogInformation("Adding {Count} invoice items to invoice: {InvoiceId}", invoiceItems.Count, invoiceId);
+        
+        var evt = new AddInvoiceItems(invoiceId, invoiceItems);
+        using var session = _documentStore.LightweightSession();
+        session.StoreEvents<Invoice>(invoiceId, evt, null);
+        await session.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Deletes one or more invoice items from an invoice
+    /// </summary>
+    public async Task DeleteInvoiceItemsAsync(Guid invoiceId, List<Guid> invoiceItemIds)
+    {
+        if (invoiceItemIds == null || !invoiceItemIds.Any()) 
+            throw new ArgumentException("Invoice item IDs list cannot be null or empty", nameof(invoiceItemIds));
+
+        _logger.LogInformation("Deleting {Count} invoice items from invoice: {InvoiceId}", invoiceItemIds.Count, invoiceId);
+        
+        var evt = new DeleteInvoiceItems(invoiceId, invoiceItemIds);
+        using var session = _documentStore.LightweightSession();
+        session.StoreEvents<Invoice>(invoiceId, evt, null);
+        await session.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Modifies one or more invoice items in an invoice
+    /// </summary>
+    public async Task ModifyInvoiceItemsAsync(Guid invoiceId, List<InvoiceItem> invoiceItems)
+    {
+        if (invoiceItems == null || !invoiceItems.Any()) 
+            throw new ArgumentException("Invoice items list cannot be null or empty", nameof(invoiceItems));
+
+        _logger.LogInformation("Modifying {Count} invoice items in invoice: {InvoiceId}", invoiceItems.Count, invoiceId);
+        
+        var evt = new ModifyInvoiceItems(invoiceId, invoiceItems);
+        using var session = _documentStore.LightweightSession();
+        session.StoreEvents<Invoice>(invoiceId, evt, null);
+        await session.SaveChangesAsync();
+    }
 }

@@ -152,6 +152,7 @@ public class Invoice : IAggregateRoot
         {
             copy.Items.Add(new InvoiceItem
             {
+                Id = item.Id,
                 Description = item.Description,
                 BillingType = item.BillingType,
                 Quantity = item.Quantity,
@@ -188,7 +189,7 @@ public class Invoice : IAggregateRoot
     {
         if (other == null) return true;
 
-        return HasInvoiceDataChangedFrom(other) || HasExpenseProofFilesChangedFrom(other);
+        return HasInvoiceDataChangedFrom(other) || HasExpenseProofFilesChangedFrom(other) || HasInvoiceItemsChangedFrom(other);
     }
 
     /// <summary>
@@ -263,6 +264,35 @@ public class Invoice : IAggregateRoot
     }
 
     /// <summary>
+    /// Compares only the invoice items to detect changes
+    /// </summary>
+    public bool HasInvoiceItemsChangedFrom(Invoice other)
+    {
+        if (other == null) return true;
+
+        if (Items.Count != other.Items.Count)
+            return true;
+
+        foreach (var item in Items)
+        {
+            var otherItem = other.Items.FirstOrDefault(i => i.Id == item.Id);
+            if (otherItem == null ||
+                item.Description != otherItem.Description ||
+                item.BillingType != otherItem.BillingType ||
+                item.Quantity != otherItem.Quantity ||
+                item.UnitPrice != otherItem.UnitPrice ||
+                item.Area != otherItem.Area ||
+                item.PricePerSquareMeter != otherItem.PricePerSquareMeter ||
+                item.FixedAmount != otherItem.FixedAmount)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// Gets the expense proof file changes compared to another invoice
     /// </summary>
     public ExpenseProofFileChanges GetExpenseProofFileChanges(Invoice other)
@@ -316,6 +346,64 @@ public class Invoice : IAggregateRoot
 
         return changes;
     }
+
+    /// <summary>
+    /// Gets the invoice item changes compared to another invoice
+    /// </summary>
+    public InvoiceItemChanges GetInvoiceItemChanges(Invoice other)
+    {
+        if (other == null)
+        {
+            return new InvoiceItemChanges
+            {
+                Added = Items.ToList(),
+                Modified = new List<InvoiceItem>(),
+                Deleted = new List<Guid>()
+            };
+        }
+
+        var changes = new InvoiceItemChanges
+        {
+            Added = new List<InvoiceItem>(),
+            Modified = new List<InvoiceItem>(),
+            Deleted = new List<Guid>()
+        };
+
+        // Find added items (exist in current but not in other)
+        foreach (var item in Items)
+        {
+            var otherItem = other.Items.FirstOrDefault(i => i.Id == item.Id);
+            if (otherItem == null)
+            {
+                changes.Added.Add(item);
+            }
+            else
+            {
+                // Check if item was modified
+                if (item.Description != otherItem.Description ||
+                    item.BillingType != otherItem.BillingType ||
+                    item.Quantity != otherItem.Quantity ||
+                    item.UnitPrice != otherItem.UnitPrice ||
+                    item.Area != otherItem.Area ||
+                    item.PricePerSquareMeter != otherItem.PricePerSquareMeter ||
+                    item.FixedAmount != otherItem.FixedAmount)
+                {
+                    changes.Modified.Add(item);
+                }
+            }
+        }
+
+        // Find deleted items (exist in other but not in current)
+        foreach (var otherItem in other.Items)
+        {
+            if (!Items.Any(i => i.Id == otherItem.Id))
+            {
+                changes.Deleted.Add(otherItem.Id);
+            }
+        }
+
+        return changes;
+    }
 }
 
 public enum BillingType
@@ -328,6 +416,7 @@ public enum BillingType
 
 public class InvoiceItem
 {
+    public Guid Id { get; set; } = Guid.NewGuid();
     public string Description { get; set; } = string.Empty;
     public BillingType BillingType { get; set; }
 
@@ -356,6 +445,18 @@ public class InvoiceItem
             };
         }
     }
+}
+
+/// <summary>
+/// Represents the changes in invoice items between two invoice states
+/// </summary>
+public class InvoiceItemChanges
+{
+    public List<InvoiceItem> Added { get; set; } = new();
+    public List<InvoiceItem> Modified { get; set; } = new();
+    public List<Guid> Deleted { get; set; } = new();
+
+    public bool HasChanges => Added.Any() || Modified.Any() || Deleted.Any();
 }
 
 /// <summary>

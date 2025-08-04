@@ -1,0 +1,110 @@
+@using ClivoxApp.Models.Invoice
+
+<MudDialog>
+    <TitleContent>
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+            <MudIcon Icon="@Icons.Material.Filled.AttachFile" />
+            <MudText Typo="Typo.h6">Manage Expense Proof Files</MudText>
+        </MudStack>
+    </TitleContent>
+    <DialogContent>
+        <MudText Typo="Typo.subtitle1" Class="mb-4">
+            Invoice: @InvoiceNumber
+        </MudText>
+        
+        <!-- File Upload Section -->
+        <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Class="mb-3">
+                <MudButton OnClick="SelectFile" 
+                          StartIcon="@Icons.Material.Filled.CloudUpload" 
+                          Color="Color.Primary" 
+                          Variant="Variant.Filled"
+                          Disabled="_isUploadingFile">
+                    @if (_isUploadingFile)
+                    {
+                        <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+                        <text>Uploading</text>
+                    }
+                    else
+                    {
+                        <text>Upload File</text>
+                    }
+                </MudButton>
+                <MudText Typo="Typo.caption" Color="Color.Secondary">
+                    PDF and image files only (max 10MB)
+                </MudText>
+            </MudStack>
+            
+            @if (ExpenseProofFiles?.Any() == true)
+            {
+                <MudText Typo="Typo.subtitle2" Class="mb-2">Attached Files</MudText>
+                @foreach (var file in ExpenseProofFiles)
+                {
+                    <MudCard Class="mb-2" Elevation="1">
+                        <MudCardContent>
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Style="width: 100%;">
+                                <MudIcon Icon="@GetFileIcon(file.ContentType)" />
+                                <MudStack Spacing="0" Style="flex-grow: 1;">
+                                    <MudText Typo="Typo.body2">@file.FileName</MudText>
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                        @FormatFileSize(file.FileSize) • @file.UploadedAt.ToString("dd.MM.yyyy HH:mm")
+                                    </MudText>
+                                    @if (!string.IsNullOrEmpty(file.Description))
+                                    {
+                                        <MudText Typo="Typo.caption" Color="Color.Primary">
+                                            <MudIcon Icon="@Icons.Material.Filled.Description" Size="Size.Small" Style="vertical-align: middle; margin-right: 4px;" />
+                                            @file.Description
+                                        </MudText>
+                                    }
+                                    @if (file.Amount > 0)
+                                    {
+                                        <MudText Typo="Typo.caption" Color="Color.Success">
+                                            <MudIcon Icon="@Icons.Material.Filled.Euro" Size="Size.Small" Style="vertical-align: middle; margin-right: 4px;" />
+                                            €@file.Amount.ToString("F2")
+                                        </MudText>
+                                    }
+                                </MudStack>
+                                <MudIconButton Icon="@Icons.Material.Filled.Visibility" 
+                                             Size="Size.Small" 
+                                             OnClick="@(() => ViewFile(file))" 
+                                             Title="View File" />
+                                <MudIconButton Icon="@Icons.Material.Filled.Edit" 
+                                             Size="Size.Small" 
+                                             OnClick="@(() => EditFileDetails(file))" 
+                                             Title="Edit Details" />
+                                <MudIconButton Icon="@Icons.Material.Filled.Download" 
+                                             Size="Size.Small" 
+                                             OnClick="@(() => DownloadFile(file))" 
+                                             Title="Download File" />
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                                             Size="Size.Small" 
+                                             Color="Color.Error" 
+                                             OnClick="@(() => RemoveFile(file))" 
+                                             Title="Remove File" />
+                            </MudStack>
+                        </MudCardContent>
+                    </MudCard>
+                }
+                
+                @if (TotalExpenseAmount > 0)
+                {
+                    <MudDivider Class="my-2" />
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.FlexEnd" Spacing="2">
+                        <MudText Typo="Typo.subtitle2" Color="Color.Primary">
+                            Total Amount: €@TotalExpenseAmount.ToString("F2")
+                        </MudText>
+                    </MudStack>
+                }
+            }
+            else
+            {
+                <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">
+                    No files attached yet. Upload files to get started.
+                </MudAlert>
+            }
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Close" Color="Color.Primary">Close</MudButton>
+    </DialogActions>
+</MudDialog>

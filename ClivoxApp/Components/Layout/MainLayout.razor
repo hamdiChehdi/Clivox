@@ -23,7 +23,7 @@
                 <MudItem xs="2">
                     <!-- User Info -->
                     <MudStack Spacing="0" Class="mr-2">
-                        <MudText Typo="Typo.caption" Color="Color.Secondary">Welcome</MudText>
+                        <MudText Typo="Typo.caption" Color="Color.Secondary">@Resource.mainLayout_Welcome</MudText>
                         <MudText Typo="Typo.body2" Style="font-weight: 500;">@_currentUserName</MudText>
                     </MudStack>
                 </MudItem>
@@ -50,7 +50,7 @@
                         <LanguageSwitcher CurrentLanguage="@_currentLanguage" OnLanguageChanged="ChangeLanguage" />
 
                         <!-- Lock Session Button -->
-                        <MudTooltip Text="Lock Session">
+                        <MudTooltip Text="@Resource.mainLayout_LockSession">
                             <MudIconButton Icon="@Icons.Material.Filled.Lock"
                                            Color="Color.Warning"
                                            OnClick="LockSession"
@@ -58,7 +58,7 @@
                         </MudTooltip>
 
                         <!-- Logout Button -->
-                        <MudTooltip Text="Logout">
+                        <MudTooltip Text="@Resource.mainLayout_Logout">
                             <MudIconButton Icon="@Icons.Material.Filled.Logout"
                                            Color="Color.Error"
                                            OnClick="Logout"
@@ -86,10 +86,10 @@ else if (_showError)
             <MudCardContent>
                 <MudStack Spacing="3" AlignItems="AlignItems.Center">
                     <MudIcon Icon="@Icons.Material.Filled.Error" Color="Color.Error" Size="Size.Large" />
-                    <MudText Typo="Typo.h6" Color="Color.Error">Authentication Error</MudText>
+                    <MudText Typo="Typo.h6" Color="Color.Error">@Resource.mainLayout_AuthenticationError</MudText>
                     <MudText Typo="Typo.body1" Style="text-align: center;">@_errorMessage</MudText>
                     <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="RetryAuthentication">
-                        Retry
+                        @Resource.mainLayout_Retry
                     </MudButton>
                 </MudStack>
             </MudCardContent>
@@ -101,11 +101,11 @@ else
     <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
         <MudStack AlignItems="AlignItems.Center" Spacing="3">
             <MudProgressCircular Indeterminate="true" Size="Size.Large" />
-            <MudText Class="ml-3">Initializing authentication...</MudText>
+            <MudText Class="ml-3">@Resource.mainLayout_InitializingAuthentication</MudText>
             @if (!_authenticationCheckCompleted)
             {
                 <MudText Typo="Typo.caption" Color="Color.Secondary">
-                    Checking database connection and user credentials...
+                    @Resource.mainLayout_CheckingDatabase
                 </MudText>
             }
 
@@ -114,7 +114,7 @@ else
                        Variant="Variant.Filled"
                        OnClick="TestShowLoginDialog"
                        Style="margin-top: 20px;">
-                Test Login Dialog
+                @Resource.mainLayout_TestLoginDialog
             </MudButton>
         </MudStack>
     </div>

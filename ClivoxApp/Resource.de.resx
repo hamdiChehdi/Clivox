@@ -388,4 +388,157 @@
   <data name="fileUpload_DownloadError" xml:space="preserve">
     <value>Fehler beim Herunterladen der Datei: {0}</value>
   </data>
+  <!-- MainLayout texts -->
+  <data name="mainLayout_Welcome" xml:space="preserve">
+    <value>Willkommen</value>
+  </data>
+  <data name="mainLayout_LockSession" xml:space="preserve">
+    <value>Sitzung sperren</value>
+  </data>
+  <data name="mainLayout_Logout" xml:space="preserve">
+    <value>Abmelden</value>
+  </data>
+  <data name="mainLayout_AuthenticationError" xml:space="preserve">
+    <value>Authentifizierungsfehler</value>
+  </data>
+  <data name="mainLayout_Retry" xml:space="preserve">
+    <value>Wiederholen</value>
+  </data>
+  <data name="mainLayout_InitializingAuthentication" xml:space="preserve">
+    <value>Authentifizierung wird initialisiert...</value>
+  </data>
+  <data name="mainLayout_CheckingDatabase" xml:space="preserve">
+    <value>Datenbankverbindung und Benutzerdaten werden überprüft...</value>
+  </data>
+  <data name="mainLayout_TestLoginDialog" xml:space="preserve">
+    <value>Anmeldedialog testen</value>
+  </data>
+  <!-- InvoiceCard texts -->
+  <data name="invoiceCard_NetTotal" xml:space="preserve">
+    <value>Nettosumme</value>
+  </data>
+  <data name="invoiceCard_Issued" xml:space="preserve">
+    <value>Ausgestellt</value>
+  </data>
+  <data name="invoiceCard_Due" xml:space="preserve">
+    <value>Fällig</value>
+  </data>
+  <data name="invoiceCard_Service" xml:space="preserve">
+    <value>Leistung</value>
+  </data>
+  <data name="invoiceCard_Tasks" xml:space="preserve">
+    <value>Aufgaben</value>
+  </data>
+  <data name="invoiceCard_Task" xml:space="preserve">
+    <value>Aufgabe</value>
+  </data>
+  <data name="invoiceCard_Expenses" xml:space="preserve">
+    <value>Ausgaben </value>
+  </data>
+  <data name="invoiceCard_NoCosts" xml:space="preserve">
+    <value>Keine Kosten</value>
+  </data>
+  <data name="invoiceCard_FinancialSummary" xml:space="preserve">
+    <value>Finanzübersicht</value>
+  </data>
+  <data name="invoiceCard_ItemsTotal" xml:space="preserve">
+    <value>Positionen Gesamt</value>
+  </data>
+  <data name="invoiceCard_ProfitMargin" xml:space="preserve">
+    <value>Gewinnmarge</value>
+  </data>
+  <data name="invoiceCard_EditInvoice" xml:space="preserve">
+    <value>Rechnung bearbeiten</value>
+  </data>
+  <data name="invoiceCard_ManageItems" xml:space="preserve">
+    <value>Positionen verwalten</value>
+  </data>
+  <data name="invoiceCard_ManageFiles" xml:space="preserve">
+    <value>Dateien verwalten</value>
+  </data>
+  <data name="invoiceCard_DeleteInvoice" xml:space="preserve">
+    <value>Rechnung löschen</value>
+  </data>
+  <data name="invoiceCard_ExportToExcel" xml:space="preserve">
+    <value>Nach Excel exportieren</value>
+  </data>
+  <data name="invoiceCard_PreviewExportPDF" xml:space="preserve">
+    <value>PDF Vorschau &amp; Export</value>
+  </data>
+  <data name="invoiceCard_Overdue" xml:space="preserve">
+    <value>Überfällig</value>
+  </data>
+  <data name="invoiceCard_DueSoon" xml:space="preserve">
+    <value>Bald fällig</value>
+  </data>
+  <data name="invoiceCard_Current" xml:space="preserve">
+    <value>Aktuell</value>
+  </data>
+  <!-- ClientCard texts -->
+  <data name="clientCard_Company" xml:space="preserve">
+    <value>Firma</value>
+  </data>
+  <data name="clientCard_Individual" xml:space="preserve">
+    <value>Einzelperson</value>
+  </data>
+  <data name="clientCard_Job" xml:space="preserve">
+    <value>Auftrag</value>
+  </data>
+  <data name="clientCard_Jobs" xml:space="preserve">
+    <value>Aufträge</value>
+  </data>
+  <data name="clientCard_EditClient" xml:space="preserve">
+    <value>Kunde bearbeiten</value>
+  </data>
+  <data name="clientCard_DeleteClient" xml:space="preserve">
+    <value>Kunde löschen</value>
+  </data>
+  <!-- General UI -->
+  <data name="general_Save" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="general_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="general_Edit" xml:space="preserve">
+    <value>Bearbeiten</value>
+  </data>
+  <data name="general_Delete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="general_Add" xml:space="preserve">
+    <value>Hinzufügen</value>
+  </data>
+  <!-- Dialog titles -->
+  <data name="dialog_AddEditClient" xml:space="preserve">
+    <value>Kunde hinzufügen/bearbeiten</value>
+  </data>
+  <!-- Validation messages -->
+  <data name="validation_CompanyNameRequired" xml:space="preserve">
+    <value>Firmenname ist erforderlich</value>
+  </data>
+  <data name="validation_CompanyNameRequiredForCompany" xml:space="preserve">
+    <value>Firmenname ist für Firmenkunden erforderlich.</value>
+  </data>
+  <data name="validation_FirstNameRequired" xml:space="preserve">
+    <value>Vorname ist erforderlich</value>
+  </data>
+  <data name="validation_FirstNameRequiredForIndividual" xml:space="preserve">
+    <value>Vorname ist für Einzelkunden erforderlich.</value>
+  </data>
+  <data name="validation_LastNameRequired" xml:space="preserve">
+    <value>Nachname ist erforderlich</value>
+  </data>
+  <data name="validation_LastNameRequiredForIndividual" xml:space="preserve">
+    <value>Nachname ist für Einzelkunden erforderlich.</value>
+  </data>
+  <data name="validation_PhoneNumberRequired" xml:space="preserve">
+    <value>Telefonnummer ist erforderlich</value>
+  </data>
+  <data name="validation_InvalidEmailFormat" xml:space="preserve">
+    <value>Ungültiges E-Mail-Format.</value>
+  </data>
+  <data name="validation_InvalidGermanPhoneFormat" xml:space="preserve">
+    <value>Ungültiges deutsches Telefonnummer-Format.</value>
+  </data>
 </root>

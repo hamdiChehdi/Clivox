@@ -11,7 +11,7 @@
                     {
                         <MudIcon Icon="@Icons.Material.Filled.Business" Size="Size.Medium" Style="color: white;" />
                         <div>
-                            <MudText Typo="Typo.body2" Style="color: rgba(255,255,255,0.8); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Company</MudText>
+                            <MudText Typo="Typo.body2" Style="color: rgba(255,255,255,0.8); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">@Resource.clientCard_Company</MudText>
                             <MudText Typo="Typo.h6" Style="color: white; font-weight: 600; line-height: 1.2; margin-top: 2px;">@Client.CompanyName</MudText>
                         </div>
                     }
@@ -19,15 +19,15 @@
                     {
                         <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Medium" Style="color: white;" />
                         <div>
-                            <MudText Typo="Typo.body2" Style="color: rgba(255,255,255,0.8); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Individual</MudText>
+                            <MudText Typo="Typo.body2" Style="color: rgba(255,255,255,0.8); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">@Resource.clientCard_Individual</MudText>
                             <MudText Typo="Typo.h6" Style="color: white; font-weight: 600; line-height: 1.2; margin-top: 2px;">@Client.FullName</MudText>
                         </div>
                     }
                 </div>
-                <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="display: flex; align-items: center, gap: 8px;">
                     <div style="background-color: rgba(255,255,255,0.2); color: white; font-size: 0.65rem; font-weight: 600; padding: 4px 8px; border-radius: 12px; display: flex; align-items: center; gap: 4px;">
                         <MudIcon Icon="@Icons.Material.Filled.Work" Size="Size.Small" />
-                        @Client.JobCount @(Client.JobCount == 1 ? "Job" : "Jobs")
+                        @Client.JobCount @(Client.JobCount == 1 ? Resource.clientCard_Job : Resource.clientCard_Jobs)
                     </div>
                 </div>
             </MudStack>
@@ -83,18 +83,18 @@
                        Variant="Variant.Text"
                        OnClick="ManageJobs"
                        Style="text-transform: none; border-radius: 8px; font-weight: 600;">
-                @Client.JobCount @(Client.JobCount == 1 ? "Job" : "Jobs")
+                @Client.JobCount @(Client.JobCount == 1 ? Resource.clientCard_Job : Resource.clientCard_Jobs)
             </MudButton>
             
             <MudStack Row="true" Spacing="1">
-                <MudTooltip Text="Edit Client">
+                <MudTooltip Text="@Resource.clientCard_EditClient">
                     <MudIconButton Icon="@Icons.Material.Filled.Edit" 
                                    Color="Color.Primary" 
                                    Size="Size.Small"
                                    OnClick="EditClient"
                                    Style="border-radius: 8px;" />
                 </MudTooltip>
-                <MudTooltip Text="Delete Client">
+                <MudTooltip Text="@Resource.clientCard_DeleteClient">
                     <MudIconButton Icon="@Icons.Material.Filled.Delete" 
                                    Color="Color.Error" 
                                    Size="Size.Small"

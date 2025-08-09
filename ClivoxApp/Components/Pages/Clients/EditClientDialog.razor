@@ -1,5 +1,5 @@
 ﻿<MudDialog>
-    <TitleContent>Add/Edit Client</TitleContent>
+    <TitleContent>@Resource.dialog_AddEditClient</TitleContent>
     <DialogContent>
         <MudForm @ref="form" @bind-IsValid="@success">
             <MudGrid GutterSize="2">
@@ -89,8 +89,8 @@
         </MudForm>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Submit" Color="Color.Primary" Disabled="@(!success)">Save</MudButton>
-        <MudButton OnClick="Cancel" Color="Color.Secondary">Cancel</MudButton>
+        <MudButton OnClick="Submit" Color="Color.Primary" Disabled="@(!success)">@Resource.general_Save</MudButton>
+        <MudButton OnClick="Cancel" Color="Color.Secondary">@Resource.general_Cancel</MudButton>
     </DialogActions>
 </MudDialog>
 

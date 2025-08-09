@@ -205,6 +205,60 @@ namespace ClivoxApp {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Company.
+        /// </summary>
+        public static string clientCard_Company {
+            get {
+                return ResourceManager.GetString("clientCard_Company", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Client.
+        /// </summary>
+        public static string clientCard_DeleteClient {
+            get {
+                return ResourceManager.GetString("clientCard_DeleteClient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Client.
+        /// </summary>
+        public static string clientCard_EditClient {
+            get {
+                return ResourceManager.GetString("clientCard_EditClient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Individual.
+        /// </summary>
+        public static string clientCard_Individual {
+            get {
+                return ResourceManager.GetString("clientCard_Individual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Job.
+        /// </summary>
+        public static string clientCard_Job {
+            get {
+                return ResourceManager.GetString("clientCard_Job", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jobs.
+        /// </summary>
+        public static string clientCard_Jobs {
+            get {
+                return ResourceManager.GetString("clientCard_Jobs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Austria.
         /// </summary>
         public static string country_Austria {
@@ -291,6 +345,15 @@ namespace ClivoxApp {
         public static string country_Switzerland {
             get {
                 return ResourceManager.GetString("country_Switzerland", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add/Edit Client.
+        /// </summary>
+        public static string dialog_AddEditClient {
+            get {
+                return ResourceManager.GetString("dialog_AddEditClient", resourceCulture);
             }
         }
         
@@ -448,11 +511,479 @@ namespace ClivoxApp {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attached Files:.
+        /// </summary>
+        public static string expenseProofFiles_AttachedFiles {
+            get {
+                return ResourceManager.GetString("expenseProofFiles_AttachedFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download file.
+        /// </summary>
+        public static string expenseProofFiles_DownloadFile {
+            get {
+                return ResourceManager.GetString("expenseProofFiles_DownloadFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit details.
+        /// </summary>
+        public static string expenseProofFiles_EditDetails {
+            get {
+                return ResourceManager.GetString("expenseProofFiles_EditDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No expense proof files attached. Upload files to provide documentation for your expenses..
+        /// </summary>
+        public static string expenseProofFiles_NoFiles {
+            get {
+                return ResourceManager.GetString("expenseProofFiles_NoFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove file.
+        /// </summary>
+        public static string expenseProofFiles_RemoveFile {
+            get {
+                return ResourceManager.GetString("expenseProofFiles_RemoveFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Supported: PDF, Images (JPG, PNG), Word, Excel files.
+        /// </summary>
+        public static string expenseProofFiles_SupportedFormats {
+            get {
+                return ResourceManager.GetString("expenseProofFiles_SupportedFormats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expense Proof Files.
+        /// </summary>
+        public static string expenseProofFiles_Title {
+            get {
+                return ResourceManager.GetString("expenseProofFiles_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Expense Amount:.
+        /// </summary>
+        public static string expenseProofFiles_TotalAmount {
+            get {
+                return ResourceManager.GetString("expenseProofFiles_TotalAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload Proof Files.
+        /// </summary>
+        public static string expenseProofFiles_UploadButton {
+            get {
+                return ResourceManager.GetString("expenseProofFiles_UploadButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add File Details.
+        /// </summary>
+        public static string fileDetailsDialog_AddTitle {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_AddTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter the total expense amount documented in this file.
+        /// </summary>
+        public static string fileDetailsDialog_AmountHelper {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_AmountHelper", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Describe what this expense proof file contains (e.g., &apos;Restaurant receipt for client dinner&apos;, &apos;Gas station receipt for project travel&apos;).
+        /// </summary>
+        public static string fileDetailsDialog_DescriptionHelper {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_DescriptionHelper", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter a description for this expense proof file....
+        /// </summary>
+        public static string fileDetailsDialog_DescriptionPlaceholder {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_DescriptionPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expense Amount (€).
+        /// </summary>
+        public static string fileDetailsDialog_ExpenseAmount {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_ExpenseAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File Description.
+        /// </summary>
+        public static string fileDetailsDialog_FileDescription {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_FileDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File uploaded successfully! Please add details below:.
+        /// </summary>
+        public static string fileDetailsDialog_FileUploadedSuccess {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_FileUploadedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save Details.
+        /// </summary>
+        public static string fileDetailsDialog_Save {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip (Add Later).
+        /// </summary>
+        public static string fileDetailsDialog_Skip {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_Skip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 💡 Tip: Adding description and amount helps you track expenses better and makes invoice management easier..
+        /// </summary>
+        public static string fileDetailsDialog_Tip {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_Tip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit File Details.
+        /// </summary>
+        public static string fileDetailsDialog_Title {
+            get {
+                return ResourceManager.GetString("fileDetailsDialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error downloading file: {0}.
+        /// </summary>
+        public static string fileUpload_DownloadError {
+            get {
+                return ResourceManager.GetString("fileUpload_DownloadError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File downloaded successfully..
+        /// </summary>
+        public static string fileUpload_DownloadSuccess {
+            get {
+                return ResourceManager.GetString("fileUpload_DownloadSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error uploading files: {0}.
+        /// </summary>
+        public static string fileUpload_Error {
+            get {
+                return ResourceManager.GetString("fileUpload_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File {0} is too large. Maximum size is 10 MB..
+        /// </summary>
+        public static string fileUpload_FileTooLarge {
+            get {
+                return ResourceManager.GetString("fileUpload_FileTooLarge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File removed successfully..
+        /// </summary>
+        public static string fileUpload_RemoveSuccess {
+            get {
+                return ResourceManager.GetString("fileUpload_RemoveSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File uploaded. You can add details later by clicking the edit button..
+        /// </summary>
+        public static string fileUpload_SuccessAddLater {
+            get {
+                return ResourceManager.GetString("fileUpload_SuccessAddLater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successfully uploaded file with details..
+        /// </summary>
+        public static string fileUpload_SuccessWithDetails {
+            get {
+                return ResourceManager.GetString("fileUpload_SuccessWithDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add.
+        /// </summary>
+        public static string general_Add {
+            get {
+                return ResourceManager.GetString("general_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string general_Cancel {
+            get {
+                return ResourceManager.GetString("general_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string general_Delete {
+            get {
+                return ResourceManager.GetString("general_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit.
+        /// </summary>
+        public static string general_Edit {
+            get {
+                return ResourceManager.GetString("general_Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string general_Save {
+            get {
+                return ResourceManager.GetString("general_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search clients....
         /// </summary>
         public static string home_SearchClients {
             get {
                 return ResourceManager.GetString("home_SearchClients", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current.
+        /// </summary>
+        public static string invoiceCard_Current {
+            get {
+                return ResourceManager.GetString("invoiceCard_Current", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Invoice.
+        /// </summary>
+        public static string invoiceCard_DeleteInvoice {
+            get {
+                return ResourceManager.GetString("invoiceCard_DeleteInvoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Due.
+        /// </summary>
+        public static string invoiceCard_Due {
+            get {
+                return ResourceManager.GetString("invoiceCard_Due", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Due Soon.
+        /// </summary>
+        public static string invoiceCard_DueSoon {
+            get {
+                return ResourceManager.GetString("invoiceCard_DueSoon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Invoice.
+        /// </summary>
+        public static string invoiceCard_EditInvoice {
+            get {
+                return ResourceManager.GetString("invoiceCard_EditInvoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expenses.
+        /// </summary>
+        public static string invoiceCard_Expenses {
+            get {
+                return ResourceManager.GetString("invoiceCard_Expenses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export to Excel.
+        /// </summary>
+        public static string invoiceCard_ExportToExcel {
+            get {
+                return ResourceManager.GetString("invoiceCard_ExportToExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Financial Summary.
+        /// </summary>
+        public static string invoiceCard_FinancialSummary {
+            get {
+                return ResourceManager.GetString("invoiceCard_FinancialSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Issued.
+        /// </summary>
+        public static string invoiceCard_Issued {
+            get {
+                return ResourceManager.GetString("invoiceCard_Issued", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Items Total.
+        /// </summary>
+        public static string invoiceCard_ItemsTotal {
+            get {
+                return ResourceManager.GetString("invoiceCard_ItemsTotal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage Files.
+        /// </summary>
+        public static string invoiceCard_ManageFiles {
+            get {
+                return ResourceManager.GetString("invoiceCard_ManageFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage Items.
+        /// </summary>
+        public static string invoiceCard_ManageItems {
+            get {
+                return ResourceManager.GetString("invoiceCard_ManageItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Net Total.
+        /// </summary>
+        public static string invoiceCard_NetTotal {
+            get {
+                return ResourceManager.GetString("invoiceCard_NetTotal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Costs.
+        /// </summary>
+        public static string invoiceCard_NoCosts {
+            get {
+                return ResourceManager.GetString("invoiceCard_NoCosts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Overdue.
+        /// </summary>
+        public static string invoiceCard_Overdue {
+            get {
+                return ResourceManager.GetString("invoiceCard_Overdue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preview & Export PDF.
+        /// </summary>
+        public static string invoiceCard_PreviewExportPDF {
+            get {
+                return ResourceManager.GetString("invoiceCard_PreviewExportPDF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profit Margin.
+        /// </summary>
+        public static string invoiceCard_ProfitMargin {
+            get {
+                return ResourceManager.GetString("invoiceCard_ProfitMargin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service.
+        /// </summary>
+        public static string invoiceCard_Service {
+            get {
+                return ResourceManager.GetString("invoiceCard_Service", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task.
+        /// </summary>
+        public static string invoiceCard_Task {
+            get {
+                return ResourceManager.GetString("invoiceCard_Task", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tasks.
+        /// </summary>
+        public static string invoiceCard_Tasks {
+            get {
+                return ResourceManager.GetString("invoiceCard_Tasks", resourceCulture);
             }
         }
         
@@ -502,6 +1033,15 @@ namespace ClivoxApp {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attachments.
+        /// </summary>
+        public static string jobs_Attachments {
+            get {
+                return ResourceManager.GetString("jobs_Attachments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Loading client....
         /// </summary>
         public static string jobs_ClientLoading {
@@ -529,11 +1069,38 @@ namespace ClivoxApp {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Expense proof files updated.
+        /// </summary>
+        public static string jobs_ExpenseFilesUpdatedSuccess {
+            get {
+                return ResourceManager.GetString("jobs_ExpenseFilesUpdatedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expenses.
+        /// </summary>
+        public static string jobs_Expenses {
+            get {
+                return ResourceManager.GetString("jobs_Expenses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Export to Excel.
         /// </summary>
         public static string jobs_ExportToExcel {
             get {
                 return ResourceManager.GetString("jobs_ExportToExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invoice data updated.
+        /// </summary>
+        public static string jobs_InvoiceUpdatedSuccess {
+            get {
+                return ResourceManager.GetString("jobs_InvoiceUpdatedSuccess", resourceCulture);
             }
         }
         
@@ -556,56 +1123,20 @@ namespace ClivoxApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Total.
-        /// </summary>
-        public static string jobs_Total {
-            get {
-                return ResourceManager.GetString("jobs_Total", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Expenses.
-        /// </summary>
-        public static string jobs_Expenses {
-            get {
-                return ResourceManager.GetString("jobs_Expenses", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Attachments.
-        /// </summary>
-        public static string jobs_Attachments {
-            get {
-                return ResourceManager.GetString("jobs_Attachments", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invoice data updated.
-        /// </summary>
-        public static string jobs_InvoiceUpdatedSuccess {
-            get {
-                return ResourceManager.GetString("jobs_InvoiceUpdatedSuccess", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Expense proof files updated.
-        /// </summary>
-        public static string jobs_ExpenseFilesUpdatedSuccess {
-            get {
-                return ResourceManager.GetString("jobs_ExpenseFilesUpdatedSuccess", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to No changes detected. Invoice was not updated..
         /// </summary>
         public static string jobs_NoChangesDetected {
             get {
                 return ResourceManager.GetString("jobs_NoChangesDetected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total.
+        /// </summary>
+        public static string jobs_Total {
+            get {
+                return ResourceManager.GetString("jobs_Total", resourceCulture);
             }
         }
         
@@ -619,245 +1150,245 @@ namespace ClivoxApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expense Proof Files.
+        ///   Looks up a localized string similar to Authentication Error.
         /// </summary>
-        public static string expenseProofFiles_Title {
+        public static string mainLayout_AuthenticationError {
             get {
-                return ResourceManager.GetString("expenseProofFiles_Title", resourceCulture);
+                return ResourceManager.GetString("mainLayout_AuthenticationError", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Upload Proof Files.
+        ///   Looks up a localized string similar to Checking database connection and user credentials....
         /// </summary>
-        public static string expenseProofFiles_UploadButton {
+        public static string mainLayout_CheckingDatabase {
             get {
-                return ResourceManager.GetString("expenseProofFiles_UploadButton", resourceCulture);
+                return ResourceManager.GetString("mainLayout_CheckingDatabase", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Supported: PDF, Images (JPG, PNG), Word, Excel files.
+        ///   Looks up a localized string similar to Initializing authentication....
         /// </summary>
-        public static string expenseProofFiles_SupportedFormats {
+        public static string mainLayout_InitializingAuthentication {
             get {
-                return ResourceManager.GetString("expenseProofFiles_SupportedFormats", resourceCulture);
+                return ResourceManager.GetString("mainLayout_InitializingAuthentication", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Attached Files:.
+        ///   Looks up a localized string similar to Lock Session.
         /// </summary>
-        public static string expenseProofFiles_AttachedFiles {
+        public static string mainLayout_LockSession {
             get {
-                return ResourceManager.GetString("expenseProofFiles_AttachedFiles", resourceCulture);
+                return ResourceManager.GetString("mainLayout_LockSession", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No expense proof files attached. Upload files to provide documentation for your expenses..
+        ///   Looks up a localized string similar to Logout.
         /// </summary>
-        public static string expenseProofFiles_NoFiles {
+        public static string mainLayout_Logout {
             get {
-                return ResourceManager.GetString("expenseProofFiles_NoFiles", resourceCulture);
+                return ResourceManager.GetString("mainLayout_Logout", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Total Expense Amount:.
+        ///   Looks up a localized string similar to Retry.
         /// </summary>
-        public static string expenseProofFiles_TotalAmount {
+        public static string mainLayout_Retry {
             get {
-                return ResourceManager.GetString("expenseProofFiles_TotalAmount", resourceCulture);
+                return ResourceManager.GetString("mainLayout_Retry", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit details.
+        ///   Looks up a localized string similar to Test Login Dialog.
         /// </summary>
-        public static string expenseProofFiles_EditDetails {
+        public static string mainLayout_TestLoginDialog {
             get {
-                return ResourceManager.GetString("expenseProofFiles_EditDetails", resourceCulture);
+                return ResourceManager.GetString("mainLayout_TestLoginDialog", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Download file.
+        ///   Looks up a localized string similar to Welcome.
         /// </summary>
-        public static string expenseProofFiles_DownloadFile {
+        public static string mainLayout_Welcome {
             get {
-                return ResourceManager.GetString("expenseProofFiles_DownloadFile", resourceCulture);
+                return ResourceManager.GetString("mainLayout_Welcome", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remove file.
+        ///   Looks up a localized string similar to Company name is required.
         /// </summary>
-        public static string expenseProofFiles_RemoveFile {
+        public static string validation_CompanyNameRequired {
             get {
-                return ResourceManager.GetString("expenseProofFiles_RemoveFile", resourceCulture);
+                return ResourceManager.GetString("validation_CompanyNameRequired", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit File Details.
+        ///   Looks up a localized string similar to Company name is required for company clients..
         /// </summary>
-        public static string fileDetailsDialog_Title {
+        public static string validation_CompanyNameRequiredForCompany {
             get {
-                return ResourceManager.GetString("fileDetailsDialog_Title", resourceCulture);
+                return ResourceManager.GetString("validation_CompanyNameRequiredForCompany", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add File Details.
+        ///   Looks up a localized string similar to First name is required.
         /// </summary>
-        public static string fileDetailsDialog_AddTitle {
+        public static string validation_FirstNameRequired {
             get {
-                return ResourceManager.GetString("fileDetailsDialog_AddTitle", resourceCulture);
+                return ResourceManager.GetString("validation_FirstNameRequired", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File Description.
+        ///   Looks up a localized string similar to First name is required for individual clients..
         /// </summary>
-        public static string fileDetailsDialog_FileDescription {
+        public static string validation_FirstNameRequiredForIndividual {
             get {
-                return ResourceManager.GetString("fileDetailsDialog_FileDescription", resourceCulture);
+                return ResourceManager.GetString("validation_FirstNameRequiredForIndividual", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter a description for this expense proof file....
+        ///   Looks up a localized string similar to Invalid email format..
         /// </summary>
-        public static string fileDetailsDialog_DescriptionPlaceholder {
+        public static string validation_InvalidEmailFormat {
             get {
-                return ResourceManager.GetString("fileDetailsDialog_DescriptionPlaceholder", resourceCulture);
+                return ResourceManager.GetString("validation_InvalidEmailFormat", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Describe what this expense proof file contains (e.g., 'Restaurant receipt for client dinner', 'Gas station receipt for project travel').
+        ///   Looks up a localized string similar to Invalid German phone number format..
         /// </summary>
-        public static string fileDetailsDialog_DescriptionHelper {
+        public static string validation_InvalidGermanPhoneFormat {
             get {
-                return ResourceManager.GetString("fileDetailsDialog_DescriptionHelper", resourceCulture);
+                return ResourceManager.GetString("validation_InvalidGermanPhoneFormat", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expense Amount (€).
+        ///   Looks up a localized string similar to Last name is required.
         /// </summary>
-        public static string fileDetailsDialog_ExpenseAmount {
+        public static string validation_LastNameRequired {
             get {
-                return ResourceManager.GetString("fileDetailsDialog_ExpenseAmount", resourceCulture);
+                return ResourceManager.GetString("validation_LastNameRequired", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter the total expense amount documented in this file.
+        ///   Looks up a localized string similar to Last name is required for individual clients..
         /// </summary>
-        public static string fileDetailsDialog_AmountHelper {
+        public static string validation_LastNameRequiredForIndividual {
             get {
-                return ResourceManager.GetString("fileDetailsDialog_AmountHelper", resourceCulture);
+                return ResourceManager.GetString("validation_LastNameRequiredForIndividual", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 💡 Tip: Adding description and amount helps you track expenses better and makes invoice management easier..
+        ///   Looks up a localized string similar to Phone number is required.
         /// </summary>
-        public static string fileDetailsDialog_Tip {
+        public static string validation_PhoneNumberRequired {
             get {
-                return ResourceManager.GetString("fileDetailsDialog_Tip", resourceCulture);
+                return ResourceManager.GetString("validation_PhoneNumberRequired", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Save Details.
+        ///   Looks up a localized string similar to Client is required..
         /// </summary>
-        public static string fileDetailsDialog_Save {
+        public static string validation_ClientRequired {
             get {
-                return ResourceManager.GetString("fileDetailsDialog_Save", resourceCulture);
+                return ResourceManager.GetString("validation_ClientRequired", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Skip (Add Later).
+        ///   Looks up a localized string similar to Invoice must have at least one item..
         /// </summary>
-        public static string fileDetailsDialog_Skip {
+        public static string validation_InvoiceMustHaveOneItem {
             get {
-                return ResourceManager.GetString("fileDetailsDialog_Skip", resourceCulture);
+                return ResourceManager.GetString("validation_InvoiceMustHaveOneItem", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File uploaded successfully! Please add details below:.
+        ///   Looks up a localized string similar to Invoice number is required..
         /// </summary>
-        public static string fileDetailsDialog_FileUploadedSuccess {
+        public static string validation_InvoiceNumberRequired {
             get {
-                return ResourceManager.GetString("fileDetailsDialog_FileUploadedSuccess", resourceCulture);
+                return ResourceManager.GetString("validation_InvoiceNumberRequired", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File {0} is too large. Maximum size is 10 MB..
+        ///   Looks up a localized string similar to Invoice validation failed:.
         /// </summary>
-        public static string fileUpload_FileTooLarge {
+        public static string validation_InvoiceValidationFailed {
             get {
-                return ResourceManager.GetString("fileUpload_FileTooLarge", resourceCulture);
+                return ResourceManager.GetString("validation_InvoiceValidationFailed", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Successfully uploaded file with details..
+        ///   Looks up a localized string similar to Item {0}: Area must be greater than 0..
         /// </summary>
-        public static string fileUpload_SuccessWithDetails {
+        public static string validation_ItemAreaGreaterThanZero {
             get {
-                return ResourceManager.GetString("fileUpload_SuccessWithDetails", resourceCulture);
+                return ResourceManager.GetString("validation_ItemAreaGreaterThanZero", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File uploaded. You can add details later by clicking the edit button..
+        ///   Looks up a localized string similar to Item {0}: Description is required..
         /// </summary>
-        public static string fileUpload_SuccessAddLater {
+        public static string validation_ItemDescriptionRequired {
             get {
-                return ResourceManager.GetString("fileUpload_SuccessAddLater", resourceCulture);
+                return ResourceManager.GetString("validation_ItemDescriptionRequired", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error uploading files: {0}.
+        ///   Looks up a localized string similar to Item {0}: Fixed amount must be greater than 0..
         /// </summary>
-        public static string fileUpload_Error {
+        public static string validation_ItemFixedAmountGreaterThanZero {
             get {
-                return ResourceManager.GetString("fileUpload_Error", resourceCulture);
+                return ResourceManager.GetString("validation_ItemFixedAmountGreaterThanZero", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File removed successfully..
+        ///   Looks up a localized string similar to Item {0}: Price per square meter must be greater than 0..
         /// </summary>
-        public static string fileUpload_RemoveSuccess {
+        public static string validation_ItemPricePerSquareMeterGreaterThanZero {
             get {
-                return ResourceManager.GetString("fileUpload_RemoveSuccess", resourceCulture);
+                return ResourceManager.GetString("validation_ItemPricePerSquareMeterGreaterThanZero", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File downloaded successfully..
+        ///   Looks up a localized string similar to Item {0}: Quantity must be greater than 0..
         /// </summary>
-        public static string fileUpload_DownloadSuccess {
+        public static string validation_ItemQuantityGreaterThanZero {
             get {
-                return ResourceManager.GetString("fileUpload_DownloadSuccess", resourceCulture);
+                return ResourceManager.GetString("validation_ItemQuantityGreaterThanZero", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error downloading file: {0}.
+        ///   Looks up a localized string similar to Item {0}: Unit price must be greater than 0..
         /// </summary>
-        public static string fileUpload_DownloadError {
+        public static string validation_ItemUnitPriceGreaterThanZero {
             get {
-                return ResourceManager.GetString("fileUpload_DownloadError", resourceCulture);
+                return ResourceManager.GetString("validation_ItemUnitPriceGreaterThanZero", resourceCulture);
             }
         }
     }

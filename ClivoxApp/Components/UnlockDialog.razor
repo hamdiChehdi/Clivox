@@ -1,0 +1,64 @@
+@using ClivoxApp.Services
+
+<MudDialog>
+    <TitleContent>
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+            <MudIcon Icon="@Icons.Material.Filled.LockOpen" />
+            <MudText Typo="Typo.h6">Unlock Session</MudText>
+        </MudStack>
+    </TitleContent>
+    <DialogContent>
+        <MudContainer Style="max-width: 350px;">
+            <MudStack Spacing="3">
+                <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">
+                    Your session is locked. Please enter your password to continue.
+                </MudAlert>
+
+                @if (!string.IsNullOrEmpty(_errorMessage))
+                {
+                    <MudAlert Severity="Severity.Error" Variant="Variant.Filled">
+                        @_errorMessage
+                    </MudAlert>
+                }
+
+                <MudTextField @bind-Value="_password"
+                              Label="Password"
+                              Variant="Variant.Outlined"
+                              InputType="@(_showPassword ? InputType.Text : InputType.Password)"
+                              StartIcon="@Icons.Material.Filled.Key"
+                              EndIcon="@(_showPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
+                              OnEndIconClick="@TogglePasswordVisibility"
+                              Required="true"
+                              Disabled="_isLoading"
+                              OnKeyPress="@OnKeyPress"
+                              Immediate="true" />
+            </MudStack>
+        </MudContainer>
+    </DialogContent>
+    <DialogActions>
+        <MudStack Row="true" Spacing="2">
+            <MudButton OnClick="@Unlock"
+                       Color="Color.Primary"
+                       Variant="Variant.Filled"
+                       StartIcon="@Icons.Material.Filled.LockOpen"
+                       Disabled="_isLoading">
+                @if (_isLoading)
+                {
+                    <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+                    <text>Unlocking...</text>
+                }
+                else
+                {
+                    <text>Unlock</text>
+                }
+            </MudButton>
+            <MudButton OnClick="@Logout"
+                       Color="Color.Error"
+                       Variant="Variant.Outlined"
+                       StartIcon="@Icons.Material.Filled.Logout"
+                       Disabled="_isLoading">
+                Logout
+            </MudButton>
+        </MudStack>
+    </DialogActions>
+</MudDialog>

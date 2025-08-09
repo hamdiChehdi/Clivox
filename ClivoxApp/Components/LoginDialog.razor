@@ -1,0 +1,78 @@
+@using ClivoxApp.Models.Auth
+@using ClivoxApp.Services
+
+<MudDialog>
+    <TitleContent>
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+            <MudIcon Icon="@Icons.Material.Filled.Lock" />
+            <MudText Typo="Typo.h6">Login to ClivoxApp</MudText>
+        </MudStack>
+    </TitleContent>
+    <DialogContent>
+        <MudContainer Style="max-width: 400px;">
+            <MudStack Spacing="4">
+                <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">
+                    Please enter your credentials to access the application.
+                    <br/>
+                    <strong>Default:</strong> admin / Admin123!
+                </MudAlert>
+
+                @if (!string.IsNullOrEmpty(_errorMessage))
+                {
+                    <MudAlert Severity="Severity.Error" Variant="Variant.Filled">
+                        @_errorMessage
+                    </MudAlert>
+                }
+
+                <MudTextField @bind-Value="_username"
+                              Label="Username"
+                              Variant="Variant.Outlined"
+                              StartIcon="@Icons.Material.Filled.Person"
+                              Required="true"
+                              Disabled="_isLoading"
+                              OnKeyPress="@OnKeyPress" />
+
+                <MudTextField @bind-Value="_password"
+                              Label="Password"
+                              Variant="Variant.Outlined"
+                              InputType="@(_showPassword ? InputType.Text : InputType.Password)"
+                              StartIcon="@Icons.Material.Filled.Key"
+                              EndIcon="@(_showPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
+                              OnEndIconClick="@TogglePasswordVisibility"
+                              Required="true"
+                              Disabled="_isLoading"
+                              OnKeyPress="@OnKeyPress" />
+
+                <MudCheckBox @bind-Value="_rememberMe"
+                             Label="Remember me for 7 days"
+                             Color="Color.Primary"
+                             Disabled="_isLoading" />
+            </MudStack>
+        </MudContainer>
+    </DialogContent>
+    <DialogActions>
+        <MudStack Row="true" Spacing="2">
+            <MudButton OnClick="@Login"
+                       Color="Color.Primary"
+                       Variant="Variant.Filled"
+                       StartIcon="@Icons.Material.Filled.Login"
+                       Disabled="_isLoading">
+                @if (_isLoading)
+                {
+                    <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+                    <text>Logging in...</text>
+                }
+                else
+                {
+                    <text>Login</text>
+                }
+            </MudButton>
+            <MudButton OnClick="@Cancel"
+                       Color="Color.Secondary"
+                       Variant="Variant.Outlined"
+                       Disabled="_isLoading">
+                Cancel
+            </MudButton>
+        </MudStack>
+    </DialogActions>
+</MudDialog>

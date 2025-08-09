@@ -11,7 +11,7 @@
     <div class="page">
         <div class="sidebar">
             <MudGrid>
-                <MudItem xs="3" >
+                <MudItem xs="3">
                     <MudStack Row="true" Justify="Justify.FlexStart">
                         <MudIconButton Icon="@Icons.Material.Filled.Home" Color="Color.Primary" OnClick="NavigateToHome" Size="Size.Large" Class="mt-2" Style=" height:40px;width:40px;margin-bottom:8px;" />
                         <MudButton StartIcon="@Icons.Material.Filled.AccountBox" Color="Color.Primary" Variant="Variant.Filled" Class="mt-2" Size="Size.Small" OnClick="OpenBusinessOwnerDialog" Style="max-width: 175px">
@@ -19,69 +19,65 @@
                         </MudButton>
                     </MudStack>
                 </MudItem>
-                <MudItem xs="1">
+                <MudItem xs="2">
+                    <!-- User Info -->
+                    <MudStack Spacing="0" Class="mr-2">
+                        <MudText Typo="Typo.caption" Color="Color.Secondary">Welcome</MudText>
+                        <MudText Typo="Typo.body2" Style="font-weight: 500;">@_currentUserName</MudText>
+                    </MudStack>
                 </MudItem>
-                 <MudItem xs="3">
-                    <!--<MudImage Src="images/bache_enduit.png" Height="80" Width="250" Alt=" Mony the dog" Elevation="25" Class="rounded-lg mt-2" />-->
+                <MudItem xs="3">
                 </MudItem>
-               
-                <MudItem xs="5">
-                    <MudStack Row="true" Spacing="1">
-                        <!-- User Info -->
-                        <MudStack Spacing="0" Class="mr-2">
-                            <MudText Typo="Typo.caption" Color="Color.Secondary">Welcome</MudText>
-                            <MudText Typo="Typo.body2" Style="font-weight: 500;">@_currentUserName</MudText>
-                        </MudStack>
-                        
-                        <!-- Lock Session Button -->
-                        <MudTooltip Text="Lock Session">
-                            <MudIconButton Icon="@Icons.Material.Filled.Lock" 
-                                         Color="Color.Warning" 
-                                         OnClick="LockSession" 
-                                         Size="Size.Small" />
-                        </MudTooltip>
-                        
-                        <!-- Logout Button -->
-                        <MudTooltip Text="Logout">
-                            <MudIconButton Icon="@Icons.Material.Filled.Logout" 
-                                         Color="Color.Error" 
-                                         OnClick="Logout" 
-                                         Size="Size.Small" />
-                        </MudTooltip>
-
-                        <MudSwitch Value="_isDarkMode" 
-                                   Color="Color.Primary" 
-                                   Class="ma-4" 
+                <MudItem xs="4">
+                    <MudStack Row="true">
+                        <MudSwitch Value="_isDarkMode"
+                                   Color="Color.Primary"
+                                   Class="ma-2"
                                    T="bool"
                                    ValueChanged="@(async (bool value) => { _isDarkMode = value; await OnThemeChanged(); })">
-                                @if (_isDarkMode)
-                                {
-                                    <MudIcon Icon="@Icons.Material.Filled.DarkMode" />
-                                }
-                                else
-                                {
-                                    <MudIcon Icon="@Icons.Material.Filled.LightMode" />
-                                }
-                            </MudSwitch>
-                        
-                            <MudSelect T="string"
-                                       Label="Language"
-                                       Variant="Variant.Outlined"
-                                       ValueChanged="ChangeLanguage"
-                                       Style="min-width: 80px;max-width: 200px">
-                                <MudSelectItem Value="@("en")">
-                                    <div style="display: flex; align-items: center; margin-top: 8px;">
-                                        <MudImage Src="images/en.jpg" alt="English" class="mr-5" Width="25" Height="25" />
-                                        English
-                                    </div>
-                                </MudSelectItem>
-                                <MudSelectItem Value="@("de")">
-                                    <div style="display: flex; align-items: center; margin-top: 8px;">
-                                        <MudImage Src="images/de.jpg" alt="German" class="mr-5" Width="25" Height="25" />
-                                        German
-                                    </div>
-                                </MudSelectItem>
-                            </MudSelect>
+                            @if (_isDarkMode)
+                            {
+                                <MudIcon Icon="@Icons.Material.Filled.DarkMode" />
+                            }
+                            else
+                            {
+                                <MudIcon Icon="@Icons.Material.Filled.LightMode" />
+                            }
+                        </MudSwitch>
+
+                        <MudSelect T="string"
+                                   Label="Language"
+                                   Variant="Variant.Outlined"
+                                   ValueChanged="ChangeLanguage"
+                                   Style="min-width: 80px;max-width: 200px">
+                            <MudSelectItem Value="@("en")">
+                                <div style="display: flex; align-items: center; margin-top: 8px;">
+                                    <MudImage Src="images/en.jpg" alt="English" class="mr-5" Width="25" Height="25" />
+                                    English
+                                </div>
+                            </MudSelectItem>
+                            <MudSelectItem Value="@("de")">
+                                <div style="display: flex; align-items: center; margin-top: 8px;">
+                                    <MudImage Src="images/de.jpg" alt="German" class="mr-5" Width="25" Height="25" />
+                                    German
+                                </div>
+                            </MudSelectItem>
+                        </MudSelect>
+                        <!-- Lock Session Button -->
+                        <MudTooltip Text="Lock Session">
+                            <MudIconButton Icon="@Icons.Material.Filled.Lock"
+                                           Color="Color.Warning"
+                                           OnClick="LockSession"
+                                           Size="Size.Large" />
+                        </MudTooltip>
+
+                        <!-- Logout Button -->
+                        <MudTooltip Text="Logout">
+                            <MudIconButton Icon="@Icons.Material.Filled.Logout"
+                                           Color="Color.Error"
+                                           OnClick="Logout"
+                                           Size="Size.Large" />
+                        </MudTooltip>
                     </MudStack>
                 </MudItem>
             </MudGrid>
@@ -89,7 +85,6 @@
 
         <main>
             <div class="top-row px-4">
-                
             </div>
 
             <article class="content px-4">
@@ -127,10 +122,10 @@ else
                     Checking database connection and user credentials...
                 </MudText>
             }
-            
+
             <!-- Temporary test button for login dialog -->
-            <MudButton Color="Color.Warning" 
-                       Variant="Variant.Filled" 
+            <MudButton Color="Color.Warning"
+                       Variant="Variant.Filled"
                        OnClick="TestShowLoginDialog"
                        Style="margin-top: 20px;">
                 Test Login Dialog

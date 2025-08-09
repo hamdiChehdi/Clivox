@@ -3,17 +3,73 @@
 
 <style>
     .financial-header:hover {
-        background-color: rgba(25, 118, 210, 0.05) !important;
+        background-color: var(--mud-palette-action-hover) !important;
     }
     .invoice-card-container {
         cursor: default;
+        background-color: var(--mud-palette-surface) !important;
+        color: var(--mud-palette-text-primary) !important;
     }
     .financial-header {
         cursor: pointer;
     }
     .expanded-icon {
-        background-color: rgba(25, 118, 210, 0.1) !important;
+        background-color: var(--mud-palette-primary-hover) !important;
         border-radius: 50%;
+    }
+    .date-card {
+        background: var(--mud-palette-background-grey) !important;
+        color: var(--mud-palette-text-primary) !important;
+    }
+    .date-card-overdue {
+        background: var(--mud-palette-error-lighten) !important;
+        color: var(--mud-palette-text-primary) !important;
+    }
+    .date-card-service {
+        background: var(--mud-palette-background-grey) !important;
+        color: var(--mud-palette-text-primary) !important;
+    }
+    .financial-summary-container {
+        background: var(--mud-palette-background-grey) !important;
+        border: 1px solid var(--mud-palette-table-lines) !important;
+    }
+    .action-bar {
+        background: var(--mud-palette-background-grey) !important;
+        border-top: 1px solid var(--mud-palette-table-lines) !important;
+    }
+    
+    /* Theme-aware card styling */
+    .invoice-card-container:hover {
+        box-shadow: var(--mud-elevation-8) !important;
+        transform: translateY(-2px);
+        transition: all 0.3s ease !important;
+    }
+    
+    /* Dark theme specific adjustments */
+    .mud-theme-dark .invoice-card-container {
+        border-color: var(--mud-palette-dark-divider) !important;
+    }
+    
+    .mud-theme-dark .date-card {
+        background: rgba(255, 255, 255, 0.05) !important;
+    }
+    
+    .mud-theme-dark .date-card-overdue {
+        background: rgba(244, 67, 54, 0.15) !important;
+    }
+    
+    .mud-theme-dark .date-card-service {
+        background: rgba(33, 150, 243, 0.15) !important;
+    }
+    
+    .mud-theme-dark .financial-summary-container {
+        background: rgba(255, 255, 255, 0.03) !important;
+        border-color: rgba(255, 255, 255, 0.12) !important;
+    }
+    
+    .mud-theme-dark .action-bar {
+        background: rgba(255, 255, 255, 0.03) !important;
+        border-top-color: rgba(255, 255, 255, 0.12) !important;
     }
 </style>
 
@@ -53,67 +109,67 @@
             <!-- Date Information Grid -->
             <MudGrid>
                 <MudItem xs="4">
-                    <div style="text-align: center; padding: 12px; background: #f8f9fa; border-radius: 12px;">
+                    <MudPaper Class="date-card pa-3" Elevation="1" Style="text-align: center; border-radius: 12px;">
                         <MudIcon Icon="@Icons.Material.Filled.CalendarToday" Size="Size.Small" Color="Color.Primary" Style="margin-bottom: 4px;" />
                         <MudText Typo="Typo.caption" Color="Color.Secondary" Style="font-weight: 600; text-transform: uppercase; font-size: 0.7rem;">Issued</MudText>
-                        <MudText Typo="Typo.body2" Style="font-weight: 600; color: #333;">@Invoice.InvoiceDate.ToString("dd MMM")</MudText>
-                    </div>
+                        <MudText Typo="Typo.body2" Style="font-weight: 600;">@Invoice.InvoiceDate.ToString("dd MMM")</MudText>
+                    </MudPaper>
                 </MudItem>
                 <MudItem xs="4">
-                    <div style="text-align: center; padding: 12px; background: @(IsOverdue(Invoice) ? "#ffebee" : "#f8f9fa"); border-radius: 12px;">
+                    <MudPaper Class="@($"{(IsOverdue(Invoice) ? "date-card-overdue" : "date-card")} pa-3")" Elevation="1" Style="text-align: center; border-radius: 12px;">
                         <MudIcon Icon="@Icons.Material.Filled.Event" Size="Size.Small" Color="@(IsOverdue(Invoice) ? Color.Error : Color.Warning)" Style="margin-bottom: 4px;" />
                         <MudText Typo="Typo.caption" Color="Color.Secondary" Style="font-weight: 600; text-transform: uppercase; font-size: 0.7rem;">Due</MudText>
-                        <MudText Typo="Typo.body2" Style="@($"font-weight: 600; color: {(IsOverdue(Invoice) ? "#d32f2f" : "#333")};")">@Invoice.DueDate.ToString("dd MMM")</MudText>
-                    </div>
+                        <MudText Typo="Typo.body2" Style="font-weight: 600;" Color="@(IsOverdue(Invoice) ? Color.Error : Color.Default)">@Invoice.DueDate.ToString("dd MMM")</MudText>
+                    </MudPaper>
                 </MudItem>
                 <MudItem xs="4">
-                    <div style="text-align: center; padding: 12px; background: #e3f2fd; border-radius: 12px;">
+                    <MudPaper Class="date-card-service pa-3" Elevation="1" Style="text-align: center; border-radius: 12px;">
                         <MudIcon Icon="@Icons.Material.Filled.Work" Size="Size.Small" Color="Color.Info" Style="margin-bottom: 4px;" />
                         <MudText Typo="Typo.caption" Color="Color.Secondary" Style="font-weight: 600; text-transform: uppercase; font-size: 0.7rem;">Service</MudText>
-                        <MudText Typo="Typo.body2" Style="font-weight: 600; color: #333;">@Invoice.ServiceDate.ToString("dd MMM")</MudText>
-                    </div>
+                        <MudText Typo="Typo.body2" Style="font-weight: 600;">@Invoice.ServiceDate.ToString("dd MMM")</MudText>
+                    </MudPaper>
                 </MudItem>
             </MudGrid>
 
             <!-- Quick Stats -->
             <MudGrid>
                 <MudItem xs="6">
-                    <div style="text-align: center; padding: 16px; background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%); border-radius: 12px;">
+                    <MudPaper Elevation="1" Style="text-align: center; padding: 16px; background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.2) 100%); border-radius: 12px; border: 1px solid rgba(76, 175, 80, 0.3);">
                         <MudIcon Icon="@Icons.Material.Filled.ListAlt" Color="Color.Success" Size="Size.Medium" Style="margin-bottom: 8px;" />
-                        <MudText Typo="Typo.h6" Style="color: #2E7D32; font-weight: 700; margin-bottom: 4px;">@Invoice.Items.Count</MudText>
-                        <MudText Typo="Typo.caption" Style="color: #388E3C; font-weight: 600; text-transform: uppercase; font-size: 0.7rem;">@(Invoice.Items.Count == 1 ? "Task" : "Tasks")</MudText>
-                        <MudText Typo="Typo.caption" Style="color: #2E7D32; font-weight: 600; font-size: 0.7rem; margin-top: 2px;">
+                        <MudText Typo="Typo.h6" Color="Color.Success" Style="font-weight: 700; margin-bottom: 4px;">@Invoice.Items.Count</MudText>
+                        <MudText Typo="Typo.caption" Color="Color.Success" Style="font-weight: 600; text-transform: uppercase; font-size: 0.7rem;">@(Invoice.Items.Count == 1 ? "Task" : "Tasks")</MudText>
+                        <MudText Typo="Typo.caption" Color="Color.Success" Style="font-weight: 600; font-size: 0.7rem; margin-top: 2px;">
                             @Invoice.ItemsTotal.ToString("C", CultureInfo.GetCultureInfo("de-DE"))
                         </MudText>
-                    </div>
+                    </MudPaper>
                 </MudItem>
                 <MudItem xs="6">
                     @{
                         var attachmentCount = Invoice.ExpenseProofFiles?.Count ?? 0;
                         var expenseAmount = Invoice.ExpenseProofFiles?.Sum(x => x.Amount) ?? 0;
                     }
-                    <div style="text-align: center; padding: 16px; background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-radius: 12px;">
+                    <MudPaper Elevation="1" Style="text-align: center; padding: 16px; background: linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, rgba(255, 152, 0, 0.2) 100%); border-radius: 12px; border: 1px solid rgba(255, 152, 0, 0.3);">
                         <MudIcon Icon="@Icons.Material.Filled.Receipt" Color="Color.Warning" Size="Size.Medium" Style="margin-bottom: 8px;" />
-                        <MudText Typo="Typo.h6" Style="color: #F57C00; font-weight: 700; margin-bottom: 4px;">@attachmentCount</MudText>
-                        <MudText Typo="Typo.caption" Style="color: #FF8F00; font-weight: 600; text-transform: uppercase; font-size: 0.7rem;">Expenses </MudText>
+                        <MudText Typo="Typo.h6" Color="Color.Warning" Style="font-weight: 700; margin-bottom: 4px;">@attachmentCount</MudText>
+                        <MudText Typo="Typo.caption" Color="Color.Warning" Style="font-weight: 600; text-transform: uppercase; font-size: 0.7rem;">Expenses </MudText>
                         @if (expenseAmount > 0)
                         {
-                            <MudText Typo="Typo.caption" Style="color: #E65100; font-weight: 600; font-size: 0.7rem; margin-top: 2px;">
+                            <MudText Typo="Typo.caption" Color="Color.Warning" Style="font-weight: 600; font-size: 0.7rem; margin-top: 2px;">
                                 @expenseAmount.ToString("C", CultureInfo.GetCultureInfo("de-DE"))
                             </MudText>
                         }
                         else
                         {
-                            <MudText Typo="Typo.caption" Style="color: #FF8F00; font-weight: 600; font-size: 0.7rem; margin-top: 2px;">
+                            <MudText Typo="Typo.caption" Color="Color.Warning" Style="font-weight: 600; font-size: 0.7rem; margin-top: 2px;">
                                 No Costs
                             </MudText>
                         }
-                    </div>
+                    </MudPaper>
                 </MudItem>
             </MudGrid>
 
             <!-- Financial Breakdown Expander -->
-            <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 16px; border: 1px solid #dee2e6; overflow: hidden;">
+            <MudPaper Class="financial-summary-container" Elevation="1" Style="border-radius: 16px; overflow: hidden;">
                 <!-- Expandable Header -->
                 <div class="financial-header" 
                      style="padding: 16px; transition: all 0.2s ease; background: transparent;" 
@@ -122,7 +178,7 @@
                     <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <MudIcon Icon="@Icons.Material.Filled.Analytics" Color="Color.Primary" Size="Size.Medium" />
-                            <MudText Typo="Typo.subtitle2" Style="color: #495057; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Financial Summary</MudText>
+                            <MudText Typo="Typo.subtitle2" Color="Color.Primary" Style="font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Financial Summary</MudText>
                         </div>
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <!-- Quick Net Total Preview -->
@@ -145,15 +201,15 @@
                     <div style="padding: 0 20px 20px 20px;">
                         <MudStack Spacing="3">
                             <!-- Items Total (Revenue) -->
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%); border-radius: 8px;">
+                            <MudPaper Elevation="1" Style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.2) 100%); border-radius: 8px; border: 1px solid rgba(76, 175, 80, 0.3);">
                                 <div style="display: flex; align-items: center; gap: 8px;">
                                     <MudIcon Icon="@Icons.Material.Filled.TrendingUp" Size="Size.Small" Color="Color.Success" />
-                                    <MudText Typo="Typo.body2" Style="color: #2E7D32; font-weight: 600;">Items Total</MudText>
+                                    <MudText Typo="Typo.body2" Color="Color.Success" Style="font-weight: 600;">Items Total</MudText>
                                 </div>
-                                <MudText Typo="Typo.body1" Style="color: #1B5E20; font-weight: 700;">
+                                <MudText Typo="Typo.body1" Color="Color.Success" Style="font-weight: 700;">
                                     @Invoice.ItemsTotal.ToString("C", CultureInfo.GetCultureInfo("de-DE"))
                                 </MudText>
-                            </div>
+                            </MudPaper>
 
                             <!-- Expenses Total (Costs) -->
                             @{
@@ -161,52 +217,52 @@
                             }
                             @if (hasExpenses)
                             {
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%); border-radius: 8px;">
+                                <MudPaper Elevation="1" Style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.2) 100%); border-radius: 8px; border: 1px solid rgba(244, 67, 54, 0.3);">
                                     <div style="display: flex; align-items: center; gap: 8px;">
                                         <MudIcon Icon="@Icons.Material.Filled.TrendingDown" Size="Size.Small" Color="Color.Error" />
-                                        <MudText Typo="Typo.body2" Style="color: #C62828; font-weight: 600;">Expenses</MudText>
+                                        <MudText Typo="Typo.body2" Color="Color.Error" Style="font-weight: 600;">Expenses</MudText>
                                     </div>
-                                    <MudText Typo="Typo.body1" Style="color: #B71C1C; font-weight: 700;">
+                                    <MudText Typo="Typo.body1" Color="Color.Error" Style="font-weight: 700;">
                                         -@Invoice.ExpensesTotal.ToString("C", CultureInfo.GetCultureInfo("de-DE"))
                                     </MudText>
-                                </div>
+                                </MudPaper>
                             }
 
                             <!-- Divider Line -->
-                            <div style="height: 1px; background: linear-gradient(90deg, transparent, #6c757d, transparent); margin: 8px 0;"></div>
+                            <MudDivider />
 
                             <!-- Net Total (What Client Pays) -->
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-radius: 12px; border: 2px solid #1976D2;">
+                            <MudPaper Elevation="2" Style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: linear-gradient(135deg, rgba(25, 118, 210, 0.1) 0%, rgba(25, 118, 210, 0.2) 100%); border-radius: 12px; border: 2px solid rgba(25, 118, 210, 0.5);">
                                 <div style="display: flex; align-items: center; gap: 10px;">
                                     <MudIcon Icon="@Icons.Material.Filled.AccountBalance" Size="Size.Medium" Color="Color.Primary" />
-                                    <MudText Typo="Typo.h6" Style="color: #0D47A1; font-weight: 700;">Net Total</MudText>
+                                    <MudText Typo="Typo.h6" Color="Color.Primary" Style="font-weight: 700;">Net Total</MudText>
                                 </div>
-                                <MudText Typo="Typo.h5" Style="color: #0D47A1; font-weight: 700;">
+                                <MudText Typo="Typo.h5" Color="Color.Primary" Style="font-weight: 700;">
                                     @Invoice.NetTotal.ToString("C", CultureInfo.GetCultureInfo("de-DE"))
                                 </MudText>
-                            </div>
+                            </MudPaper>
 
                             @if (hasExpenses)
                             {
                                 <!-- Profit Margin Indicator -->
-                                <div style="text-align: center; padding: 8px; background: rgba(108, 117, 125, 0.1); border-radius: 8px;">
-                                    <MudText Typo="Typo.caption" Style="color: #6c757d; font-weight: 600; text-transform: uppercase; font-size: 0.7rem;">Profit Margin</MudText>
+                                <MudPaper Elevation="1" Style="text-align: center; padding: 8px; border-radius: 8px;">
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary" Style="font-weight: 600; text-transform: uppercase; font-size: 0.7rem;">Profit Margin</MudText>
                                     @{
                                         var profitMargin = Invoice.ItemsTotal > 0 ? (Invoice.NetTotal / Invoice.ItemsTotal) * 100 : 0;
-                                        var profitColor = profitMargin >= 70 ? "#4CAF50" : profitMargin >= 50 ? "#FF9800" : "#F44336";
+                                        var profitColor = profitMargin >= 70 ? Color.Success : profitMargin >= 50 ? Color.Warning : Color.Error;
                                     }
-                                    <MudText Typo="Typo.body2" Style="@($"color: {profitColor}; font-weight: 700;")">@profitMargin.ToString("F1")%</MudText>
-                                </div>
+                                    <MudText Typo="Typo.body2" Color="@profitColor" Style="font-weight: 700;">@profitMargin.ToString("F1")%</MudText>
+                                </MudPaper>
                             }
                         </MudStack>
                     </div>
                 </MudCollapse>
-            </div>
+            </MudPaper>
         </MudStack>
     </MudCardContent>
 
     <!-- Enhanced Action Bar -->
-    <div style="padding: 20px; border-top: 1px solid #f0f0f0; background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);">
+    <MudPaper Class="action-bar pa-5" Elevation="0" Style="border-radius: 0;">
         <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
             <!-- Primary Actions -->
             <MudButtonGroup Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small">
@@ -241,18 +297,18 @@
                            Color="Color.Success" 
                            Size="Size.Small"
                            OnClick="@(() => OnExportExcel.InvokeAsync(Invoice))"
-                           Style="width: 40px; height: 40px; background: linear-gradient(135deg, #4CAF50 0%, #45A049 100%);" />
+                           Style="width: 40px; height: 40px;" />
                 </MudTooltip>
                 <MudTooltip Text="Preview & Export PDF">
                     <MudFab StartIcon="@Icons.Material.Filled.PictureAsPdf" 
                            Color="Color.Error" 
                            Size="Size.Small"
                            OnClick="HandlePdfPreview"
-                           Style="width: 40px; height: 40px; background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%); color: white;" />
+                           Style="width: 40px; height: 40px;" />
                 </MudTooltip>
             </MudStack>
         </MudStack>
-    </div>
+    </MudPaper>
 </MudPaper>
 
 @code {

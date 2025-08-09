@@ -1,10 +1,10 @@
 <div class="client-card">
-    <MudPaper Class="pa-0" 
+    <MudPaper Class="client-card-container pa-0" 
               Elevation="3" 
-              Style="border-radius: 16px; overflow: hidden; transition: all 0.3s ease; height: 100%; display: flex; flex-direction: column;">
+              Style="border-radius: 16px; overflow: hidden; height: 100%; display: flex; flex-direction: column;">
         
         <!-- Header Section with Client Type -->
-        <div style="background: linear-gradient(135deg, @(Client.IsCompany ? "#2196F3 0%, #1976D2 100%" : "#9C27B0 0%, #7B1FA2 100%")); padding: 16px; color: white;">
+        <div class="client-header" style="background: @GetClientTypeGradient(Client.IsCompany); padding: 16px; color: white;">
             <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
                 <div style="display: flex; align-items: center; gap: 10px;">
                     @if (Client.IsCompany)
@@ -40,43 +40,43 @@
                 @if (Client.Email is not null)
                 {
                     <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="background-color: #f5f5f5; border-radius: 8px; padding: 6px; display: flex; align-items: center; justify-content: center; min-width: 32px; height: 32px;">
-                            <MudIcon Icon="@Icons.Material.Filled.Email" Size="Size.Small" Style="color: #666;" />
-                        </div>
-                        <MudText Typo="Typo.body2" Style="color: #333; font-weight: 500;">@Client.Email</MudText>
+                        <MudPaper Class="contact-info-icon" Elevation="0" Style="border-radius: 8px; padding: 6px; display: flex; align-items: center; justify-content: center; min-width: 32px; height: 32px;">
+                            <MudIcon Icon="@Icons.Material.Filled.Email" Size="Size.Small" />
+                        </MudPaper>
+                        <MudText Typo="Typo.body2" Class="contact-info-text" Style="font-weight: 500;">@Client.Email</MudText>
                     </div>
                 }
                 
                 @if (Client.PhoneNumber is not null)
                 {
                     <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="background-color: #f5f5f5; border-radius: 8px; padding: 6px; display: flex; align-items: center; justify-content: center; min-width: 32px; height: 32px;">
-                            <MudIcon Icon="@Icons.Material.Filled.Phone" Size="Size.Small" Style="color: #666;" />
-                        </div>
-                        <MudText Typo="Typo.body2" Style="color: #333; font-weight: 500;">@Client.PhoneNumber</MudText>
+                        <MudPaper Class="contact-info-icon" Elevation="0" Style="border-radius: 8px; padding: 6px; display: flex; align-items: center; justify-content: center; min-width: 32px; height: 32px;">
+                            <MudIcon Icon="@Icons.Material.Filled.Phone" Size="Size.Small" />
+                        </MudPaper>
+                        <MudText Typo="Typo.body2" Class="contact-info-text" Style="font-weight: 500;">@Client.PhoneNumber</MudText>
                     </div>
                 }
 
                 <!-- Address Section -->
                 <div style="display: flex; align-items: flex-start; gap: 12px;">
-                    <div style="background-color: #f5f5f5; border-radius: 8px; padding: 6px; display: flex; align-items: center; justify-content: center; min-width: 32px; height: 32px;">
-                        <MudIcon Icon="@Icons.Material.Filled.LocationOn" Size="Size.Small" Style="color: #666;" />
-                    </div>
+                    <MudPaper Class="contact-info-icon" Elevation="0" Style="border-radius: 8px; padding: 6px; display: flex; align-items: center; justify-content: center; min-width: 32px; height: 32px;">
+                        <MudIcon Icon="@Icons.Material.Filled.LocationOn" Size="Size.Small" />
+                    </MudPaper>
                     <div style="line-height: 1.5; flex: 1;">
                         @if (!string.IsNullOrWhiteSpace(Client.Address.CompanyOrPerson))
                         {
-                            <MudText Typo="Typo.body2" Style="color: #333; font-weight: 600; margin-bottom: 2px;">@Client.Address.CompanyOrPerson</MudText>
+                            <MudText Typo="Typo.body2" Class="contact-info-text" Style="font-weight: 600; margin-bottom: 2px;">@Client.Address.CompanyOrPerson</MudText>
                         }
-                        <MudText Typo="Typo.body2" Style="color: #666; margin-bottom: 2px;">@Client.Address.Street</MudText>
-                        <MudText Typo="Typo.body2" Style="color: #666; margin-bottom: 2px;">@Client.Address.PostalCode @Client.Address.City</MudText>
-                        <MudText Typo="Typo.caption" Style="color: #999; font-size: 0.75rem;">@Client.Address.Country</MudText>
+                        <MudText Typo="Typo.body2" Class="contact-info-secondary" Style="margin-bottom: 2px;">@Client.Address.Street</MudText>
+                        <MudText Typo="Typo.body2" Class="contact-info-secondary" Style="margin-bottom: 2px;">@Client.Address.PostalCode @Client.Address.City</MudText>
+                        <MudText Typo="Typo.caption" Color="Color.Secondary" Style="font-size: 0.75rem;">@Client.Address.Country</MudText>
                     </div>
                 </div>
             </MudStack>
         </MudCardContent>
 
         <!-- Actions Section -->
-        <MudCardActions Style="padding: 12px 20px 20px; justify-content: space-between; border-top: 1px solid #f0f0f0;">
+        <MudCardActions Class="actions-section" Style="padding: 12px 20px 20px; justify-content: space-between;">
             <MudButton StartIcon="@Icons.Material.Filled.Work" 
                        Color="Color.Info" 
                        Size="Size.Small"
@@ -92,14 +92,14 @@
                                    Color="Color.Primary" 
                                    Size="Size.Small"
                                    OnClick="EditClient"
-                                   Style="border-radius: 8px; background-color: rgba(25, 118, 210, 0.1);" />
+                                   Style="border-radius: 8px;" />
                 </MudTooltip>
                 <MudTooltip Text="Delete Client">
                     <MudIconButton Icon="@Icons.Material.Filled.Delete" 
                                    Color="Color.Error" 
                                    Size="Size.Small"
                                    OnClick="DeleteClient"
-                                   Style="border-radius: 8px; background-color: rgba(244, 67, 54, 0.1);" />
+                                   Style="border-radius: 8px;" />
                 </MudTooltip>
             </MudStack>
         </MudCardActions>
@@ -118,6 +118,14 @@
 
     [Inject]
     private NavigationManager NavigationManager { get; set; } = null!;
+
+    private string GetClientTypeGradient(bool isCompany)
+    {
+        if (isCompany)
+            return "linear-gradient(135deg, #2196F3 0%, #1976D2 100%)"; // Blue for companies
+        else
+            return "linear-gradient(135deg, #9C27B0 0%, #7B1FA2 100%)"; // Purple for individuals
+    }
 
     private async Task DeleteClient()
     {
@@ -140,3 +148,81 @@
         NavigationManager.NavigateTo($"/jobs/{Client.Id}");
     }
 }
+
+<style>
+    .client-card-container {
+        background-color: var(--mud-palette-surface) !important;
+        color: var(--mud-palette-text-primary) !important;
+        border: 1px solid var(--mud-palette-table-lines) !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .client-card-container:hover {
+        box-shadow: var(--mud-elevation-8) !important;
+        transform: translateY(-2px);
+    }
+    
+    .client-header {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .client-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.1);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
+    
+    .client-card-container:hover .client-header::before {
+        opacity: 1;
+    }
+    
+    .contact-info-icon {
+        background-color: var(--mud-palette-background-grey) !important;
+        color: var(--mud-palette-text-secondary) !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    .contact-info-icon:hover {
+        background-color: var(--mud-palette-primary-lighten) !important;
+        color: var(--mud-palette-primary) !important;
+    }
+    
+    .contact-info-text {
+        color: var(--mud-palette-text-primary) !important;
+    }
+    
+    .contact-info-secondary {
+        color: var(--mud-palette-text-secondary) !important;
+    }
+    
+    .actions-section {
+        border-top: 1px solid var(--mud-palette-table-lines) !important;
+    }
+    
+    /* Dark theme specific adjustments */
+    .mud-theme-dark .client-card-container {
+        border-color: var(--mud-palette-dark-divider) !important;
+    }
+    
+    .mud-theme-dark .contact-info-icon {
+        background: rgba(255, 255, 255, 0.05) !important;
+        color: var(--mud-palette-text-secondary) !important;
+    }
+    
+    .mud-theme-dark .contact-info-icon:hover {
+        background: rgba(25, 118, 210, 0.2) !important;
+        color: var(--mud-palette-primary-lighten) !important;
+    }
+    
+    .mud-theme-dark .actions-section {
+        border-top-color: rgba(255, 255, 255, 0.12) !important;
+    }
+</style>

@@ -1,0 +1,277 @@
+@using ClivoxApp.Models.Invoice
+@using ClivoxApp.Models.Clients
+@using ClivoxApp.Models
+@using ClivoxApp.Services
+@using CommunityToolkit.Maui.Storage
+
+<MudDialog>
+    <TitleContent>
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+            <MudIcon Icon="@Icons.Material.Filled.PictureAsPdf" Color="Color.Error" />
+            <MudText Typo="Typo.h6">Invoice PDF Preview</MudText>
+        </MudStack>
+    </TitleContent>
+    <DialogContent>
+        <MudContainer MaxWidth="MaxWidth.Large" Style="min-height: 600px;">
+            <!-- PDF Preview Header -->
+            <MudPaper Class="pa-4 mb-4" Elevation="1" Style="border-radius: 12px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                    <div>
+                        <MudText Typo="Typo.h6" Style="color: #495057; font-weight: 600;">Invoice Preview</MudText>
+                        <MudText Typo="Typo.body2" Color="Color.Secondary">@InvoiceNumber</MudText>
+                    </div>
+                    <MudStack Row="true" Spacing="2">
+                        <MudChip T="string" Color="Color.Info" Size="Size.Small" Icon="@Icons.Material.Filled.FilePresent">
+                            PDF Document
+                        </MudChip>
+                        <MudChip T="string" Color="Color.Success" Size="Size.Small" Icon="@Icons.Material.Filled.DataUsage">
+                            @FormatFileSize(PdfContent?.Length ?? 0)
+                        </MudChip>
+                    </MudStack>
+                </MudStack>
+            </MudPaper>
+
+            <!-- PDF Viewer Section -->
+            <MudPaper Elevation="3" Style="border-radius: 16px; overflow: hidden; min-height: 500px; background: #f5f5f5;">
+                @if (IsLoading)
+                {
+                    <div style="display: flex; justify-content: center; align-items: center; height: 500px;">
+                        <MudStack AlignItems="AlignItems.Center" Spacing="3">
+                            <MudProgressCircular Indeterminate="true" Size="Size.Large" Color="Color.Primary" />
+                            <MudText Typo="Typo.h6" Color="Color.Secondary">Generating PDF Preview...</MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">This may take a few moments</MudText>
+                        </MudStack>
+                    </div>
+                }
+                else if (HasError)
+                {
+                    <div style="display: flex; justify-content: center; align-items: center; height: 500px;">
+                        <MudStack AlignItems="AlignItems.Center" Spacing="3" Style="max-width: 400px; text-align: center;">
+                            <MudIcon Icon="@Icons.Material.Filled.Error" Color="Color.Error" Size="Size.Large" />
+                            <MudText Typo="Typo.h6" Color="Color.Error">Preview Error</MudText>
+                            <MudText Typo="Typo.body1" Color="Color.Secondary">
+                                Unable to generate PDF preview. This might be due to missing data or system limitations.
+                            </MudText>
+                            @if (!string.IsNullOrEmpty(ErrorMessage))
+                            {
+                                <MudAlert Severity="Severity.Error" Variant="Variant.Outlined" Dense="true">
+                                    @ErrorMessage
+                                </MudAlert>
+                            }
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                You can still try to generate and download the PDF directly using the button below.
+                            </MudText>
+                        </MudStack>
+                    </div>
+                }
+                else if (PdfContent != null)
+                {
+                    <div style="width: 100%; height: 600px; border-radius: 16px; overflow: hidden; position: relative;">
+                        <!-- PDF Embed with proper scaling -->
+                        <iframe src="@GetPdfDataUrl()" 
+                                style="width: 100%; height: 100%; border: none; background: white; border-radius: 16px; display: block;"
+                                title="Invoice PDF Preview"
+                                loading="lazy">
+                            <div style="display: flex; justify-content: center; align-items: center; height: 100%; background: #f5f5f5;">
+                                <MudStack AlignItems="AlignItems.Center" Spacing="2">
+                                    <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Warning" />
+                                    <MudText Typo="Typo.body1" Color="Color.Secondary">
+                                        Your browser doesn't support PDF preview. Please download the file to view it.
+                                    </MudText>
+                                </MudStack>
+                            </div>
+                        </iframe>
+                        
+                        <!-- PDF Controls Overlay -->
+                        <div style="position: absolute; bottom: 16px; right: 16px; z-index: 10;">
+                            <MudFab StartIcon="@Icons.Material.Filled.Fullscreen"
+                                   Size="Size.Small"
+                                   Color="Color.Primary"
+                                   OnClick="OpenPdfInNewTab"
+                                   Title="Open in New Tab"
+                                   Style="margin-right: 8px;" />
+                        </div>
+                    </div>
+                }
+            </MudPaper>
+
+            <!-- Action Instructions -->
+            <MudAlert Severity="Severity.Info" Variant="Variant.Outlined" Class="mt-4">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                    <MudIcon Icon="@Icons.Material.Filled.Info" />
+                    <MudText Typo="Typo.body2">
+                        Review your invoice above. If everything looks correct, click "Download PDF" to save the file to your device.
+                    </MudText>
+                </MudStack>
+            </MudAlert>
+        </MudContainer>
+    </DialogContent>
+    <DialogActions>
+        <MudStack Row="true" Spacing="2" Style="width: 100%;" Justify="Justify.SpaceBetween">
+            <MudButton OnClick="Close" 
+                       Color="Color.Secondary" 
+                       Variant="Variant.Text"
+                       StartIcon="@Icons.Material.Filled.Close">
+                Cancel
+            </MudButton>
+            
+            <MudStack Row="true" Spacing="2">
+                <MudButton OnClick="RegeneratePdf" 
+                           Color="Color.Info" 
+                           Variant="Variant.Outlined"
+                           StartIcon="@Icons.Material.Filled.Refresh"
+                           Disabled="IsLoading">
+                    Refresh Preview
+                </MudButton>
+                
+                <MudButton OnClick="DownloadPdf" 
+                           Color="Color.Success" 
+                           Variant="Variant.Filled"
+                           StartIcon="@Icons.Material.Filled.Download"
+                           Disabled="IsLoading || HasError || PdfContent == null"
+                           Style="min-width: 150px;">
+                    @if (IsDownloading)
+                    {
+                        <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+                        <text>Downloading...</text>
+                    }
+                    else
+                    {
+                        <text>Download PDF</text>
+                    }
+                </MudButton>
+            </MudStack>
+        </MudStack>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter] public Invoice Invoice { get; set; } = null!;
+    [Parameter] public Client Client { get; set; } = null!;
+    [Parameter] public BusinessOwner? BusinessOwner { get; set; }
+    [Parameter] public string InvoiceNumber { get; set; } = string.Empty;
+
+    [Inject] private ISnackbar Snackbar { get; set; } = null!;
+
+    private byte[]? PdfContent { get; set; }
+    private bool IsLoading { get; set; } = true;
+    private bool IsDownloading { get; set; } = false;
+    private bool HasError { get; set; } = false;
+    private string ErrorMessage { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GeneratePdf();
+    }
+
+    private async Task GeneratePdf()
+    {
+        IsLoading = true;
+        HasError = false;
+        ErrorMessage = string.Empty;
+        StateHasChanged();
+
+        try
+        {
+            if (BusinessOwner == null)
+            {
+                throw new InvalidOperationException("Business owner information is required to generate PDF.");
+            }
+
+            if (Client == null)
+            {
+                throw new InvalidOperationException("Client information is required to generate PDF.");
+            }
+
+            // Generate PDF using the existing service
+            using var stream = ExportInvoicePdf.ExportToPdf(Invoice, Client, BusinessOwner);
+            PdfContent = stream.ToArray();
+
+            Snackbar.Add("PDF preview generated successfully.", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            HasError = true;
+            ErrorMessage = ex.Message;
+            Snackbar.Add($"Error generating PDF preview: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            IsLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task RegeneratePdf()
+    {
+        await GeneratePdf();
+    }
+
+    private async Task DownloadPdf()
+    {
+        if (PdfContent == null) return;
+
+        IsDownloading = true;
+        StateHasChanged();
+
+        try
+        {
+            using var stream = new MemoryStream(PdfContent);
+            var fileName = $"invoice_{InvoiceNumber.Replace("/", "_")}_{DateTime.Now:yyyyMMdd_HHmmss}.pdf";
+            
+            await FileSaver.Default.SaveAsync(fileName, stream, default);
+            
+            Snackbar.Add("PDF downloaded successfully.", Severity.Success);
+            
+            // Close the dialog after successful download
+            await Task.Delay(1500); // Brief delay to show success message
+            MudDialog.Close();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error downloading PDF: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            IsDownloading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task OpenPdfInNewTab()
+    {
+        if (PdfContent == null) return;
+
+        try
+        {
+            // Create a temporary file or use data URL to open in new tab
+            var dataUrl = GetPdfDataUrl();
+            // Note: In MAUI, we might need a different approach
+            // For now, we'll show a message to download the file
+            Snackbar.Add("To view in full screen, please download the PDF file.", Severity.Info);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error opening PDF: {ex.Message}", Severity.Warning);
+        }
+    }
+
+    private string GetPdfDataUrl()
+    {
+        if (PdfContent == null) return string.Empty;
+        var base64String = Convert.ToBase64String(PdfContent);
+        return $"data:application/pdf;base64,{base64String}";
+    }
+
+    private string FormatFileSize(int bytes)
+    {
+        if (bytes < 1024) return $"{bytes} B";
+        if (bytes < 1024 * 1024) return $"{bytes / 1024:F1} KB";
+        return $"{bytes / (1024 * 1024):F1} MB";
+    }
+
+    private void Close() => MudDialog.Close();
+}

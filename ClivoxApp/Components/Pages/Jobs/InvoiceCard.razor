@@ -243,11 +243,11 @@
                            OnClick="@(() => OnExportExcel.InvokeAsync(Invoice))"
                            Style="width: 40px; height: 40px; background: linear-gradient(135deg, #4CAF50 0%, #45A049 100%);" />
                 </MudTooltip>
-                <MudTooltip Text="Export to PDF">
+                <MudTooltip Text="Preview & Export PDF">
                     <MudFab StartIcon="@Icons.Material.Filled.PictureAsPdf" 
                            Color="Color.Error" 
                            Size="Size.Small"
-                           OnClick="@(() => OnExportPdf.InvokeAsync(Invoice))"
+                           OnClick="HandlePdfPreview"
                            Style="width: 40px; height: 40px; background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%); color: white;" />
                 </MudTooltip>
             </MudStack>
@@ -263,6 +263,7 @@
     [Parameter] public EventCallback<Invoice> OnManageFiles { get; set; }
     [Parameter] public EventCallback<Invoice> OnExportExcel { get; set; }
     [Parameter] public EventCallback<Invoice> OnExportPdf { get; set; }
+    [Parameter] public EventCallback<Invoice> OnPreviewPdf { get; set; }
 
     private bool _isHovered = false;
     private bool _isFinancialSummaryExpanded = false; // Collapsed by default
@@ -271,6 +272,19 @@
     {
         _isFinancialSummaryExpanded = !_isFinancialSummaryExpanded;
         StateHasChanged(); // Force UI update
+    }
+
+    private async Task HandlePdfPreview()
+    {
+        if (OnPreviewPdf.HasDelegate)
+        {
+            await OnPreviewPdf.InvokeAsync(Invoice);
+        }
+        else if (OnExportPdf.HasDelegate)
+        {
+            // Fallback to direct export if preview not available
+            await OnExportPdf.InvokeAsync(Invoice);
+        }
     }
 
     private string GetStatusGradient(Invoice invoice)

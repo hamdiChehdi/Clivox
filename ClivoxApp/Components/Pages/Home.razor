@@ -1,14 +1,65 @@
 ﻿@page "/"
 @using ClivoxApp.Components.Pages.Clients
 
-<MudTextField @bind-Value="searchQuery" Placeholder="@Resource.home_SearchClients" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mb-4" Style="height: 40px;" Icon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Immediate="true" />
+<!-- Enhanced Header Section -->
+<div style="padding: 20px 0;">
+    <MudPaper Class="pa-6 mb-6" Elevation="2" Style="border-radius: 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="4">
+            <MudIcon Icon="@Icons.Material.Filled.People" Style="color: white;" Size="Size.Large" />
+            <div style="flex-grow: 1;">
+                <MudText Typo="Typo.h4" Style="color: white; font-weight: 600; margin-bottom: 4px;">Client Management</MudText>
+                <MudText Typo="Typo.body1" Style="color: rgba(255,255,255,0.9);">@filteredClients.Count() clients • @filteredClients.Sum(c => c.JobCount) total jobs</MudText>
+            </div>
+            <MudButton StartIcon="@Icons.Material.Filled.Add" 
+                       Color="Color.Surface" 
+                       Variant="Variant.Filled" 
+                       OnClick="OpenAddClientDialog"
+                       Style="background-color: rgba(255,255,255,0.2); color: white; border-radius: 12px; text-transform: none; padding: 12px 24px; backdrop-filter: blur(10px);">
+                Add New Client
+            </MudButton>
+        </MudStack>
+    </MudPaper>
 
-<MudFab StartIcon="@Icons.Material.Filled.Add" Color="Color.Tertiary" OnClick="OpenAddClientDialog" DropShadow="false" Style="position: fixed; bottom: 16px; right: 16px;" />
-<MudGrid GutterSize="3">
-    @foreach (var client in filteredClients)
+    <!-- Search Section -->
+    <MudTextField @bind-Value="searchQuery" 
+                  Placeholder="@Resource.home_SearchClients" 
+                  Variant="Variant.Outlined" 
+                  Adornment="Adornment.Start" 
+                  AdornmentIcon="@Icons.Material.Filled.Search" 
+                  Class="mb-6" 
+                  Style="border-radius: 12px;"
+                  AdornmentColor="Color.Primary" 
+                  Immediate="true" />
+
+    <!-- Professional Grid Layout -->
+    <MudGrid GutterSize="4">
+        @foreach (var client in filteredClients)
+        {
+            <MudItem xs="12" sm="6" md="4" lg="3">
+                <ClientCard Client="client" OnDelete="DeleteClient" OnEdit="EditClient" />
+            </MudItem>
+        }
+    </MudGrid>
+
+    <!-- Empty State -->
+    @if (!filteredClients.Any())
     {
-        <MudItem xs="12" sm="4" md="4">
-            <ClientCard Client="client" OnDelete="DeleteClient" OnEdit="EditClient" />
-        </MudItem>
+        <MudPaper Class="pa-8 text-center" Elevation="1" Style="border-radius: 16px; margin-top: 24px;">
+            <MudIcon Icon="@Icons.Material.Filled.PersonSearch" Size="Size.Large" Color="Color.Secondary" Style="margin-bottom: 16px;" />
+            <MudText Typo="Typo.h6" Color="Color.Secondary">No clients found</MudText>
+            <MudText Typo="Typo.body1" Color="Color.Secondary" Style="margin-bottom: 24px;">
+                @(string.IsNullOrWhiteSpace(searchQuery) ? "Start by adding your first client" : "Try adjusting your search criteria")
+            </MudText>
+            @if (string.IsNullOrWhiteSpace(searchQuery))
+            {
+                <MudButton StartIcon="@Icons.Material.Filled.Add" 
+                           Color="Color.Primary" 
+                           Variant="Variant.Filled" 
+                           OnClick="OpenAddClientDialog"
+                           Style="text-transform: none; border-radius: 12px;">
+                    Add Your First Client
+                </MudButton>
+            }
+        </MudPaper>
     }
-</MudGrid>
+</div>

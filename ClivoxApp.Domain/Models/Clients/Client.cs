@@ -22,6 +22,9 @@ public class Client : IAggregateRoot
     // Add computed property for full name display
     public string FullName => $"{FirstName} {LastName}";
 
+    // Job count property (not persisted, loaded separately)
+    public int JobCount { get; set; } = 0;
+
     /// <summary>
     /// Validates that the client has the minimum required information
     /// </summary>
@@ -91,6 +94,7 @@ public class Client : IAggregateRoot
             Gender = this.Gender,
             Email = this.Email,
             PhoneNumber = this.PhoneNumber,
+            JobCount = this.JobCount, // Include job count in deep copy
             Address = new Address
             {
                 CompanyOrPerson = this.Address.CompanyOrPerson,

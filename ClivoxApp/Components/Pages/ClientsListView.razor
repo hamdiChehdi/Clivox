@@ -1,0 +1,153 @@
+@page "/clients-list"
+@using ClivoxApp.Components.Pages.Clients
+
+<div style="padding: 24px 0;">
+    <!-- Header -->
+    <MudPaper Class="pa-6 mb-6" Elevation="1" Style="border-radius: 12px;">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+            <div>
+                <MudText Typo="Typo.h4" Color="Color.Primary" Style="font-weight: 600;">Client Directory</MudText>
+                <MudText Typo="Typo.body1" Color="Color.Secondary">@filteredClients.Count() clients total • @filteredClients.Sum(c => c.JobCount) total jobs</MudText>
+            </div>
+            <MudStack Row="true" Spacing="2">
+                <MudTextField @bind-Value="searchQuery" 
+                              Placeholder="Search clients..." 
+                              Variant="Variant.Outlined" 
+                              Adornment="Adornment.Start" 
+                              AdornmentIcon="@Icons.Material.Filled.Search" 
+                              Style="min-width: 300px; border-radius: 8px;"
+                              AdornmentColor="Color.Primary" 
+                              Immediate="true" />
+                <MudButton StartIcon="@Icons.Material.Filled.Add" 
+                           Color="Color.Primary" 
+                           Variant="Variant.Filled" 
+                           OnClick="OpenAddClientDialog"
+                           Style="border-radius: 8px;">
+                    Add Client
+                </MudButton>
+            </MudStack>
+        </MudStack>
+    </MudPaper>
+
+    <!-- List View -->
+    <MudPaper Elevation="2" Style="border-radius: 12px; overflow: hidden;">
+        @if (filteredClients.Any())
+        {
+            @foreach (var (client, index) in filteredClients.Select((c, i) => (c, i)))
+            {
+                <div style="border-bottom: @(index < filteredClients.Count() - 1 ? "1px solid #f0f0f0" : "none");">
+                    <MudStack Row="true" 
+                              AlignItems="AlignItems.Center" 
+                              Style="padding: 20px 24px; transition: background-color 0.2s ease; cursor: pointer;"
+                              Class="hover:bg-gray-50">
+                        
+                        <!-- Client Avatar/Icon -->
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                                    width: 60px; height: 60px; border-radius: 50%; 
+                                    display: flex; align-items: center; justify-content: center;
+                                    margin-right: 16px;">
+                            @if (client.IsCompany)
+                            {
+                                <MudIcon Icon="@Icons.Material.Filled.Business" Style="color: white;" Size="Size.Medium" />
+                            }
+                            else
+                            {
+                                <MudIcon Icon="@Icons.Material.Filled.Person" Style="color: white;" Size="Size.Medium" />
+                            }
+                        </div>
+
+                        <!-- Client Info -->
+                        <div style="flex: 1;">
+                            <MudStack Spacing="1">
+                                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                                    <MudText Typo="Typo.h6" Style="color: #333; font-weight: 600;">
+                                        @(client.IsCompany ? client.CompanyName : client.FullName)
+                                    </MudText>
+                                    <MudChip T="string"
+                                             Size="Size.Small" 
+                                             Color="@(client.IsCompany ? Color.Info : Color.Primary)" 
+                                             Style="text-transform: uppercase; font-size: 0.7rem; font-weight: 600;">
+                                        @(client.IsCompany ? "Company" : "Individual")
+                                    </MudChip>
+                                    <MudChip T="string"
+                                             Size="Size.Small" 
+                                             Color="Color.Success" 
+                                             Icon="@Icons.Material.Filled.Work"
+                                             Style="font-size: 0.7rem; font-weight: 600;">
+                                        @client.JobCount @(client.JobCount == 1 ? "Job" : "Jobs")
+                                    </MudChip>
+                                </MudStack>
+                                
+                                <MudStack Row="true" Spacing="4" Style="color: #666;">
+                                    @if (!string.IsNullOrWhiteSpace(client.Email))
+                                    {
+                                        <div style="display: flex; align-items: center; gap: 6px;">
+                                            <MudIcon Icon="@Icons.Material.Filled.Email" Size="Size.Small" />
+                                            <MudText Typo="Typo.body2">@client.Email</MudText>
+                                        </div>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(client.PhoneNumber))
+                                    {
+                                        <div style="display: flex; align-items: center; gap: 6px;">
+                                            <MudIcon Icon="@Icons.Material.Filled.Phone" Size="Size.Small" />
+                                            <MudText Typo="Typo.body2">@client.PhoneNumber</MudText>
+                                        </div>
+                                    }
+                                </MudStack>
+                                
+                                <MudText Typo="Typo.body2" Style="color: #999;">
+                                    <MudIcon Icon="@Icons.Material.Filled.LocationOn" Size="Size.Small" Style="margin-right: 4px;" />
+                                    @client.Address?.Street, @client.Address?.City, @client.Address?.Country
+                                </MudText>
+                            </MudStack>
+                        </div>
+
+                        <!-- Actions -->
+                        <MudStack Row="true" Spacing="1">
+                            <MudTooltip Text="@($"Manage {client.JobCount} {(client.JobCount == 1 ? "Job" : "Jobs")}")">
+                                <MudIconButton Icon="@Icons.Material.Filled.Work" 
+                                             Color="Color.Info" 
+                                             Size="Size.Medium"
+                                             OnClick="@(() => NavigateToJobs(client.Id))" 
+                                             Style="border-radius: 8px;" />
+                            </MudTooltip>
+                            <MudTooltip Text="Edit Client">
+                                <MudIconButton Icon="@Icons.Material.Filled.Edit" 
+                                             Color="Color.Primary" 
+                                             Size="Size.Medium"
+                                             OnClick="@(() => EditClient(client))" 
+                                             Style="border-radius: 8px;" />
+                            </MudTooltip>
+                            <MudTooltip Text="Delete Client">
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                                             Color="Color.Error" 
+                                             Size="Size.Medium"
+                                             OnClick="@(() => DeleteClient(client.Id))" 
+                                             Style="border-radius: 8px;" />
+                            </MudTooltip>
+                        </MudStack>
+                    </MudStack>
+                </div>
+            }
+        }
+        else
+        {
+            <div style="padding: 60px 24px; text-align: center;">
+                <MudIcon Icon="@Icons.Material.Filled.PersonSearch" Size="Size.Large" Color="Color.Secondary" Style="margin-bottom: 16px;" />
+                <MudText Typo="Typo.h6" Color="Color.Secondary">No clients found</MudText>
+                <MudText Typo="Typo.body1" Color="Color.Secondary" Style="margin: 8px 0 24px;">
+                    @(string.IsNullOrWhiteSpace(searchQuery) ? "Add your first client to get started" : "No clients match your search")
+                </MudText>
+                @if (string.IsNullOrWhiteSpace(searchQuery))
+                {
+                    <MudButton StartIcon="@Icons.Material.Filled.Add" 
+                               Color="Color.Primary" 
+                               Variant="Variant.Filled" 
+                               OnClick="OpenAddClientDialog">
+                        Add Your First Client
+                    </MudButton>
+                }
+            </div>
+        }
+    </MudPaper>
+</div>

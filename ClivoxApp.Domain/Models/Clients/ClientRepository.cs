@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using ClivoxApp.EventSourcingInfrastucture;
 using ClivoxApp.Models.Clients.Events;
+using ClivoxApp.Models.Invoice;
 using JasperFx.CodeGeneration.Frames;
 using Marten;
 using Microsoft.Extensions.Logging;
@@ -34,6 +35,10 @@ public class ClientRepository
             _logger.LogWarning("Client with ID: {ClientId} not found", id);
             return null;
         }
+        
+        // Load job count for the client
+        await LoadJobCountAsync(client);
+        
         return client;
     }
 
@@ -45,7 +50,59 @@ public class ClientRepository
         {
             _logger.LogWarning("No clients found");
         }
+
+        // Load job counts for all clients
+        await LoadJobCountsAsync(clients);
+
         return clients;
+    }
+
+    public async Task<IReadOnlyList<Client>> GetAllClientsWithJobCountsAsync()
+    {
+        _logger.LogInformation("Fetching all clients with job counts");
+        var clients = await _querySession.Query<Client>().OrderBy(x => x.FullName).ToListAsync();
+        
+        if (clients.Count == 0)
+        {
+            _logger.LogWarning("No clients found");
+            return clients;
+        }
+
+        // Load job counts for all clients
+        await LoadJobCountsAsync(clients);
+
+        return clients;
+    }
+
+    private async Task LoadJobCountAsync(Client client)
+    {
+        var jobCount = await _querySession.Query<Invoice.Invoice>()
+            .CountAsync(i => i.ClientId == client.Id);
+        client.JobCount = jobCount;
+    }
+
+    private async Task LoadJobCountsAsync(IReadOnlyList<Client> clients)
+    {
+        if (!clients.Any()) return;
+
+        var clientIds = clients.Select(c => c.Id).ToList();
+        
+        // Get job counts for all clients in one query
+        var invoices = await _querySession.Query<Invoice.Invoice>()
+            .Where(i => clientIds.Contains(i.ClientId))
+            .ToListAsync();
+
+        var invoiceCounts = invoices
+            .GroupBy(i => i.ClientId)
+            .Select(g => new { ClientId = g.Key, Count = g.Count() })
+            .ToList();
+
+        // Apply job counts to clients
+        foreach (var client in clients)
+        {
+            var jobCount = invoiceCounts.FirstOrDefault(jc => jc.ClientId == client.Id);
+            client.JobCount = jobCount?.Count ?? 0;
+        }
     }
 
     public async Task FindClient(string lowerCaseSearchText)

@@ -9,12 +9,13 @@ using ClivoxApp.Components.Pages.Clients;
 
 namespace ClivoxApp.Components.Pages
 {
-    public partial class Home : ComponentBase
+    public partial class ClientsListView : ComponentBase
     {
-        [Inject] private ClientRepository ClientRepository { get; set; }
-        [Inject] private IDialogService DialogService { get; set; }
-        [Inject] private ISnackbar Snackbar { get; set; }
-        [Inject] private NavigationManager NavigationManager { get; set; }
+        [Inject] private ClientRepository ClientRepository { get; set; } = null!;
+        [Inject] private IDialogService DialogService { get; set; } = null!;
+        [Inject] private ISnackbar Snackbar { get; set; } = null!;
+        [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+        
         private List<Client> clients = new();
         private string searchQuery = string.Empty;
         private Client client = new();
@@ -33,8 +34,17 @@ namespace ClivoxApp.Components.Pages
 
         private async Task DeleteClient(Guid clientId)
         {
-            await ClientRepository.DeleteClientAsync(clientId);
-            clients = clients.Where(c => c.Id != clientId).ToList();
+            var confirmation = await DialogService.ShowMessageBox(
+                "Delete Client",
+                "Are you sure you want to delete this client?",
+                yesText: "Delete", cancelText: "Cancel");
+
+            if (confirmation == true)
+            {
+                await ClientRepository.DeleteClientAsync(clientId);
+                clients = clients.Where(c => c.Id != clientId).ToList();
+                Snackbar.Add("Client deleted successfully", Severity.Success);
+            }
         }
 
         private async Task EditClient(Client client)

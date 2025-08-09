@@ -1,51 +1,109 @@
 <div class="client-card">
-    <MudCard>
-        <MudCardContent>
-            <MudText Typo="Typo.h6">
-                @if (Client.IsCompany)
-                {
-                    <MudIcon Icon="@Icons.Material.Filled.Business" Color="Color.Info" Style="vertical-align: middle; margin-right: 8px;" />
-                    @Client.CompanyName
-                }
-                else
-                {
-                    <MudIcon Icon="@Icons.Material.Filled.Person" Color="Color.Primary" Style="vertical-align: middle; margin-right: 8px;" />
-                    @Client.FullName
-                }
-            </MudText>
-            @if (Client.Email is not null)
-            {
-                <div style="display: flex; align-items: center; margin-top: 8px;">
-                    <MudIcon Icon="@Icons.Material.Filled.Email" style="margin-right: 8px;" />
-                    <MudText Typo="Typo.body2">@Client.Email</MudText>
-                </div>
-            }
-            @if (Client.PhoneNumber is not null)
-            {
-                <div style="display: flex; align-items: center; margin-top: 8px;">
-                    <MudIcon Icon="@Icons.Material.Filled.Phone" style="margin-right: 8px;" />
-                    <MudText Typo="Typo.body2">@Client.PhoneNumber</MudText>
-                </div>
-            }
-            <div style="display: flex; align-items: flex-start; margin-top: 8px;">
-                <MudIcon Icon="@Icons.Material.Filled.LocationOn" style="margin-right: 8px; margin-top: 2px;" />
-                <div>
-                    @if (!string.IsNullOrWhiteSpace(Client.Address.CompanyOrPerson))
+    <MudPaper Class="pa-0" 
+              Elevation="3" 
+              Style="border-radius: 16px; overflow: hidden; transition: all 0.3s ease; height: 100%; display: flex; flex-direction: column;">
+        
+        <!-- Header Section with Client Type -->
+        <div style="background: linear-gradient(135deg, @(Client.IsCompany ? "#2196F3 0%, #1976D2 100%" : "#9C27B0 0%, #7B1FA2 100%")); padding: 16px; color: white;">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    @if (Client.IsCompany)
                     {
-                        <MudText Typo="Typo.body2">@Client.Address.CompanyOrPerson</MudText><br />
+                        <MudIcon Icon="@Icons.Material.Filled.Business" Size="Size.Medium" Style="color: white;" />
+                        <div>
+                            <MudText Typo="Typo.body2" Style="color: rgba(255,255,255,0.8); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Company</MudText>
+                            <MudText Typo="Typo.h6" Style="color: white; font-weight: 600; line-height: 1.2; margin-top: 2px;">@Client.CompanyName</MudText>
+                        </div>
                     }
-                    <MudText Typo="Typo.body2">@Client.Address.Street</MudText><br />
-                    <MudText Typo="Typo.body2">@Client.Address.PostalCode @Client.Address.City</MudText>
-                    <br /><MudText Typo="Typo.body2">@Client.Address.Country</MudText>
+                    else
+                    {
+                        <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Medium" Style="color: white;" />
+                        <div>
+                            <MudText Typo="Typo.body2" Style="color: rgba(255,255,255,0.8); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Individual</MudText>
+                            <MudText Typo="Typo.h6" Style="color: white; font-weight: 600; line-height: 1.2; margin-top: 2px;">@Client.FullName</MudText>
+                        </div>
+                    }
                 </div>
-            </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div style="background-color: rgba(255,255,255,0.2); color: white; font-size: 0.65rem; font-weight: 600; padding: 4px 8px; border-radius: 12px; display: flex; align-items: center; gap: 4px;">
+                        <MudIcon Icon="@Icons.Material.Filled.Work" Size="Size.Small" />
+                        @Client.JobCount @(Client.JobCount == 1 ? "Job" : "Jobs")
+                    </div>
+                </div>
+            </MudStack>
+        </div>
+
+        <!-- Content Section -->
+        <MudCardContent Style="padding: 20px; flex: 1; display: flex; flex-direction: column;">
+            <MudStack Spacing="3" Style="flex: 1;">
+                <!-- Contact Information -->
+                @if (Client.Email is not null)
+                {
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="background-color: #f5f5f5; border-radius: 8px; padding: 6px; display: flex; align-items: center; justify-content: center; min-width: 32px; height: 32px;">
+                            <MudIcon Icon="@Icons.Material.Filled.Email" Size="Size.Small" Style="color: #666;" />
+                        </div>
+                        <MudText Typo="Typo.body2" Style="color: #333; font-weight: 500;">@Client.Email</MudText>
+                    </div>
+                }
+                
+                @if (Client.PhoneNumber is not null)
+                {
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="background-color: #f5f5f5; border-radius: 8px; padding: 6px; display: flex; align-items: center; justify-content: center; min-width: 32px; height: 32px;">
+                            <MudIcon Icon="@Icons.Material.Filled.Phone" Size="Size.Small" Style="color: #666;" />
+                        </div>
+                        <MudText Typo="Typo.body2" Style="color: #333; font-weight: 500;">@Client.PhoneNumber</MudText>
+                    </div>
+                }
+
+                <!-- Address Section -->
+                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                    <div style="background-color: #f5f5f5; border-radius: 8px; padding: 6px; display: flex; align-items: center; justify-content: center; min-width: 32px; height: 32px;">
+                        <MudIcon Icon="@Icons.Material.Filled.LocationOn" Size="Size.Small" Style="color: #666;" />
+                    </div>
+                    <div style="line-height: 1.5; flex: 1;">
+                        @if (!string.IsNullOrWhiteSpace(Client.Address.CompanyOrPerson))
+                        {
+                            <MudText Typo="Typo.body2" Style="color: #333; font-weight: 600; margin-bottom: 2px;">@Client.Address.CompanyOrPerson</MudText>
+                        }
+                        <MudText Typo="Typo.body2" Style="color: #666; margin-bottom: 2px;">@Client.Address.Street</MudText>
+                        <MudText Typo="Typo.body2" Style="color: #666; margin-bottom: 2px;">@Client.Address.PostalCode @Client.Address.City</MudText>
+                        <MudText Typo="Typo.caption" Style="color: #999; font-size: 0.75rem;">@Client.Address.Country</MudText>
+                    </div>
+                </div>
+            </MudStack>
         </MudCardContent>
-        <MudCardActions style="justify-content: flex-end;">
-            <MudIconButton Icon="@Icons.Material.Filled.Work" Color="Color.Info" OnClick="ManageJobs" />
-            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="EditClient" />
-            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="DeleteClient" />
+
+        <!-- Actions Section -->
+        <MudCardActions Style="padding: 12px 20px 20px; justify-content: space-between; border-top: 1px solid #f0f0f0;">
+            <MudButton StartIcon="@Icons.Material.Filled.Work" 
+                       Color="Color.Info" 
+                       Size="Size.Small"
+                       Variant="Variant.Text"
+                       OnClick="ManageJobs"
+                       Style="text-transform: none; border-radius: 8px; font-weight: 600;">
+                @Client.JobCount @(Client.JobCount == 1 ? "Job" : "Jobs")
+            </MudButton>
+            
+            <MudStack Row="true" Spacing="1">
+                <MudTooltip Text="Edit Client">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" 
+                                   Color="Color.Primary" 
+                                   Size="Size.Small"
+                                   OnClick="EditClient"
+                                   Style="border-radius: 8px; background-color: rgba(25, 118, 210, 0.1);" />
+                </MudTooltip>
+                <MudTooltip Text="Delete Client">
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                                   Color="Color.Error" 
+                                   Size="Size.Small"
+                                   OnClick="DeleteClient"
+                                   Style="border-radius: 8px; background-color: rgba(244, 67, 54, 0.1);" />
+                </MudTooltip>
+            </MudStack>
         </MudCardActions>
-    </MudCard>
+    </MudPaper>
 </div>
 
 @code {

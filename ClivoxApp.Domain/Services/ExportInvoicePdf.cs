@@ -7,11 +7,14 @@ using QuestPDF.Infrastructure;
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace ClivoxApp.Services;
 
 public class ExportInvoicePdf
 {
+    private const string CompanyLogoPath = "companyLogo.png";
+    
     static ExportInvoicePdf()
     {
         QuestPDF.Settings.License = LicenseType.Community;
@@ -44,8 +47,23 @@ public class ExportInvoicePdf
     {
         container.Row(row =>
         {
+            // Left side - Company logo and business owner info
             row.RelativeItem().Column(column =>
             {
+                // Try to find and add company logo
+                var logoPath = FindCompanyLogo();
+                if (!string.IsNullOrEmpty(logoPath))
+                {
+                    column.Item()
+                        .AlignLeft()
+                        .Width(120)
+                        .Height(60)
+                        .Image(logoPath)
+                        .FitArea();
+                    
+                    column.Item().PaddingTop(15); // Add space after logo
+                }
+
                 string ownerName = !string.IsNullOrEmpty(businessOwner.CompanyName)
                     ? businessOwner.CompanyName
                     : $"{businessOwner.FirstName} {businessOwner.LastName}";
@@ -62,6 +80,7 @@ public class ExportInvoicePdf
                 }
             });
 
+            // Right side - Invoice details
             row.ConstantItem(220).Column(column =>
             {
                 column.Item().BorderBottom(1).PaddingBottom(5).Text("RECHNUNG").SemiBold().FontSize(15);
@@ -94,6 +113,61 @@ public class ExportInvoicePdf
                 });
             });
         });
+    }
+
+    /// <summary>
+    /// Attempts to find the company logo file in various common locations
+    /// </summary>
+    private static string? FindCompanyLogo()
+    {
+        // Try multiple potential paths for the logo file
+        var potentialPaths = new[]
+        {
+            CompanyLogoPath, // Current directory
+            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, CompanyLogoPath), // App base directory
+            Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "", CompanyLogoPath), // Assembly directory
+            Path.Combine(Environment.CurrentDirectory, CompanyLogoPath), // Current working directory
+        };
+
+        foreach (var path in potentialPaths)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(path) && File.Exists(path))
+                {
+                    return path;
+                }
+            }
+            catch
+            {
+                // Continue to next path if this one fails
+                continue;
+            }
+        }
+
+        // Try to load from MAUI app package if available
+        try
+        {
+            // In a MAUI context, we can try to access the app package
+            var appPackagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wwwroot", CompanyLogoPath);
+            if (File.Exists(appPackagePath))
+            {
+                return appPackagePath;
+            }
+
+            // Another common MAUI path
+            var resourcePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Images", CompanyLogoPath);
+            if (File.Exists(resourcePath))
+            {
+                return resourcePath;
+            }
+        }
+        catch
+        {
+            // Logo not found in app package locations
+        }
+
+        return null; // Logo not found
     }
 
     private static void ComposeContent(IContainer container, Invoice invoice, Client client, BusinessOwner businessOwner)

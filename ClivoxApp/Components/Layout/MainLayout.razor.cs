@@ -82,7 +82,8 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
     {
         if (firstRender)
         {
-            _isDarkMode = await _mudThemeProvider.GetSystemDarkModeAsync();
+            // Load saved theme preference first, then fall back to system preference
+            await LoadThemePreferenceAsync();
             _initialRenderComplete = true;
             
             // Show dialogs after initial render is complete
@@ -99,6 +100,53 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
             
             StateHasChanged();
         }
+    }
+
+    private async Task LoadThemePreferenceAsync()
+    {
+        try
+        {
+            // Try to get saved theme preference from secure storage
+            var savedTheme = await SecureStorage.Default.GetAsync("theme_preference");
+            
+            if (savedTheme == "dark")
+            {
+                _isDarkMode = true;
+            }
+            else if (savedTheme == "light")
+            {
+                _isDarkMode = false;
+            }
+            else
+            {
+                // No saved preference, use system preference
+                _isDarkMode = await _mudThemeProvider.GetSystemDarkModeAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error loading theme preference: {ex.Message}");
+            // Fallback to system preference
+            _isDarkMode = await _mudThemeProvider.GetSystemDarkModeAsync();
+        }
+    }
+
+    private async Task SaveThemePreferenceAsync()
+    {
+        try
+        {
+            await SecureStorage.Default.SetAsync("theme_preference", _isDarkMode ? "dark" : "light");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error saving theme preference: {ex.Message}");
+        }
+    }
+
+    private async Task OnThemeChanged()
+    {
+        await SaveThemePreferenceAsync();
+        StateHasChanged();
     }
 
     private async Task CheckAuthenticationState()
@@ -278,8 +326,11 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
         NavigationManager.NavigateTo("/");
     }
 
-    private void ChangeLanguage(string language)
+    private async Task ChangeLanguage(string language)
     {
+        // Save current theme preference before reload
+        await SaveThemePreferenceAsync();
+        
         var culture = new System.Globalization.CultureInfo(language);
         System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
         System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;

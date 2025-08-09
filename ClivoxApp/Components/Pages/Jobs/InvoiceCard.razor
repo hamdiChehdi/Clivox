@@ -1,0 +1,196 @@
+@using ClivoxApp.Models.Invoice
+@using System.Globalization
+
+<MudPaper Class="pa-0" 
+          Elevation="4" 
+          Style="border-radius: 20px; overflow: hidden; transition: all 0.3s ease; height: 100%; display: flex; flex-direction: column; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;"
+          @onmouseenter="@(() => _isHovered = true)"
+          @onmouseleave="@(() => _isHovered = false)">
+    
+    <!-- Invoice Header with Status -->
+    <div style="background: @GetStatusGradient(Invoice); padding: 24px; color: white; position: relative;">
+        <div style="position: absolute; top: -10px; right: -10px; width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 50%; opacity: 0.5;"></div>
+        <div style="position: absolute; bottom: -20px; left: -20px; width: 80px; height: 80px; background: rgba(255,255,255,0.05); border-radius: 50%; opacity: 0.7;"></div>
+        
+        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Style="position: relative; z-index: 2;">
+            <div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <MudIcon Icon="@GetStatusIcon(Invoice)" Size="Size.Small" Style="color: white;" />
+                    <MudText Typo="Typo.body2" Style="color: rgba(255,255,255,0.9); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">@GetStatusText(Invoice)</MudText>
+                </div>
+                <MudText Typo="Typo.h5" Style="color: white; font-weight: 700; line-height: 1.2;">@Invoice.InvoiceNumber</MudText>
+            </div>
+            <div style="text-align: right;">
+                <MudText Typo="Typo.caption" Style="color: rgba(255,255,255,0.8); font-size: 0.7rem;">Total Amount</MudText>
+                <div style="background-color: rgba(255,255,255,0.2); padding: 8px 12px; border-radius: 12px; backdrop-filter: blur(5px); margin-top: 4px;">
+                    <MudText Typo="Typo.body1" Style="color: white; font-weight: 700; font-size: 1rem;">
+                        @Invoice.Items.Sum(x => x.Total).ToString("C", CultureInfo.GetCultureInfo("de-DE"))
+                    </MudText>
+                </div>
+            </div>
+        </MudStack>
+    </div>
+
+    <!-- Invoice Content -->
+    <MudCardContent Style="padding: 24px; flex: 1; display: flex; flex-direction: column;">
+        <MudStack Spacing="4" Style="flex: 1;">
+            <!-- Date Information Grid -->
+            <MudGrid>
+                <MudItem xs="4">
+                    <div style="text-align: center; padding: 12px; background: #f8f9fa; border-radius: 12px;">
+                        <MudIcon Icon="@Icons.Material.Filled.CalendarToday" Size="Size.Small" Color="Color.Primary" Style="margin-bottom: 4px;" />
+                        <MudText Typo="Typo.caption" Color="Color.Secondary" Style="font-weight: 600; text-transform: uppercase; font-size: 0.7rem;">Issued</MudText>
+                        <MudText Typo="Typo.body2" Style="font-weight: 600; color: #333;">@Invoice.InvoiceDate.ToString("dd MMM")</MudText>
+                    </div>
+                </MudItem>
+                <MudItem xs="4">
+                    <div style="text-align: center; padding: 12px; background: @(IsOverdue(Invoice) ? "#ffebee" : "#f8f9fa"); border-radius: 12px;">
+                        <MudIcon Icon="@Icons.Material.Filled.Event" Size="Size.Small" Color="@(IsOverdue(Invoice) ? Color.Error : Color.Warning)" Style="margin-bottom: 4px;" />
+                        <MudText Typo="Typo.caption" Color="Color.Secondary" Style="font-weight: 600; text-transform: uppercase; font-size: 0.7rem;">Due</MudText>
+                        <MudText Typo="Typo.body2" Style="@($"font-weight: 600; color: {(IsOverdue(Invoice) ? "#d32f2f" : "#333")};")">@Invoice.DueDate.ToString("dd MMM")</MudText>
+                    </div>
+                </MudItem>
+                <MudItem xs="4">
+                    <div style="text-align: center; padding: 12px; background: #e3f2fd; border-radius: 12px;">
+                        <MudIcon Icon="@Icons.Material.Filled.Work" Size="Size.Small" Color="Color.Info" Style="margin-bottom: 4px;" />
+                        <MudText Typo="Typo.caption" Color="Color.Secondary" Style="font-weight: 600; text-transform: uppercase; font-size: 0.7rem;">Service</MudText>
+                        <MudText Typo="Typo.body2" Style="font-weight: 600; color: #333;">@Invoice.ServiceDate.ToString("dd MMM")</MudText>
+                    </div>
+                </MudItem>
+            </MudGrid>
+
+            <!-- Quick Stats -->
+            <MudGrid>
+                <MudItem xs="6">
+                    <div style="text-align: center; padding: 16px; background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%); border-radius: 12px;">
+                        <MudIcon Icon="@Icons.Material.Filled.ListAlt" Color="Color.Success" Size="Size.Medium" Style="margin-bottom: 8px;" />
+                        <MudText Typo="Typo.h6" Style="color: #2E7D32; font-weight: 700; margin-bottom: 4px;">@Invoice.Items.Count</MudText>
+                        <MudText Typo="Typo.caption" Style="color: #388E3C; font-weight: 600; text-transform: uppercase; font-size: 0.7rem;">@(Invoice.Items.Count == 1 ? "Item" : "Items")</MudText>
+                    </div>
+                </MudItem>
+                <MudItem xs="6">
+                    @{
+                        var attachmentCount = Invoice.ExpenseProofFiles?.Count ?? 0;
+                        var expenseAmount = Invoice.ExpenseProofFiles?.Sum(x => x.Amount) ?? 0;
+                    }
+                    <div style="text-align: center; padding: 16px; background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-radius: 12px;">
+                        <MudIcon Icon="@Icons.Material.Filled.AttachFile" Color="Color.Warning" Size="Size.Medium" Style="margin-bottom: 8px;" />
+                        <MudText Typo="Typo.h6" Style="color: #F57C00; font-weight: 700; margin-bottom: 4px;">@attachmentCount</MudText>
+                        <MudText Typo="Typo.caption" Style="color: #FF8F00; font-weight: 600; text-transform: uppercase; font-size: 0.7rem;">Files</MudText>
+                        @if (expenseAmount > 0)
+                        {
+                            <MudText Typo="Typo.caption" Style="color: #E65100; font-weight: 600; font-size: 0.7rem; margin-top: 2px;">
+                                @expenseAmount.ToString("C", CultureInfo.GetCultureInfo("de-DE"))
+                            </MudText>
+                        }
+                    </div>
+                </MudItem>
+            </MudGrid>
+        </MudStack>
+    </MudCardContent>
+
+    <!-- Enhanced Action Bar -->
+    <div style="padding: 20px; border-top: 1px solid #f0f0f0; background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);">
+        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+            <!-- Primary Actions -->
+            <MudButtonGroup Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small">
+                <MudTooltip Text="Edit Invoice">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" 
+                                 Color="Color.Primary" 
+                                 OnClick="@(() => OnEdit.InvokeAsync(Invoice))"
+                                 Style="border-radius: 8px 0 0 8px;" />
+                </MudTooltip>
+                <MudTooltip Text="Manage Items">
+                    <MudIconButton Icon="@Icons.Material.Filled.List" 
+                                 Color="Color.Primary" 
+                                 OnClick="@(() => OnManageItems.InvokeAsync(Invoice))" />
+                </MudTooltip>
+                <MudTooltip Text="Manage Files">
+                    <MudIconButton Icon="@Icons.Material.Filled.AttachFile" 
+                                 Color="Color.Primary" 
+                                 OnClick="@(() => OnManageFiles.InvokeAsync(Invoice))" />
+                </MudTooltip>
+                <MudTooltip Text="Delete Invoice">
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                                 Color="Color.Error" 
+                                 OnClick="@(() => OnDelete.InvokeAsync(Invoice))"
+                                 Style="border-radius: 0 8px 8px 0;" />
+                </MudTooltip>
+            </MudButtonGroup>
+
+            <!-- Export Actions -->
+            <MudStack Row="true" Spacing="1">
+                <MudTooltip Text="Export to Excel">
+                    <MudFab StartIcon="@Icons.Material.Filled.TableChart"
+                           Color="Color.Success" 
+                           Size="Size.Small"
+                           OnClick="@(() => OnExportExcel.InvokeAsync(Invoice))"
+                           Style="width: 40px; height: 40px; background: linear-gradient(135deg, #4CAF50 0%, #45A049 100%);" />
+                </MudTooltip>
+                <MudTooltip Text="Export to PDF">
+                    <MudFab Icon="@Icons.Material.Filled.PictureAsPdf" 
+                           Color="Color.Error" 
+                           Size="Size.Small"
+                           OnClick="@(() => OnExportPdf.InvokeAsync(Invoice))"
+                           Style="width: 40px; height: 40px; background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);" />
+                </MudTooltip>
+            </MudStack>
+        </MudStack>
+    </div>
+</MudPaper>
+
+@code {
+    [Parameter] public Invoice Invoice { get; set; } = null!;
+    [Parameter] public EventCallback<Invoice> OnEdit { get; set; }
+    [Parameter] public EventCallback<Invoice> OnDelete { get; set; }
+    [Parameter] public EventCallback<Invoice> OnManageItems { get; set; }
+    [Parameter] public EventCallback<Invoice> OnManageFiles { get; set; }
+    [Parameter] public EventCallback<Invoice> OnExportExcel { get; set; }
+    [Parameter] public EventCallback<Invoice> OnExportPdf { get; set; }
+
+    private bool _isHovered = false;
+
+    private string GetStatusGradient(Invoice invoice)
+    {
+        if (IsOverdue(invoice))
+            return "linear-gradient(135deg, #f44336 0%, #d32f2f 100%)"; // Red for overdue
+        
+        if (IsDueSoon(invoice))
+            return "linear-gradient(135deg, #ff9800 0%, #f57c00 100%)"; // Orange for due soon
+        
+        return "linear-gradient(135deg, #4CAF50 0%, #45A049 100%)"; // Green for normal
+    }
+
+    private string GetStatusIcon(Invoice invoice)
+    {
+        if (IsOverdue(invoice))
+            return Icons.Material.Filled.Warning;
+        
+        if (IsDueSoon(invoice))
+            return Icons.Material.Filled.Schedule;
+        
+        return Icons.Material.Filled.CheckCircle;
+    }
+
+    private string GetStatusText(Invoice invoice)
+    {
+        if (IsOverdue(invoice))
+            return "Overdue";
+        
+        if (IsDueSoon(invoice))
+            return "Due Soon";
+        
+        return "Current";
+    }
+
+    private bool IsOverdue(Invoice invoice)
+    {
+        return invoice.DueDate < DateTime.Now.Date;
+    }
+
+    private bool IsDueSoon(Invoice invoice)
+    {
+        var daysUntilDue = (invoice.DueDate - DateTime.Now.Date).TotalDays;
+        return daysUntilDue <= 7 && daysUntilDue >= 0;
+    }
+}

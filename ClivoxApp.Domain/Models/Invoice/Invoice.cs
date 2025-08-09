@@ -27,6 +27,21 @@ public class Invoice : IAggregateRoot
     public List<ExpenseProofFile> ExpenseProofFiles { get; set; } = new();
 
     /// <summary>
+    /// Calculates the total amount from all invoice items (what you charge the client)
+    /// </summary>
+    public decimal ItemsTotal => Items?.Sum(x => x.Total) ?? 0m;
+
+    /// <summary>
+    /// Calculates the total amount from all expense proof files (what you spent)
+    /// </summary>
+    public decimal ExpensesTotal => ExpenseProofFiles?.Sum(x => x.Amount) ?? 0m;
+
+    /// <summary>
+    /// Calculates the net invoice total (Items - Expenses = what client actually pays)
+    /// </summary>
+    public decimal NetTotal => ItemsTotal - ExpensesTotal;
+
+    /// <summary>
     /// Validates that the invoice has the minimum required information
     /// </summary>
     /// <returns>True if invoice is valid, false otherwise</returns>

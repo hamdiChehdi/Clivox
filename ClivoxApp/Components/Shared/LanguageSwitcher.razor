@@ -1,0 +1,225 @@
+﻿@using System.Globalization
+
+<style>
+    .language-switcher {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .language-button {
+        background: var(--mud-palette-surface) !important;
+        border: 1px solid var(--mud-palette-table-lines) !important;
+        border-radius: 12px !important;
+        padding: 8px 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        min-width: 100px !important;
+        justify-content: flex-start !important;
+        position: relative !important;
+    }
+    
+    .language-button:hover {
+        background: var(--mud-palette-action-hover) !important;
+        border-color: var(--mud-palette-primary) !important;
+        box-shadow: 0 2px 8px rgba(25, 118, 210, 0.15) !important;
+        transform: translateY(-1px) !important;
+    }
+    
+    .language-button.active {
+        border-color: var(--mud-palette-primary) !important;
+        box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2) !important;
+    }
+    
+    .language-flag {
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    
+    .language-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        margin-top: 8px;
+        background: var(--mud-palette-surface);
+        border: 1px solid var(--mud-palette-table-lines);
+        border-radius: 12px;
+        box-shadow: var(--mud-elevation-8);
+        min-width: 180px;
+        z-index: 1000;
+        overflow: hidden;
+        opacity: 1;
+        transform: translateY(0);
+        transition: all 0.2s ease;
+    }
+    
+    .language-option {
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border-bottom: 1px solid var(--mud-palette-table-lines);
+        position: relative;
+    }
+    
+    .language-option:last-child {
+        border-bottom: none;
+    }
+    
+    .language-option:hover {
+        background: var(--mud-palette-action-hover);
+        transform: translateX(2px);
+    }
+    
+    .language-option.active {
+        background: linear-gradient(135deg, rgba(25, 118, 210, 0.1) 0%, rgba(25, 118, 210, 0.05) 100%);
+        color: var(--mud-palette-primary);
+        font-weight: 600;
+    }
+    
+    .language-option.active::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--mud-palette-primary);
+    }
+    
+    .language-name {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    
+    .language-code {
+        font-size: 11px;
+        color: var(--mud-palette-text-secondary);
+        text-transform: uppercase;
+        font-weight: 700;
+        padding: 2px 6px;
+        background: var(--mud-palette-background-grey);
+        border-radius: 4px;
+    }
+    
+    /* Dark theme adjustments */
+    .mud-theme-dark .language-button {
+        border-color: rgba(255, 255, 255, 0.12) !important;
+    }
+    
+    .mud-theme-dark .language-button:hover {
+        border-color: var(--mud-palette-primary) !important;
+        box-shadow: 0 2px 12px rgba(25, 118, 210, 0.3) !important;
+    }
+    
+    .mud-theme-dark .language-dropdown {
+        border-color: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    
+    .mud-theme-dark .language-option {
+        border-bottom-color: rgba(255, 255, 255, 0.06);
+    }
+    
+    .mud-theme-dark .language-code {
+        background: rgba(255, 255, 255, 0.08);
+    }
+</style>
+
+<div class="language-switcher mt-2" @onclick:stopPropagation="true">
+    <MudButton Class="@($"language-button {(IsDropdownOpen ? "active" : "")}")" 
+               @onclick="ToggleDropdown"
+               Style="background: transparent; border: none; padding: 0; height: auto;">
+        <div class="@($"language-button {(IsDropdownOpen ? "active" : "")}")">
+            <div class="language-flag">@GetLanguageFlag(CurrentLanguage)</div>
+            <MudText Typo="Typo.body2" Style="font-weight: 600; color: var(--mud-palette-text-primary);">
+                @GetLanguageName(CurrentLanguage)
+            </MudText>
+            <MudIcon Icon="@(IsDropdownOpen ? Icons.Material.Filled.ExpandLess : Icons.Material.Filled.ExpandMore)" 
+                     Size="Size.Small" 
+                     Style="color: var(--mud-palette-text-secondary); margin-left: auto;" />
+        </div>
+    </MudButton>
+
+    @if (IsDropdownOpen)
+    {
+        <div class="language-dropdown" @onclick:stopPropagation="true">
+            @foreach (var language in AvailableLanguages)
+            {
+                <div class="language-option @(language.Code == CurrentLanguage ? "active" : "")"
+                     @onclick="@(() => SelectLanguage(language.Code))">
+                    <MudImage Src="@($"images/{language.Code}.jpg")" alt="English" class="mr-5" Width="25" Height="25" />
+                    <div class="language-flag">@GetLanguageFlag(language.Code)</div>
+                    <div class="language-name">@language.NativeName</div>
+                    <div class="language-code">@language.Code</div>
+                    @if (language.Code == CurrentLanguage)
+                    {
+                        <MudIcon Icon="@Icons.Material.Filled.Check" 
+                                 Size="Size.Small" 
+                                 Color="Color.Primary" 
+                                 Style="margin-left: auto;" />
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string CurrentLanguage { get; set; } = "en";
+    [Parameter] public EventCallback<string> OnLanguageChanged { get; set; }
+    
+    private bool IsDropdownOpen { get; set; } = false;
+    
+    private readonly List<LanguageOption> AvailableLanguages = new()
+    {
+        new("en", "English", "English"),
+        new("de", "Deutsch", "German")
+    };
+    
+    private void ToggleDropdown()
+    {
+        IsDropdownOpen = !IsDropdownOpen;
+        StateHasChanged();
+    }
+    
+    private async Task SelectLanguage(string languageCode)
+    {
+        IsDropdownOpen = false;
+        if (languageCode != CurrentLanguage)
+        {
+            await OnLanguageChanged.InvokeAsync(languageCode);
+        }
+        StateHasChanged();
+    }
+    
+    private string GetLanguageFlag(string languageCode)
+    {
+        return languageCode.ToLower() switch
+        {
+            "en" => "🇺🇸",
+            "de" => "🇩🇪", 
+            _ => "🌍"
+        };
+    }
+    
+    private string GetLanguageName(string languageCode)
+    {
+        var language = AvailableLanguages.FirstOrDefault(l => l.Code == languageCode);
+        return language?.DisplayName ?? languageCode.ToUpper();
+    }
+    
+    private record LanguageOption(string Code, string NativeName, string DisplayName);
+}

@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using ClivoxApp.Components.Shared
+@inherits LayoutComponentBase
 @implements IDisposable
 
 <MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" />
@@ -45,24 +46,9 @@
                             }
                         </MudSwitch>
 
-                        <MudSelect T="string"
-                                   Label="Language"
-                                   Variant="Variant.Outlined"
-                                   ValueChanged="ChangeLanguage"
-                                   Style="min-width: 80px;max-width: 200px">
-                            <MudSelectItem Value="@("en")">
-                                <div style="display: flex; align-items: center; margin-top: 8px;">
-                                    <MudImage Src="images/en.jpg" alt="English" class="mr-5" Width="25" Height="25" />
-                                    English
-                                </div>
-                            </MudSelectItem>
-                            <MudSelectItem Value="@("de")">
-                                <div style="display: flex; align-items: center; margin-top: 8px;">
-                                    <MudImage Src="images/de.jpg" alt="German" class="mr-5" Width="25" Height="25" />
-                                    German
-                                </div>
-                            </MudSelectItem>
-                        </MudSelect>
+                        <!-- Professional Language Switcher -->
+                        <LanguageSwitcher CurrentLanguage="@_currentLanguage" OnLanguageChanged="ChangeLanguage" />
+
                         <!-- Lock Session Button -->
                         <MudTooltip Text="Lock Session">
                             <MudIconButton Icon="@Icons.Material.Filled.Lock"

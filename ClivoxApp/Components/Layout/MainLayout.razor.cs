@@ -28,6 +28,7 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
     private MudThemeProvider? _mudThemeProvider;
     private bool _isAuthenticated = false;
     private string _currentUserName = string.Empty;
+    private string _currentLanguage = "en"; // Track current language
     private bool _authenticationCheckCompleted = false;
     private bool _showError = false;
     private string _errorMessage = string.Empty;
@@ -57,6 +58,10 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
     protected override async Task OnInitializedAsync()
     {
         AuthService.AuthenticationStateChanged += OnAuthenticationStateChanged;
+        
+        // Initialize current language from culture
+        var currentCulture = System.Globalization.CultureInfo.CurrentUICulture;
+        _currentLanguage = currentCulture.TwoLetterISOLanguageName.ToLower();
         
         try
         {
@@ -330,6 +335,9 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
     {
         // Save current theme preference before reload
         await SaveThemePreferenceAsync();
+        
+        // Update current language
+        _currentLanguage = language;
         
         var culture = new System.Globalization.CultureInfo(language);
         System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;

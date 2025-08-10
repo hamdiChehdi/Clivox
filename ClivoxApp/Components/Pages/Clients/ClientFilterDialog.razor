@@ -1,0 +1,306 @@
+@using ClivoxApp.Models.Clients
+@using ClivoxApp.Models.Shared
+@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        <MudContainer Style="padding: 0; max-height: 70vh; overflow-y: auto;">
+            <MudStack Spacing="4">
+                <!-- Search Section -->
+                <MudPaper Class="pa-4" Elevation="1" Style="border-radius: 8px; border-left: 4px solid var(--mud-palette-primary);">
+                    <MudStack Spacing="3">
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                            <MudIcon Icon="@Icons.Material.Filled.Search" Color="Color.Primary" />
+                            <MudText Typo="Typo.h6" Color="Color.Primary">Search & Text Filters</MudText>
+                        </MudStack>
+                        
+                        <MudTextField @bind-Value="Filter.SearchQuery" 
+                                     Label="Search by name, company, or email" 
+                                     Variant="Variant.Outlined"
+                                     Adornment="Adornment.Start"
+                                     AdornmentIcon="@Icons.Material.Filled.Search"
+                                     HelperText="Search across client names, company names, and email addresses" />
+                    </MudStack>
+                </MudPaper>
+
+                <!-- Client Type & Demographics Section -->
+                <MudPaper Class="pa-4" Elevation="1" Style="border-radius: 8px; border-left: 4px solid var(--mud-palette-success);">
+                    <MudStack Spacing="3">
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                            <MudIcon Icon="@Icons.Material.Filled.People" Color="Color.Success" />
+                            <MudText Typo="Typo.h6" Color="Color.Success">Client Type & Demographics</MudText>
+                        </MudStack>
+
+                        <MudGrid>
+                            <MudItem xs="6">
+                                <MudSelect T="ClientType?" @bind-Value="Filter.ClientType" 
+                                         Label="Client Type" 
+                                         Variant="Variant.Outlined"
+                                         Clearable="true"
+                                         HelperText="Filter by individual or company clients">
+                                    <MudSelectItem T="ClientType?" Value="ClientType.Individual">Individual</MudSelectItem>
+                                    <MudSelectItem T="ClientType?" Value="ClientType.Company">Company</MudSelectItem>
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem xs="6">
+                                <MudSelect T="Gender?" @bind-Value="Filter.Gender" 
+                                         Label="Gender" 
+                                         Variant="Variant.Outlined"
+                                         Clearable="true"
+                                         Disabled="@(Filter.ClientType == ClientType.Company)"
+                                         HelperText="For individual clients only">
+                                    <MudSelectItem T="Gender?" Value="Gender.Male">Male</MudSelectItem>
+                                    <MudSelectItem T="Gender?" Value="Gender.Female">Female</MudSelectItem>
+                                </MudSelect>
+                            </MudItem>
+                        </MudGrid>
+                    </MudStack>
+                </MudPaper>
+
+                <!-- Location Section -->
+                <MudPaper Class="pa-4" Elevation="1" Style="border-radius: 8px; border-left: 4px solid var(--mud-palette-info);">
+                    <MudStack Spacing="3">
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                            <MudIcon Icon="@Icons.Material.Filled.LocationOn" Color="Color.Info" />
+                            <MudText Typo="Typo.h6" Color="Color.Info">Location Filters</MudText>
+                        </MudStack>
+
+                        <MudGrid>
+                            <MudItem xs="6">
+                                <MudSelect T="Countries?" @bind-Value="Filter.Country" 
+                                         Label="Country" 
+                                         Variant="Variant.Outlined"
+                                         Clearable="true">
+                                    @foreach (var country in AvailableCountries)
+                                    {
+                                        <MudSelectItem T="Countries?" Value="country">@country.ToString()</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem xs="6">
+                                <MudTextField @bind-Value="Filter.City" 
+                                             Label="City" 
+                                             Variant="Variant.Outlined"
+                                             HelperText="Partial match supported" />
+                            </MudItem>
+                        </MudGrid>
+                        
+                        <MudTextField @bind-Value="Filter.PostalCode" 
+                                     Label="Postal Code" 
+                                     Variant="Variant.Outlined"
+                                     Style="max-width: 200px;"
+                                     HelperText="Partial match supported" />
+                    </MudStack>
+                </MudPaper>
+
+                <!-- Date Filters Section -->
+                <MudPaper Class="pa-4" Elevation="1" Style="border-radius: 8px; border-left: 4px solid var(--mud-palette-warning);">
+                    <MudStack Spacing="3">
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                            <MudIcon Icon="@Icons.Material.Filled.DateRange" Color="Color.Warning" />
+                            <MudText Typo="Typo.h6" Color="Color.Warning">Date Filters</MudText>
+                        </MudStack>
+
+                        <!-- Client Creation Filters -->
+                        <MudText Typo="Typo.subtitle2" Style="font-weight: 600;">Client Registration</MudText>
+                        <MudGrid>
+                            <MudItem xs="4">
+                                <MudSelect T="int?" @bind-Value="Filter.CreationYear" 
+                                         Label="Registration Year" 
+                                         Variant="Variant.Outlined"
+                                         Clearable="true">
+                                    @foreach (var year in ClientCreationYears)
+                                    {
+                                        <MudSelectItem T="int?" Value="year">@year</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem xs="4">
+                                <MudDatePicker @bind-Date="Filter.CreatedFrom" 
+                                             Label="Registered From" 
+                                             Variant="Variant.Outlined"
+                                             Clearable="true" />
+                            </MudItem>
+                            <MudItem xs="4">
+                                <MudDatePicker @bind-Date="Filter.CreatedTo" 
+                                             Label="Registered To" 
+                                             Variant="Variant.Outlined"
+                                             Clearable="true" />
+                            </MudItem>
+                        </MudGrid>
+
+                        <!-- Invoice Filters -->
+                        <MudText Typo="Typo.subtitle2" Style="font-weight: 600; margin-top: 16px;">Clients with Invoices</MudText>
+                        <MudGrid>
+                            <MudItem xs="4">
+                                <MudSelect T="int?" @bind-Value="Filter.InvoiceYear" 
+                                         Label="Invoice Year" 
+                                         Variant="Variant.Outlined"
+                                         Clearable="true">
+                                    @foreach (var year in InvoiceYears)
+                                    {
+                                        <MudSelectItem T="int?" Value="year">@year</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem xs="4">
+                                <MudDatePicker @bind-Date="Filter.InvoicesFrom" 
+                                             Label="Invoices From" 
+                                             Variant="Variant.Outlined"
+                                             Clearable="true" />
+                            </MudItem>
+                            <MudItem xs="4">
+                                <MudDatePicker @bind-Date="Filter.InvoicesTo" 
+                                             Label="Invoices To" 
+                                             Variant="Variant.Outlined"
+                                             Clearable="true" />
+                            </MudItem>
+                        </MudGrid>
+                    </MudStack>
+                </MudPaper>
+
+                <!-- Job Count Filters Section -->
+                <MudPaper Class="pa-4" Elevation="1" Style="border-radius: 8px; border-left: 4px solid var(--mud-palette-error);">
+                    <MudStack Spacing="3">
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                            <MudIcon Icon="@Icons.Material.Filled.Work" Color="Color.Error" />
+                            <MudText Typo="Typo.h6" Color="Color.Error">Job/Invoice Filters</MudText>
+                        </MudStack>
+
+                        <MudSelect T="bool?" @bind-Value="Filter.HasJobs" 
+                                 Label="Has Jobs/Invoices" 
+                                 Variant="Variant.Outlined"
+                                 Clearable="true"
+                                 HelperText="Filter clients with or without jobs">
+                            <MudSelectItem T="bool?" Value="true">Has Jobs</MudSelectItem>
+                            <MudSelectItem T="bool?" Value="false">No Jobs</MudSelectItem>
+                        </MudSelect>
+
+                        <MudGrid>
+                            <MudItem xs="6">
+                                <MudNumericField T="int?" @bind-Value="Filter.MinJobCount" 
+                                               Label="Min Job Count" 
+                                               Variant="Variant.Outlined"
+                                               Min="0" />
+                            </MudItem>
+                            <MudItem xs="6">
+                                <MudNumericField T="int?" @bind-Value="Filter.MaxJobCount" 
+                                               Label="Max Job Count" 
+                                               Variant="Variant.Outlined"
+                                               Min="0" />
+                            </MudItem>
+                        </MudGrid>
+                    </MudStack>
+                </MudPaper>
+
+                <!-- Active Filters Preview -->
+                @if (Filter.HasActiveFilters)
+                {
+                    <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">
+                        <strong>Active Filters:</strong> @GetActiveFiltersDescription()
+                    </MudAlert>
+                }
+            </MudStack>
+        </MudContainer>
+    </DialogContent>
+    <DialogActions>
+        <MudStack Row="true" Spacing="2" Justify="Justify.SpaceBetween" Style="width: 100%;">
+            <MudButton OnClick="ResetFilters" 
+                       Color="Color.Secondary" 
+                       Variant="Variant.Text"
+                       StartIcon="@Icons.Material.Filled.Refresh"
+                       Disabled="@(!Filter.HasActiveFilters)">
+                Reset All
+            </MudButton>
+            <MudStack Row="true" Spacing="2">
+                <MudButton OnClick="Cancel" Color="Color.Secondary">Cancel</MudButton>
+                <MudButton OnClick="ApplyFilters" 
+                           Color="Color.Primary" 
+                           Variant="Variant.Filled"
+                           StartIcon="@Icons.Material.Filled.FilterList">
+                    Apply Filters
+                </MudButton>
+            </MudStack>
+        </MudStack>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter] public ClientFilter Filter { get; set; } = new();
+    [Parameter] public List<int> ClientCreationYears { get; set; } = new();
+    [Parameter] public List<int> InvoiceYears { get; set; } = new();
+    [Parameter] public List<Countries> AvailableCountries { get; set; } = new();
+
+    private void ApplyFilters()
+    {
+        MudDialog.Close(DialogResult.Ok(Filter));
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+    private void ResetFilters()
+    {
+        Filter.Reset();
+        StateHasChanged();
+    }
+
+    private string GetActiveFiltersDescription()
+    {
+        var filters = new List<string>();
+
+        if (!string.IsNullOrWhiteSpace(Filter.SearchQuery))
+            filters.Add($"Search: '{Filter.SearchQuery}'");
+
+        if (Filter.ClientType.HasValue)
+            filters.Add($"Type: {Filter.ClientType}");
+
+        if (Filter.Gender.HasValue)
+            filters.Add($"Gender: {Filter.Gender}");
+
+        if (Filter.Country.HasValue)
+            filters.Add($"Country: {Filter.Country}");
+
+        if (!string.IsNullOrWhiteSpace(Filter.City))
+            filters.Add($"City: '{Filter.City}'");
+
+        if (Filter.CreationYear.HasValue)
+            filters.Add($"Registered: {Filter.CreationYear}");
+
+        if (Filter.CreatedFrom.HasValue && Filter.CreatedTo.HasValue)
+            filters.Add($"Registered: {Filter.CreatedFrom:d} - {Filter.CreatedTo:d}");
+        else if (Filter.CreatedFrom.HasValue)
+            filters.Add($"Registered after: {Filter.CreatedFrom:d}");
+        else if (Filter.CreatedTo.HasValue)
+            filters.Add($"Registered before: {Filter.CreatedTo:d}");
+
+        if (Filter.InvoiceYear.HasValue)
+            filters.Add($"Invoice year: {Filter.InvoiceYear}");
+
+        if (Filter.InvoicesFrom.HasValue && Filter.InvoicesTo.HasValue)
+            filters.Add($"Invoices: {Filter.InvoicesFrom:d} - {Filter.InvoicesTo:d}");
+        else if (Filter.InvoicesFrom.HasValue)
+            filters.Add($"Invoices after: {Filter.InvoicesFrom:d}");
+        else if (Filter.InvoicesTo.HasValue)
+            filters.Add($"Invoices before: {Filter.InvoicesTo:d}");
+
+        if (Filter.HasJobs.HasValue)
+            filters.Add(Filter.HasJobs.Value ? "Has jobs" : "No jobs");
+
+        if (Filter.MinJobCount.HasValue || Filter.MaxJobCount.HasValue)
+        {
+            if (Filter.MinJobCount.HasValue && Filter.MaxJobCount.HasValue)
+                filters.Add($"Jobs: {Filter.MinJobCount}-{Filter.MaxJobCount}");
+            else if (Filter.MinJobCount.HasValue)
+                filters.Add($"Min jobs: {Filter.MinJobCount}");
+            else
+                filters.Add($"Max jobs: {Filter.MaxJobCount}");
+        }
+
+        return string.Join(", ", filters.Take(3)) + (filters.Count > 3 ? $" and {filters.Count - 3} more..." : "");
+    }
+}

@@ -7,17 +7,59 @@
         <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
             <div>
                 <MudText Typo="Typo.h4" Color="Color.Primary" Style="font-weight: 600;">Client Directory</MudText>
-                <MudText Typo="Typo.body1" Color="Color.Secondary">@filteredClients.Count() clients total • @filteredClients.Sum(c => c.JobCount) total jobs</MudText>
+                <MudText Typo="Typo.body1" Color="Color.Secondary">
+                    @if (isLoading)
+                    {
+                        <text>Loading clients...</text>
+                    }
+                    else
+                    {
+                        <text>@filteredClients.Count() clients total • @filteredClients.Sum(c => c.JobCount) total jobs</text>
+                        @if (currentFilter.HasActiveFilters)
+                        {
+                            <text> • Filters Applied</text>
+                        }
+                    }
+                </MudText>
             </div>
             <MudStack Row="true" Spacing="2">
                 <MudTextField @bind-Value="searchQuery" 
+                              @bind-Value:after="@(() => OnSearchChanged(searchQuery))"
                               Placeholder="Search clients..." 
                               Variant="Variant.Outlined" 
                               Adornment="Adornment.Start" 
                               AdornmentIcon="@Icons.Material.Filled.Search" 
                               Style="min-width: 300px; border-radius: 8px;"
                               AdornmentColor="Color.Primary" 
-                              Immediate="true" />
+                              Immediate="false" />
+                
+                <!-- Filter Button -->
+                <MudButton StartIcon="@Icons.Material.Filled.FilterList" 
+                           Color="@(currentFilter.HasActiveFilters ? Color.Warning : Color.Primary)"
+                           Variant="@(currentFilter.HasActiveFilters ? Variant.Filled : Variant.Outlined)"
+                           OnClick="OpenFilterDialog"
+                           Style="border-radius: 8px;">
+                    @if (currentFilter.HasActiveFilters)
+                    {
+                        <text>Filters (@GetActiveFilterCount())</text>
+                    }
+                    else
+                    {
+                        <text>Filter</text>
+                    }
+                </MudButton>
+
+                @if (currentFilter.HasActiveFilters)
+                {
+                    <MudButton StartIcon="@Icons.Material.Filled.ClearAll" 
+                               Color="Color.Secondary"
+                               Variant="Variant.Outlined"
+                               OnClick="ClearAllFilters"
+                               Style="border-radius: 8px;">
+                        Clear
+                    </MudButton>
+                }
+
                 <MudButton StartIcon="@Icons.Material.Filled.Add" 
                            Color="Color.Primary" 
                            Variant="Variant.Filled" 
@@ -27,127 +69,254 @@
                 </MudButton>
             </MudStack>
         </MudStack>
+
+        <!-- Active Filters Display -->
+        @if (currentFilter.HasActiveFilters)
+        {
+            <MudDivider Style="margin: 16px 0;" />
+            <MudStack Row="true" Spacing="1" Wrap="Wrap.Wrap">
+                <MudText Typo="Typo.caption" Style="align-self: center; margin-right: 8px; color: var(--mud-palette-text-secondary);">Active filters:</MudText>
+                @foreach (var filterChip in GetActiveFilterChips())
+                {
+                    <MudChip T="string" Size="Size.Small" 
+                             Color="Color.Primary" 
+                             Variant="Variant.Outlined"
+                             CloseIcon="@Icons.Material.Filled.Close"
+                             OnClose="@(() => RemoveFilter(filterChip.Key))">
+                        @filterChip.Value
+                    </MudChip>
+                }
+            </MudStack>
+        }
     </MudPaper>
 
-    <!-- List View -->
-    <MudPaper Elevation="2" Style="border-radius: 12px; overflow: hidden;">
-        @if (filteredClients.Any())
-        {
-            @foreach (var (client, index) in filteredClients.Select((c, i) => (c, i)))
+    <!-- Loading State -->
+    @if (isLoading)
+    {
+        <MudPaper Class="pa-8 text-center" Elevation="1" Style="border-radius: 16px;">
+            <MudProgressCircular Indeterminate="true" Size="Size.Large" Color="Color.Primary" />
+            <MudText Typo="Typo.h6" Color="Color.Secondary" Style="margin-top: 16px;">Loading clients...</MudText>
+        </MudPaper>
+    }
+    else
+    {
+        <!-- List View -->
+        <MudPaper Elevation="2" Style="border-radius: 12px; overflow: hidden;">
+            @if (filteredClients.Any())
             {
-                <div style="border-bottom: @(index < filteredClients.Count() - 1 ? "1px solid #f0f0f0" : "none");">
-                    <MudStack Row="true" 
-                              AlignItems="AlignItems.Center" 
-                              Style="padding: 20px 24px; transition: background-color 0.2s ease; cursor: pointer;"
-                              Class="hover:bg-gray-50">
-                        
-                        <!-- Client Avatar/Icon -->
-                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                                    width: 60px; height: 60px; border-radius: 50%; 
-                                    display: flex; align-items: center; justify-content: center;
-                                    margin-right: 16px;">
-                            @if (client.IsCompany)
-                            {
-                                <MudIcon Icon="@Icons.Material.Filled.Business" Style="color: white;" Size="Size.Medium" />
-                            }
-                            else
-                            {
-                                <MudIcon Icon="@Icons.Material.Filled.Person" Style="color: white;" Size="Size.Medium" />
-                            }
-                        </div>
+                @foreach (var (client, index) in filteredClients.Select((c, i) => (c, i)))
+                {
+                    <div style="border-bottom: @(index < filteredClients.Count() - 1 ? "1px solid #f0f0f0" : "none");">
+                        <MudStack Row="true" 
+                                  AlignItems="AlignItems.Center" 
+                                  Style="padding: 20px 24px; transition: background-color 0.2s ease; cursor: pointer;"
+                                  Class="hover:bg-gray-50"
+                                  @onclick="@(() => NavigateToJobs(client.Id))">
+                            
+                            <!-- Client Avatar/Icon -->
+                            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                                        width: 60px; height: 60px; border-radius: 50%; 
+                                        display: flex; align-items: center; justify-content: center;
+                                        margin-right: 16px;">
+                                @if (client.IsCompany)
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Business" Style="color: white;" Size="Size.Medium" />
+                                }
+                                else
+                                {
+                                    <MudIcon Icon="@(client.Gender == Gender.Female ? Icons.Material.Filled.Person4 : Icons.Material.Filled.Person)" 
+                                             Style="color: white;" Size="Size.Medium" />
+                                }
+                            </div>
 
-                        <!-- Client Info -->
-                        <div style="flex: 1;">
-                            <MudStack Spacing="1">
-                                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
-                                    <MudText Typo="Typo.h6" Style="color: #333; font-weight: 600;">
-                                        @(client.IsCompany ? client.CompanyName : client.FullName)
-                                    </MudText>
-                                    <MudChip T="string"
-                                             Size="Size.Small" 
-                                             Color="@(client.IsCompany ? Color.Info : Color.Primary)" 
-                                             Style="text-transform: uppercase; font-size: 0.7rem; font-weight: 600;">
-                                        @(client.IsCompany ? "Company" : "Individual")
-                                    </MudChip>
-                                    <MudChip T="string"
-                                             Size="Size.Small" 
-                                             Color="Color.Success" 
-                                             Icon="@Icons.Material.Filled.Work"
-                                             Style="font-size: 0.7rem; font-weight: 600;">
-                                        @client.JobCount @(client.JobCount == 1 ? "Job" : "Jobs")
-                                    </MudChip>
-                                </MudStack>
+                            <!-- Client Info -->
+                            <div style="flex-grow: 1;">
+                                <MudText Typo="Typo.h6" Style="font-weight: 600; margin-bottom: 4px;">
+                                    @(client.IsCompany ? client.CompanyName : client.FullName)
+                                </MudText>
                                 
-                                <MudStack Row="true" Spacing="4" Style="color: #666;">
+                                <MudStack Row="true" Spacing="4">
                                     @if (!string.IsNullOrWhiteSpace(client.Email))
                                     {
-                                        <div style="display: flex; align-items: center; gap: 6px;">
-                                            <MudIcon Icon="@Icons.Material.Filled.Email" Size="Size.Small" />
-                                            <MudText Typo="Typo.body2">@client.Email</MudText>
-                                        </div>
+                                        <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
+                                            <MudIcon Icon="@Icons.Material.Filled.Email" Size="Size.Small" Color="Color.Secondary" />
+                                            <MudText Typo="Typo.body2" Color="Color.Secondary">@client.Email</MudText>
+                                        </MudStack>
                                     }
-                                    @if (!string.IsNullOrWhiteSpace(client.PhoneNumber))
+                                    
+                                    @if (client.Address != null && !string.IsNullOrWhiteSpace(client.Address.City))
                                     {
-                                        <div style="display: flex; align-items: center; gap: 6px;">
-                                            <MudIcon Icon="@Icons.Material.Filled.Phone" Size="Size.Small" />
-                                            <MudText Typo="Typo.body2">@client.PhoneNumber</MudText>
-                                        </div>
+                                        <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
+                                            <MudIcon Icon="@Icons.Material.Filled.LocationOn" Size="Size.Small" Color="Color.Secondary" />
+                                            <MudText Typo="Typo.body2" Color="Color.Secondary">@client.Address.City</MudText>
+                                        </MudStack>
                                     }
-                                </MudStack>
-                                
-                                <MudText Typo="Typo.body2" Style="color: #999;">
-                                    <MudIcon Icon="@Icons.Material.Filled.LocationOn" Size="Size.Small" Style="margin-right: 4px;" />
-                                    @client.Address?.Street, @client.Address?.City, @client.Address?.Country
-                                </MudText>
-                            </MudStack>
-                        </div>
 
-                        <!-- Actions -->
-                        <MudStack Row="true" Spacing="1">
-                            <MudTooltip Text="@($"Manage {client.JobCount} {(client.JobCount == 1 ? "Job" : "Jobs")}")">
-                                <MudIconButton Icon="@Icons.Material.Filled.Work" 
-                                             Color="Color.Info" 
-                                             Size="Size.Medium"
-                                             OnClick="@(() => NavigateToJobs(client.Id))" 
-                                             Style="border-radius: 8px;" />
-                            </MudTooltip>
-                            <MudTooltip Text="Edit Client">
-                                <MudIconButton Icon="@Icons.Material.Filled.Edit" 
-                                             Color="Color.Primary" 
-                                             Size="Size.Medium"
-                                             OnClick="@(() => EditClient(client))" 
-                                             Style="border-radius: 8px;" />
-                            </MudTooltip>
-                            <MudTooltip Text="Delete Client">
-                                <MudIconButton Icon="@Icons.Material.Filled.Delete" 
-                                             Color="Color.Error" 
-                                             Size="Size.Medium"
-                                             OnClick="@(() => DeleteClient(client.Id))" 
-                                             Style="border-radius: 8px;" />
-                            </MudTooltip>
+                                    <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
+                                        <MudIcon Icon="@Icons.Material.Filled.CalendarToday" Size="Size.Small" Color="Color.Secondary" />
+                                        <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                            Registered @client.CreatedOn.ToString("MMM yyyy")
+                                        </MudText>
+                                    </MudStack>
+                                </MudStack>
+                            </div>
+
+                            <!-- Job Count Badge -->
+                            <div style="margin-right: 16px;">
+                                <MudChip T="string" 
+                                         Color="@(client.JobCount > 0 ? Color.Success : Color.Default)" 
+                                         Size="Size.Medium"
+                                         Variant="Variant.Filled">
+                                    @client.JobCount @(client.JobCount == 1 ? "Job" : "Jobs")
+                                </MudChip>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div @onclick:stopPropagation="true">
+                                <MudButtonGroup Variant="Variant.Outlined" Size="Size.Small">
+                                    <MudIconButton Icon="@Icons.Material.Filled.Edit" 
+                                                   Color="Color.Primary" 
+                                                   OnClick="@(async () => await EditClient(client))" />
+                                    <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                                                   Color="Color.Error" 
+                                                   OnClick="@(async () => await DeleteClient(client.Id))" />
+                                </MudButtonGroup>
+                            </div>
                         </MudStack>
+                    </div>
+                }
+            }
+            else
+            {
+                <!-- Empty State in List -->
+                <div class="pa-8 text-center">
+                    <MudIcon Icon="@Icons.Material.Filled.PersonSearch" Size="Size.Large" Color="Color.Secondary" Style="margin-bottom: 16px;" />
+                    <MudText Typo="Typo.h6" Color="Color.Secondary">
+                        @if (currentFilter.HasActiveFilters)
+                        {
+                            <text>No clients match your filters</text>
+                        }
+                        else
+                        {
+                            <text>No clients found</text>
+                        }
+                    </MudText>
+                    <MudText Typo="Typo.body1" Color="Color.Secondary" Style="margin-bottom: 24px;">
+                        @if (currentFilter.HasActiveFilters)
+                        {
+                            <text>Try adjusting your search criteria or clearing the filters</text>
+                        }
+                        else
+                        {
+                            <text>Start by adding your first client</text>
+                        }
+                    </MudText>
+                    
+                    <MudStack Row="true" Spacing="2" Justify="Justify.Center">
+                        @if (currentFilter.HasActiveFilters)
+                        {
+                            <MudButton StartIcon="@Icons.Material.Filled.ClearAll" 
+                                       Color="Color.Secondary" 
+                                       Variant="Variant.Outlined" 
+                                       OnClick="ClearAllFilters">
+                                Clear Filters
+                            </MudButton>
+                        }
+                        
+                        <MudButton StartIcon="@Icons.Material.Filled.Add" 
+                                   Color="Color.Primary" 
+                                   Variant="Variant.Filled" 
+                                   OnClick="OpenAddClientDialog">
+                            Add Client
+                        </MudButton>
                     </MudStack>
                 </div>
             }
-        }
-        else
-        {
-            <div style="padding: 60px 24px; text-align: center;">
-                <MudIcon Icon="@Icons.Material.Filled.PersonSearch" Size="Size.Large" Color="Color.Secondary" Style="margin-bottom: 16px;" />
-                <MudText Typo="Typo.h6" Color="Color.Secondary">No clients found</MudText>
-                <MudText Typo="Typo.body1" Color="Color.Secondary" Style="margin: 8px 0 24px;">
-                    @(string.IsNullOrWhiteSpace(searchQuery) ? "Add your first client to get started" : "No clients match your search")
-                </MudText>
-                @if (string.IsNullOrWhiteSpace(searchQuery))
-                {
-                    <MudButton StartIcon="@Icons.Material.Filled.Add" 
-                               Color="Color.Primary" 
-                               Variant="Variant.Filled" 
-                               OnClick="OpenAddClientDialog">
-                        Add Your First Client
-                    </MudButton>
-                }
-            </div>
-        }
-    </MudPaper>
+        </MudPaper>
+    }
 </div>
+
+@code {
+    private int GetActiveFilterCount()
+    {
+        int count = 0;
+        if (!string.IsNullOrWhiteSpace(currentFilter.SearchQuery)) count++;
+        if (currentFilter.ClientType.HasValue) count++;
+        if (currentFilter.Gender.HasValue) count++;
+        if (currentFilter.Country.HasValue) count++;
+        if (!string.IsNullOrWhiteSpace(currentFilter.City)) count++;
+        if (currentFilter.CreationYear.HasValue) count++;
+        if (currentFilter.CreatedFrom.HasValue || currentFilter.CreatedTo.HasValue) count++;
+        if (currentFilter.InvoiceYear.HasValue) count++;
+        if (currentFilter.InvoicesFrom.HasValue || currentFilter.InvoicesTo.HasValue) count++;
+        if (currentFilter.HasJobs.HasValue) count++;
+        if (currentFilter.MinJobCount.HasValue || currentFilter.MaxJobCount.HasValue) count++;
+        return count;
+    }
+
+    private List<KeyValuePair<string, string>> GetActiveFilterChips()
+    {
+        var chips = new List<KeyValuePair<string, string>>();
+
+        if (!string.IsNullOrWhiteSpace(currentFilter.SearchQuery))
+            chips.Add(new("SearchQuery", $"Search: {currentFilter.SearchQuery}"));
+
+        if (currentFilter.ClientType.HasValue)
+            chips.Add(new("ClientType", $"Type: {currentFilter.ClientType}"));
+
+        if (currentFilter.Gender.HasValue)
+            chips.Add(new("Gender", $"Gender: {currentFilter.Gender}"));
+
+        if (currentFilter.Country.HasValue)
+            chips.Add(new("Country", $"Country: {currentFilter.Country}"));
+
+        if (!string.IsNullOrWhiteSpace(currentFilter.City))
+            chips.Add(new("City", $"City: {currentFilter.City}"));
+
+        if (currentFilter.CreationYear.HasValue)
+            chips.Add(new("CreationYear", $"Registered: {currentFilter.CreationYear}"));
+
+        if (currentFilter.InvoiceYear.HasValue)
+            chips.Add(new("InvoiceYear", $"Invoice Year: {currentFilter.InvoiceYear}"));
+
+        if (currentFilter.HasJobs.HasValue)
+            chips.Add(new("HasJobs", currentFilter.HasJobs.Value ? "Has Jobs" : "No Jobs"));
+
+        return chips;
+    }
+
+    private async Task RemoveFilter(string filterKey)
+    {
+        switch (filterKey)
+        {
+            case "SearchQuery":
+                currentFilter.SearchQuery = null;
+                searchQuery = string.Empty;
+                break;
+            case "ClientType":
+                currentFilter.ClientType = null;
+                break;
+            case "Gender":
+                currentFilter.Gender = null;
+                break;
+            case "Country":
+                currentFilter.Country = null;
+                break;
+            case "City":
+                currentFilter.City = null;
+                break;
+            case "CreationYear":
+                currentFilter.CreationYear = null;
+                break;
+            case "InvoiceYear":
+                currentFilter.InvoiceYear = null;
+                break;
+            case "HasJobs":
+                currentFilter.HasJobs = null;
+                break;
+        }
+
+        await LoadClients();
+        StateHasChanged();
+    }
+}

@@ -8,7 +8,20 @@
             <MudIcon Icon="@Icons.Material.Filled.People" Style="color: white;" Size="Size.Large" />
             <div style="flex-grow: 1;">
                 <MudText Typo="Typo.h4" Style="color: white; font-weight: 600; margin-bottom: 4px;">Client Management</MudText>
-                <MudText Typo="Typo.body1" Style="color: rgba(255,255,255,0.9);">@filteredClients.Count() clients • @filteredClients.Sum(c => c.JobCount) total jobs</MudText>
+                <MudText Typo="Typo.body1" Style="color: rgba(255,255,255,0.9);">
+                    @if (isLoading)
+                    {
+                        <text>Loading clients...</text>
+                    }
+                    else
+                    {
+                        <text>@filteredClients.Count() clients • @filteredClients.Sum(c => c.JobCount) total jobs</text>
+                        @if (currentFilter.HasActiveFilters)
+                        {
+                            <text> • Filters Applied</text>
+                        }
+                    }
+                </MudText>
             </div>
             <MudButton StartIcon="@Icons.Material.Filled.Add" 
                        Color="Color.Surface" 
@@ -20,46 +33,232 @@
         </MudStack>
     </MudPaper>
 
-    <!-- Search Section -->
-    <MudTextField @bind-Value="searchQuery" 
-                  Placeholder="@Resource.home_SearchClients" 
-                  Variant="Variant.Outlined" 
-                  Adornment="Adornment.Start" 
-                  AdornmentIcon="@Icons.Material.Filled.Search" 
-                  Class="mb-6" 
-                  Style="border-radius: 12px;"
-                  AdornmentColor="Color.Primary" 
-                  Immediate="true" />
+    <!-- Advanced Search and Filter Section -->
+    <MudPaper Class="pa-4 mb-6" Elevation="1" Style="border-radius: 12px;">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
+            <!-- Search Field -->
+            <MudTextField @bind-Value="searchQuery" 
+                          @bind-Value:after="@(() => OnSearchChanged(searchQuery))"
+                          Placeholder="@Resource.home_SearchClients" 
+                          Variant="Variant.Outlined" 
+                          Adornment="Adornment.Start" 
+                          AdornmentIcon="@Icons.Material.Filled.Search" 
+                          Style="flex-grow: 1; border-radius: 8px;"
+                          AdornmentColor="Color.Primary" 
+                          Immediate="false" />
 
-    <!-- Professional Grid Layout -->
-    <MudGrid GutterSize="4">
-        @foreach (var client in filteredClients)
+            <!-- Filter Buttons -->
+            <MudButtonGroup Variant="Variant.Outlined" Color="Color.Primary">
+                <MudTooltip Text="Advanced Filters">
+                    <MudButton StartIcon="@Icons.Material.Filled.FilterList" 
+                               Color="@(currentFilter.HasActiveFilters ? Color.Warning : Color.Primary)"
+                               Variant="@(currentFilter.HasActiveFilters ? Variant.Filled : Variant.Outlined)"
+                               OnClick="OpenFilterDialog">
+                        @if (currentFilter.HasActiveFilters)
+                        {
+                            <MudBadge Content="@GetActiveFilterCount()" Color="Color.Error" Overlap="true">
+                                <text>Filters</text>
+                            </MudBadge>
+                        }
+                        else
+                        {
+                            <text>Filter</text>
+                        }
+                    </MudButton>
+                </MudTooltip>
+                
+                @if (currentFilter.HasActiveFilters)
+                {
+                    <MudTooltip Text="Clear All Filters">
+                        <MudButton StartIcon="@Icons.Material.Filled.ClearAll" 
+                                   Color="Color.Secondary"
+                                   OnClick="ClearAllFilters">
+                            Clear
+                        </MudButton>
+                    </MudTooltip>
+                }
+            </MudButtonGroup>
+        </MudStack>
+
+        <!-- Active Filters Display -->
+        @if (currentFilter.HasActiveFilters)
         {
-            <MudItem xs="12" sm="6" md="4" lg="3">
-                <ClientCard Client="client" OnDelete="DeleteClient" OnEdit="EditClient" />
-            </MudItem>
+            <MudDivider Style="margin: 12px 0;" />
+            <MudStack Row="true" Spacing="1" Wrap="Wrap.Wrap">
+                <MudText Typo="Typo.caption" Style="align-self: center; margin-right: 8px; color: var(--mud-palette-text-secondary);">Active filters:</MudText>
+                @foreach (var filterChip in GetActiveFilterChips())
+                {
+                    <MudChip T="string" Size="Size.Small" 
+                             Color="Color.Primary" 
+                             Variant="Variant.Outlined"
+                             CloseIcon="@Icons.Material.Filled.Close"
+                             OnClose="@(() => RemoveFilter(filterChip.Key))">
+                        @filterChip.Value
+                    </MudChip>
+                }
+            </MudStack>
         }
-    </MudGrid>
+    </MudPaper>
 
-    <!-- Empty State -->
-    @if (!filteredClients.Any())
+    <!-- Loading State -->
+    @if (isLoading)
     {
-        <MudPaper Class="pa-8 text-center" Elevation="1" Style="border-radius: 16px; margin-top: 24px;">
-            <MudIcon Icon="@Icons.Material.Filled.PersonSearch" Size="Size.Large" Color="Color.Secondary" Style="margin-bottom: 16px;" />
-            <MudText Typo="Typo.h6" Color="Color.Secondary">No clients found</MudText>
-            <MudText Typo="Typo.body1" Color="Color.Secondary" Style="margin-bottom: 24px;">
-                @(string.IsNullOrWhiteSpace(searchQuery) ? "Start by adding your first client" : "Try adjusting your search criteria")
-            </MudText>
-            @if (string.IsNullOrWhiteSpace(searchQuery))
-            {
-                <MudButton StartIcon="@Icons.Material.Filled.Add" 
-                           Color="Color.Primary" 
-                           Variant="Variant.Filled" 
-                           OnClick="OpenAddClientDialog"
-                           Style="text-transform: none; border-radius: 12px;">
-                    Add Your First Client
-                </MudButton>
-            }
+        <MudPaper Class="pa-8 text-center" Elevation="1" Style="border-radius: 16px;">
+            <MudProgressCircular Indeterminate="true" Size="Size.Large" Color="Color.Primary" />
+            <MudText Typo="Typo.h6" Color="Color.Secondary" Style="margin-top: 16px;">Loading clients...</MudText>
         </MudPaper>
     }
+    else
+    {
+        <!-- Professional Grid Layout -->
+        <MudGrid GutterSize="4">
+            @foreach (var client in filteredClients)
+            {
+                <MudItem xs="12" sm="6" md="4" lg="3">
+                    <ClientCard Client="client" OnDelete="DeleteClient" OnEdit="EditClient" />
+                </MudItem>
+            }
+        </MudGrid>
+
+        <!-- Empty State -->
+        @if (!filteredClients.Any())
+        {
+            <MudPaper Class="pa-8 text-center" Elevation="1" Style="border-radius: 16px; margin-top: 24px;">
+                <MudIcon Icon="@Icons.Material.Filled.PersonSearch" Size="Size.Large" Color="Color.Secondary" Style="margin-bottom: 16px;" />
+                <MudText Typo="Typo.h6" Color="Color.Secondary">
+                    @if (currentFilter.HasActiveFilters)
+                    {
+                        <text>No clients match your filters</text>
+                    }
+                    else
+                    {
+                        <text>No clients found</text>
+                    }
+                </MudText>
+                <MudText Typo="Typo.body1" Color="Color.Secondary" Style="margin-bottom: 24px;">
+                    @if (currentFilter.HasActiveFilters)
+                    {
+                        <text>Try adjusting your search criteria or clearing the filters</text>
+                    }
+                    else if (string.IsNullOrWhiteSpace(searchQuery))
+                    {
+                        <text>Start by adding your first client</text>
+                    }
+                    else
+                    {
+                        <text>Try adjusting your search criteria</text>
+                    }
+                </MudText>
+                
+                <MudStack Row="true" Spacing="2" Justify="Justify.Center">
+                    @if (currentFilter.HasActiveFilters)
+                    {
+                        <MudButton StartIcon="@Icons.Material.Filled.ClearAll" 
+                                   Color="Color.Secondary" 
+                                   Variant="Variant.Outlined" 
+                                   OnClick="ClearAllFilters"
+                                   Style="text-transform: none; border-radius: 12px;">
+                            Clear Filters
+                        </MudButton>
+                    }
+                    
+                    @if (!currentFilter.HasActiveFilters && string.IsNullOrWhiteSpace(searchQuery))
+                    {
+                        <MudButton StartIcon="@Icons.Material.Filled.Add" 
+                                   Color="Color.Primary" 
+                                   Variant="Variant.Filled" 
+                                   OnClick="OpenAddClientDialog"
+                                   Style="text-transform: none; border-radius: 12px;">
+                            Add Your First Client
+                        </MudButton>
+                    }
+                </MudStack>
+            </MudPaper>
+        }
+    }
 </div>
+
+@code {
+    private int GetActiveFilterCount()
+    {
+        int count = 0;
+        if (!string.IsNullOrWhiteSpace(currentFilter.SearchQuery)) count++;
+        if (currentFilter.ClientType.HasValue) count++;
+        if (currentFilter.Gender.HasValue) count++;
+        if (currentFilter.Country.HasValue) count++;
+        if (!string.IsNullOrWhiteSpace(currentFilter.City)) count++;
+        if (currentFilter.CreationYear.HasValue) count++;
+        if (currentFilter.CreatedFrom.HasValue || currentFilter.CreatedTo.HasValue) count++;
+        if (currentFilter.InvoiceYear.HasValue) count++;
+        if (currentFilter.InvoicesFrom.HasValue || currentFilter.InvoicesTo.HasValue) count++;
+        if (currentFilter.HasJobs.HasValue) count++;
+        if (currentFilter.MinJobCount.HasValue || currentFilter.MaxJobCount.HasValue) count++;
+        return count;
+    }
+
+    private List<KeyValuePair<string, string>> GetActiveFilterChips()
+    {
+        var chips = new List<KeyValuePair<string, string>>();
+
+        if (!string.IsNullOrWhiteSpace(currentFilter.SearchQuery))
+            chips.Add(new("SearchQuery", $"Search: {currentFilter.SearchQuery}"));
+
+        if (currentFilter.ClientType.HasValue)
+            chips.Add(new("ClientType", $"Type: {currentFilter.ClientType}"));
+
+        if (currentFilter.Gender.HasValue)
+            chips.Add(new("Gender", $"Gender: {currentFilter.Gender}"));
+
+        if (currentFilter.Country.HasValue)
+            chips.Add(new("Country", $"Country: {currentFilter.Country}"));
+
+        if (!string.IsNullOrWhiteSpace(currentFilter.City))
+            chips.Add(new("City", $"City: {currentFilter.City}"));
+
+        if (currentFilter.CreationYear.HasValue)
+            chips.Add(new("CreationYear", $"Registered: {currentFilter.CreationYear}"));
+
+        if (currentFilter.InvoiceYear.HasValue)
+            chips.Add(new("InvoiceYear", $"Invoice Year: {currentFilter.InvoiceYear}"));
+
+        if (currentFilter.HasJobs.HasValue)
+            chips.Add(new("HasJobs", currentFilter.HasJobs.Value ? "Has Jobs" : "No Jobs"));
+
+        return chips;
+    }
+
+    private async Task RemoveFilter(string filterKey)
+    {
+        switch (filterKey)
+        {
+            case "SearchQuery":
+                currentFilter.SearchQuery = null;
+                searchQuery = string.Empty;
+                break;
+            case "ClientType":
+                currentFilter.ClientType = null;
+                break;
+            case "Gender":
+                currentFilter.Gender = null;
+                break;
+            case "Country":
+                currentFilter.Country = null;
+                break;
+            case "City":
+                currentFilter.City = null;
+                break;
+            case "CreationYear":
+                currentFilter.CreationYear = null;
+                break;
+            case "InvoiceYear":
+                currentFilter.InvoiceYear = null;
+                break;
+            case "HasJobs":
+                currentFilter.HasJobs = null;
+                break;
+        }
+
+        await LoadClients();
+        StateHasChanged();
+    }
+}

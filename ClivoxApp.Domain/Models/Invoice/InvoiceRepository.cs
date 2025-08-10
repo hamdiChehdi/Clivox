@@ -75,7 +75,10 @@ public class InvoiceRepository
             invoice.ServiceDate,
             invoice.TotalAmount,
             invoice.ClientId,
-            invoice.Items);
+            invoice.Items,
+            invoice.Status,
+            invoice.PaidDate,
+            invoice.PaymentNotes);
         using var session = _documentStore.LightweightSession();
         session.StoreEvents<Invoice>(null, evt, null);
         await session.SaveChangesAsync();
@@ -108,7 +111,10 @@ public class InvoiceRepository
             invoice.ServiceDate,
             invoice.TotalAmount,
             invoice.ClientId,
-            invoice.Items);
+            invoice.Items,
+            invoice.Status,
+            invoice.PaidDate,
+            invoice.PaymentNotes);
         using var session = _documentStore.LightweightSession();
         session.StoreEvents<Invoice>(invoice.Id, evt, null);
         await session.SaveChangesAsync();
@@ -208,5 +214,83 @@ public class InvoiceRepository
         using var session = _documentStore.LightweightSession();
         session.StoreEvents<Invoice>(invoiceId, evt, null);
         await session.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Changes the status of an invoice
+    /// </summary>
+    public async Task ChangeInvoiceStatusAsync(Guid invoiceId, InvoiceStatus newStatus, string? paymentNotes = null)
+    {
+        _logger.LogInformation("Changing invoice {InvoiceId} status to {NewStatus}", invoiceId, newStatus);
+        
+        // Get current invoice to check previous status
+        var currentInvoice = await GetInvoiceByIdAsync(invoiceId);
+        var previousStatus = currentInvoice?.Status;
+        
+        var paidDate = newStatus == InvoiceStatus.Paid ? DateTime.Now : (DateTime?)null;
+        
+        var evt = new InvoiceStatusChanged(
+            invoiceId,
+            newStatus,
+            previousStatus,
+            paidDate,
+            paymentNotes
+        );
+        
+        using var session = _documentStore.LightweightSession();
+        session.StoreEvents<Invoice>(invoiceId, evt, null);
+        await session.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Marks an invoice as paid
+    /// </summary>
+    public async Task MarkInvoiceAsPaidAsync(Guid invoiceId, DateTime? paidDate = null, string? paymentNotes = null)
+    {
+        await ChangeInvoiceStatusAsync(invoiceId, InvoiceStatus.Paid, paymentNotes);
+    }
+
+    /// <summary>
+    /// Gets all overdue invoices (past due date and not paid)
+    /// </summary>
+    public async Task<IReadOnlyList<Invoice>> GetOverdueInvoicesAsync()
+    {
+        var invoices = await _querySession.Query<Invoice>()
+            .Where(x => x.Status != InvoiceStatus.Paid && x.Status != InvoiceStatus.Cancelled && x.DueDate < DateTime.Now.Date)
+            .OrderBy(x => x.DueDate)
+            .ToListAsync();
+        
+        return invoices;
+    }
+
+    /// <summary>
+    /// Gets all invoices by status
+    /// </summary>
+    public async Task<IReadOnlyList<Invoice>> GetInvoicesByStatusAsync(InvoiceStatus status)
+    {
+        var invoices = await _querySession.Query<Invoice>()
+            .Where(x => x.Status == status)
+            .OrderBy(x => x.InvoiceNumber)
+            .ToListAsync();
+        
+        return invoices;
+    }
+
+    /// <summary>
+    /// Gets invoices due soon (within specified days and not paid)
+    /// </summary>
+    public async Task<IReadOnlyList<Invoice>> GetInvoicesDueSoonAsync(int daysAhead = 7)
+    {
+        var futureDate = DateTime.Now.Date.AddDays(daysAhead);
+        
+        var invoices = await _querySession.Query<Invoice>()
+            .Where(x => x.Status != InvoiceStatus.Paid && 
+                       x.Status != InvoiceStatus.Cancelled && 
+                       x.DueDate >= DateTime.Now.Date && 
+                       x.DueDate <= futureDate)
+            .OrderBy(x => x.DueDate)
+            .ToListAsync();
+        
+        return invoices;
     }
 }

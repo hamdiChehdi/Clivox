@@ -282,6 +282,11 @@
                                  Color="Color.Primary" 
                                  OnClick="@(() => OnManageFiles.InvokeAsync(Invoice))" />
                 </MudTooltip>
+                <MudTooltip Text="Change Status">
+                    <MudIconButton Icon="@Icons.Material.Filled.ChangeCircle" 
+                                 Color="Color.Info" 
+                                 OnClick="HandleStatusChange" />
+                </MudTooltip>
                 <MudTooltip Text="@Resource.invoiceCard_DeleteInvoice">
                     <MudIconButton Icon="@Icons.Material.Filled.Delete" 
                                  Color="Color.Error" 
@@ -320,6 +325,7 @@
     [Parameter] public EventCallback<Invoice> OnExportExcel { get; set; }
     [Parameter] public EventCallback<Invoice> OnExportPdf { get; set; }
     [Parameter] public EventCallback<Invoice> OnPreviewPdf { get; set; }
+    [Parameter] public EventCallback<Invoice> OnChangeStatus { get; set; }
 
     private bool _isHovered = false;
     private bool _isFinancialSummaryExpanded = false; // Collapsed by default
@@ -345,45 +351,58 @@
 
     private string GetStatusGradient(Invoice invoice)
     {
-        if (IsOverdue(invoice))
-            return "linear-gradient(135deg, #f44336 0%, #d32f2f 100%)"; // Red for overdue
-        
-        if (IsDueSoon(invoice))
-            return "linear-gradient(135deg, #ff9800 0%, #f57c00 100%)"; // Orange for due soon
-        
-        return "linear-gradient(135deg, #4CAF50 0%, #45A049 100%)"; // Green for normal
+        return invoice.EffectiveStatus switch
+        {
+            InvoiceStatus.Paid => "linear-gradient(135deg, #4CAF50 0%, #45A049 100%)", // Green for paid
+            InvoiceStatus.Overdue => "linear-gradient(135deg, #f44336 0%, #d32f2f 100%)", // Red for overdue
+            InvoiceStatus.Cancelled => "linear-gradient(135deg, #9E9E9E 0%, #757575 100%)", // Gray for cancelled
+            InvoiceStatus.Draft => "linear-gradient(135deg, #2196F3 0%, #1976D2 100%)", // Blue for draft
+            _ when invoice.IsDueSoon => "linear-gradient(135deg, #ff9800 0%, #f57c00 100%)", // Orange for due soon
+            _ => "linear-gradient(135deg, #4CAF50 0%, #45A049 100%)" // Green for normal sent
+        };
     }
 
     private string GetStatusIcon(Invoice invoice)
     {
-        if (IsOverdue(invoice))
-            return Icons.Material.Filled.Warning;
-        
-        if (IsDueSoon(invoice))
-            return Icons.Material.Filled.Schedule;
-        
-        return Icons.Material.Filled.CheckCircle;
+        return invoice.EffectiveStatus switch
+        {
+            InvoiceStatus.Paid => Icons.Material.Filled.Paid,
+            InvoiceStatus.Overdue => Icons.Material.Filled.Warning,
+            InvoiceStatus.Cancelled => Icons.Material.Filled.Cancel,
+            InvoiceStatus.Draft => Icons.Material.Filled.Edit,
+            _ when invoice.IsDueSoon => Icons.Material.Filled.Schedule,
+            _ => Icons.Material.Filled.CheckCircle
+        };
     }
 
     private string GetStatusText(Invoice invoice)
     {
-        if (IsOverdue(invoice))
-            return Resource.invoiceCard_Overdue;
-        
-        if (IsDueSoon(invoice))
-            return Resource.invoiceCard_DueSoon;
-        
-        return Resource.invoiceCard_Current;
+        return invoice.EffectiveStatus switch
+        {
+            InvoiceStatus.Paid => "PAID",
+            InvoiceStatus.Overdue => "OVERDUE",
+            InvoiceStatus.Cancelled => "CANCELLED",
+            InvoiceStatus.Draft => "DRAFT",
+            _ when invoice.IsDueSoon => "DUE SOON",
+            _ => "CURRENT"
+        };
     }
 
     private bool IsOverdue(Invoice invoice)
     {
-        return invoice.DueDate < DateTime.Now.Date;
+        return invoice.IsOverdue;
     }
 
     private bool IsDueSoon(Invoice invoice)
     {
-        var daysUntilDue = (invoice.DueDate - DateTime.Now.Date).TotalDays;
-        return daysUntilDue <= 7 && daysUntilDue >= 0;
+        return invoice.IsDueSoon;
+    }
+
+    private async Task HandleStatusChange()
+    {
+        if (OnChangeStatus.HasDelegate)
+        {
+            await OnChangeStatus.InvokeAsync(Invoice);
+        }
     }
 }

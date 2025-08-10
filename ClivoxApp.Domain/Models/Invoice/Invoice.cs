@@ -19,6 +19,12 @@ public class Invoice : IAggregateRoot
     public DateTime DueDate { get; set; } = DateTime.UtcNow.AddDays(14);
     public DateTime ServiceDate { get; set; } = DateTime.UtcNow.AddDays(-7);
     public decimal TotalAmount { get; set; } = 0.0m;
+    
+    // New payment status fields
+    public InvoiceStatus Status { get; set; } = InvoiceStatus.Draft;
+    public DateTime? PaidDate { get; set; }
+    public string? PaymentNotes { get; set; }
+    
     // Navigation properties
     public Guid ClientId { get; set; }
     // List of invoice items
@@ -40,6 +46,86 @@ public class Invoice : IAggregateRoot
     /// Calculates the net invoice total (Items - Expenses = what client actually pays)
     /// </summary>
     public decimal NetTotal => ItemsTotal - ExpensesTotal;
+
+    /// <summary>
+    /// Gets the effective status of the invoice considering both the status field and due date
+    /// </summary>
+    public InvoiceStatus EffectiveStatus
+    {
+        get
+        {
+            // If explicitly marked as paid, return paid
+            if (Status == InvoiceStatus.Paid)
+                return InvoiceStatus.Paid;
+            
+            // If cancelled, return cancelled
+            if (Status == InvoiceStatus.Cancelled)
+                return InvoiceStatus.Cancelled;
+            
+            // If draft, return draft
+            if (Status == InvoiceStatus.Draft)
+                return InvoiceStatus.Draft;
+            
+            // For sent invoices, check if overdue
+            if (Status == InvoiceStatus.Sent && DueDate < DateTime.Now.Date)
+                return InvoiceStatus.Overdue;
+            
+            // Otherwise return the current status
+            return Status;
+        }
+    }
+
+    /// <summary>
+    /// Checks if the invoice is overdue (past due date and not paid)
+    /// </summary>
+    public bool IsOverdue => EffectiveStatus == InvoiceStatus.Overdue;
+
+    /// <summary>
+    /// Checks if the invoice is due soon (within 7 days and not paid)
+    /// </summary>
+    public bool IsDueSoon
+    {
+        get
+        {
+            if (Status == InvoiceStatus.Paid || Status == InvoiceStatus.Cancelled)
+                return false;
+            
+            var daysUntilDue = (DueDate - DateTime.Now.Date).TotalDays;
+            return daysUntilDue <= 7 && daysUntilDue >= 0;
+        }
+    }
+
+    /// <summary>
+    /// Marks the invoice as paid
+    /// </summary>
+    public void MarkAsPaid(DateTime? paidDate = null, string? paymentNotes = null)
+    {
+        Status = InvoiceStatus.Paid;
+        PaidDate = paidDate ?? DateTime.Now;
+        PaymentNotes = paymentNotes;
+    }
+
+    /// <summary>
+    /// Changes the invoice status
+    /// </summary>
+    public void ChangeStatus(InvoiceStatus newStatus, string? notes = null)
+    {
+        Status = newStatus;
+        
+        if (newStatus == InvoiceStatus.Paid && !PaidDate.HasValue)
+        {
+            PaidDate = DateTime.Now;
+        }
+        else if (newStatus != InvoiceStatus.Paid)
+        {
+            PaidDate = null;
+        }
+        
+        if (!string.IsNullOrEmpty(notes))
+        {
+            PaymentNotes = notes;
+        }
+    }
 
     /// <summary>
     /// Validates that the invoice has the minimum required information
@@ -157,6 +243,9 @@ public class Invoice : IAggregateRoot
             DueDate = this.DueDate,
             ServiceDate = this.ServiceDate,
             TotalAmount = this.TotalAmount,
+            Status = this.Status,
+            PaidDate = this.PaidDate,
+            PaymentNotes = this.PaymentNotes,
             ClientId = this.ClientId,
             Items = new List<InvoiceItem>(),
             ExpenseProofFiles = new List<ExpenseProofFile>()
@@ -220,6 +309,9 @@ public class Invoice : IAggregateRoot
             DueDate != other.DueDate ||
             ServiceDate != other.ServiceDate ||
             TotalAmount != other.TotalAmount ||
+            Status != other.Status ||
+            PaidDate != other.PaidDate ||
+            PaymentNotes != other.PaymentNotes ||
             ClientId != other.ClientId)
         {
             return true;
@@ -427,6 +519,15 @@ public enum BillingType
     PerSquareMeter,
     FixedPrice,
     PerObject
+}
+
+public enum InvoiceStatus
+{
+    Draft,
+    Sent,
+    Paid,
+    Overdue,
+    Cancelled
 }
 
 public class InvoiceItem

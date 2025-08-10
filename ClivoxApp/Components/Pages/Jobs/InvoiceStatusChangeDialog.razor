@@ -1,0 +1,190 @@
+﻿@using ClivoxApp.Models.Invoice
+@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        <MudContainer Style="padding: 0;">
+            <MudStack Spacing="4">
+                <!-- Current Status Display -->
+                <MudPaper Elevation="2" Style="padding: 16px; border-radius: 12px; text-align: center;">
+                    <MudText Typo="Typo.h6" Color="Color.Primary">Invoice @InvoiceNumber</MudText>
+                    <MudChip T="string" Color="@GetStatusColor(CurrentStatus)" Size="Size.Medium" Style="margin-top: 8px;">
+                        Current: @CurrentStatus.ToString()
+                    </MudChip>
+                    @if (CurrentStatus == InvoiceStatus.Paid && PaidDate.HasValue)
+                    {
+                        <MudText Typo="Typo.caption" Style="margin-top: 8px;">
+                            Paid on: @PaidDate.Value.ToString("dd MMM yyyy")
+                        </MudText>
+                    }
+                </MudPaper>
+
+                <!-- New Status Selection -->
+                <MudStack Spacing="3">
+                    <MudText Typo="Typo.h6">Change Status To:</MudText>
+                    
+                    <MudRadioGroup T="InvoiceStatus" @bind-Value="SelectedStatus">
+                        @foreach (var status in GetAvailableStatuses())
+                        {
+                            <MudRadio T="InvoiceStatus" Value="@status" 
+                                     Color="@GetStatusColor(status)" 
+                                     Style="margin-bottom: 8px;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <MudIcon Icon="@GetStatusIcon(status)" Size="Size.Small" Color="@GetStatusColor(status)" />
+                                    <div>
+                                        <MudText Typo="Typo.body1" Style="font-weight: 600;">@status.ToString()</MudText>
+                                        <MudText Typo="Typo.caption" Color="Color.Secondary">@GetStatusDescription(status)</MudText>
+                                    </div>
+                                </div>
+                            </MudRadio>
+                        }
+                    </MudRadioGroup>
+                </MudStack>
+
+                <!-- Payment Date for Paid Status -->
+                @if (SelectedStatus == InvoiceStatus.Paid)
+                {
+                    <MudDatePicker @bind-Date="PaymentDate" 
+                                 Label="Payment Date" 
+                                 Variant="Variant.Outlined"
+                                 DisableFuture="true"
+                                 HelperText="When was this invoice paid?" />
+                }
+
+                <!-- Notes -->
+                <MudTextField @bind-Value="Notes" 
+                             Label="Notes (Optional)" 
+                             Lines="3" 
+                             Variant="Variant.Outlined"
+                             HelperText="Add any additional notes about this status change" />
+
+                <!-- Summary -->
+                @if (SelectedStatus != CurrentStatus)
+                {
+                    <MudAlert Severity="@GetStatusSeverity(SelectedStatus)" Variant="Variant.Outlined">
+                        <MudText>
+                            <strong>Status Change Summary:</strong><br />
+                            From: <strong>@CurrentStatus</strong> to <strong>@SelectedStatus</strong>
+                            @if (SelectedStatus == InvoiceStatus.Paid && PaymentDate.HasValue)
+                            {
+                                <br />
+                                <text>Payment Date: </text><strong>@PaymentDate.Value.ToString("dd MMM yyyy")</strong>
+                            }
+                        </MudText>
+                    </MudAlert>
+                }
+            </MudStack>
+        </MudContainer>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Color="Color.Secondary">Cancel</MudButton>
+        <MudButton OnClick="Submit" 
+                   Color="@GetStatusColor(SelectedStatus)" 
+                   Variant="Variant.Filled"
+                   Disabled="@(SelectedStatus == CurrentStatus)"
+                   StartIcon="@GetStatusIcon(SelectedStatus)">
+            @if (SelectedStatus == InvoiceStatus.Paid)
+            {
+                <text>Mark as Paid</text>
+            }
+            else
+            {
+                <text>Change Status</text>
+            }
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudBlazor.IMudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter] public string InvoiceNumber { get; set; } = string.Empty;
+    [Parameter] public InvoiceStatus CurrentStatus { get; set; }
+    [Parameter] public DateTime? PaidDate { get; set; }
+
+    private InvoiceStatus SelectedStatus;
+    private DateTime? PaymentDate;
+    private string Notes = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        SelectedStatus = CurrentStatus;
+        PaymentDate = PaidDate ?? DateTime.Today;
+    }
+
+    private List<InvoiceStatus> GetAvailableStatuses()
+    {
+        return Enum.GetValues<InvoiceStatus>().ToList();
+    }
+
+    private Color GetStatusColor(InvoiceStatus status)
+    {
+        return status switch
+        {
+            InvoiceStatus.Draft => Color.Info,
+            InvoiceStatus.Sent => Color.Primary,
+            InvoiceStatus.Paid => Color.Success,
+            InvoiceStatus.Overdue => Color.Error,
+            InvoiceStatus.Cancelled => Color.Secondary,
+            _ => Color.Default
+        };
+    }
+
+    private string GetStatusIcon(InvoiceStatus status)
+    {
+        return status switch
+        {
+            InvoiceStatus.Draft => Icons.Material.Filled.Edit,
+            InvoiceStatus.Sent => Icons.Material.Filled.Send,
+            InvoiceStatus.Paid => Icons.Material.Filled.Paid,
+            InvoiceStatus.Overdue => Icons.Material.Filled.Warning,
+            InvoiceStatus.Cancelled => Icons.Material.Filled.Cancel,
+            _ => Icons.Material.Filled.Circle
+        };
+    }
+
+    private string GetStatusDescription(InvoiceStatus status)
+    {
+        return status switch
+        {
+            InvoiceStatus.Draft => "Invoice is being prepared and not yet sent to client",
+            InvoiceStatus.Sent => "Invoice has been sent to the client and is awaiting payment",
+            InvoiceStatus.Paid => "Invoice has been paid by the client",
+            InvoiceStatus.Overdue => "Invoice is past due date and still unpaid",
+            InvoiceStatus.Cancelled => "Invoice has been cancelled and will not be paid",
+            _ => ""
+        };
+    }
+
+    private Severity GetStatusSeverity(InvoiceStatus status)
+    {
+        return status switch
+        {
+            InvoiceStatus.Paid => Severity.Success,
+            InvoiceStatus.Overdue => Severity.Error,
+            InvoiceStatus.Cancelled => Severity.Warning,
+            _ => Severity.Info
+        };
+    }
+
+    private void Submit()
+    {
+        var result = new StatusChangeResult
+        {
+            NewStatus = SelectedStatus,
+            PaymentDate = SelectedStatus == InvoiceStatus.Paid ? PaymentDate : null,
+            Notes = string.IsNullOrWhiteSpace(Notes) ? null : Notes
+        };
+
+        MudDialog.Close(DialogResult.Ok(result));
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    public class StatusChangeResult
+    {
+        public InvoiceStatus NewStatus { get; set; }
+        public DateTime? PaymentDate { get; set; }
+        public string? Notes { get; set; }
+    }
+}

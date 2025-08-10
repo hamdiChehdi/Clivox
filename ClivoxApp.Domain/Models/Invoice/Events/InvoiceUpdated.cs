@@ -12,5 +12,8 @@ public record InvoiceUpdated(
     DateTime ServiceDate,
     decimal TotalAmount,
     Guid ClientId,
-    List<InvoiceItem> Items
+    List<InvoiceItem> Items,
+    InvoiceStatus Status = InvoiceStatus.Draft,
+    DateTime? PaidDate = null,
+    string? PaymentNotes = null
 ) : DomainEvent;

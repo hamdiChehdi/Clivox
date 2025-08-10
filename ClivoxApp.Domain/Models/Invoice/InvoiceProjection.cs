@@ -26,6 +26,9 @@ public class InvoiceProjection : SingleStreamProjection<Invoice, Guid>
         invoice.TotalAmount = @event.TotalAmount;
         invoice.ClientId = @event.ClientId;
         invoice.Items = @event.Items;
+        invoice.Status = @event.Status;
+        invoice.PaidDate = @event.PaidDate;
+        invoice.PaymentNotes = @event.PaymentNotes;
     }
 
     public void Apply(InvoiceUpdated @event, Invoice invoice)
@@ -37,6 +40,9 @@ public class InvoiceProjection : SingleStreamProjection<Invoice, Guid>
         invoice.TotalAmount = @event.TotalAmount;
         invoice.ClientId = @event.ClientId;
         invoice.Items = @event.Items;
+        invoice.Status = @event.Status;
+        invoice.PaidDate = @event.PaidDate;
+        invoice.PaymentNotes = @event.PaymentNotes;
     }
 
     /// <summary>
@@ -169,6 +175,16 @@ public class InvoiceProjection : SingleStreamProjection<Invoice, Guid>
                 invoice.Items.Add(updatedItem);
             }
         }
+    }
+
+    /// <summary>
+    /// Apply InvoiceStatusChanged event - updates the invoice status, paid date, and payment notes
+    /// </summary>
+    public void Apply(InvoiceStatusChanged @event, Invoice invoice)
+    {
+        invoice.Status = @event.NewStatus;
+        invoice.PaidDate = @event.PaidDate;
+        invoice.PaymentNotes = @event.PaymentNotes;
     }
 
     public override Invoice ApplyMetadata(Invoice invoice, IEvent lastEvent)

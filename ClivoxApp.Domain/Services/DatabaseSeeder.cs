@@ -274,10 +274,48 @@ public class DatabaseSeeder
             ServiceDate = baseDate.AddDays(-_random.Next(1, 30)),
             CreatedOn = baseDate.AddMinutes(_random.Next(0, 60)),
             ModifiedOn = baseDate.AddDays(_random.Next(0, 5)),
-            Items = GenerateRandomInvoiceItems()
+            Items = GenerateRandomInvoiceItems(),
+            Status = GenerateRandomInvoiceStatus(baseDate)
         };
 
+        // Set paid date if status is paid
+        if (invoice.Status == InvoiceStatus.Paid)
+        {
+            invoice.PaidDate = invoice.DueDate.AddDays(-_random.Next(0, 10));
+        }
+
         return invoice;
+    }
+
+    private InvoiceStatus GenerateRandomInvoiceStatus(DateTime invoiceDate)
+    {
+        var rand = _random.NextDouble();
+        var daysSinceCreated = (DateTime.Now - invoiceDate).TotalDays;
+        
+        // Older invoices are more likely to be paid
+        if (daysSinceCreated > 90)
+        {
+            return rand < 0.7 ? InvoiceStatus.Paid : InvoiceStatus.Sent;
+        }
+        else if (daysSinceCreated > 60)
+        {
+            return rand < 0.5 ? InvoiceStatus.Paid : InvoiceStatus.Sent;
+        }
+        else if (daysSinceCreated > 30)
+        {
+            return rand < 0.3 ? InvoiceStatus.Paid : InvoiceStatus.Sent;
+        }
+        else
+        {
+            // Recent invoices
+            return rand switch
+            {
+                < 0.1 => InvoiceStatus.Paid,
+                < 0.8 => InvoiceStatus.Sent,
+                < 0.95 => InvoiceStatus.Draft,
+                _ => InvoiceStatus.Cancelled
+            };
+        }
     }
 
     private List<InvoiceItem> GenerateRandomInvoiceItems()

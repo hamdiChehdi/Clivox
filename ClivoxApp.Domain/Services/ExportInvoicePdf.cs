@@ -68,7 +68,7 @@ public class ExportInvoicePdf
                     ? businessOwner.CompanyName
                     : $"{businessOwner.FirstName} {businessOwner.LastName}";
 
-                column.Item().Text(ownerName).SemiBold().FontSize(20).FontColor(Colors.Blue.Medium);
+                //column.Item().Text(ownerName).SemiBold().FontSize(20).FontColor(Colors.Blue.Medium);
 
                 if (!string.IsNullOrEmpty(businessOwner.Email))
                     column.Item().Text(businessOwner.Email);

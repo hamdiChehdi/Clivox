@@ -49,6 +49,15 @@
                         <!-- Professional Language Switcher -->
                         <LanguageSwitcher CurrentLanguage="@_currentLanguage" OnLanguageChanged="ChangeLanguage" />
 
+
+                        <!-- Database Admin Button (Debug only) -->
+                        <MudTooltip Text="Database Administration">
+                            <MudIconButton Icon="@Icons.Material.Filled.Storage"
+                                           Color="Color.Secondary"
+                                           OnClick="OpenDatabaseAdmin"
+                                           Size="Size.Large" />
+                        </MudTooltip>
+
                         <!-- Lock Session Button -->
                         <MudTooltip Text="@Resource.mainLayout_LockSession">
                             <MudIconButton Icon="@Icons.Material.Filled.Lock"

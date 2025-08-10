@@ -2,6 +2,7 @@
 using ClivoxApp.Models.Invoice;
 using ClivoxApp.Models.Auth;
 using ClivoxApp.Services;
+using ClivoxApp.Extensions;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Storage;
 using JasperFx.Events.Projections;
@@ -50,6 +51,9 @@ namespace ClivoxApp
             // Services
             builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
             builder.Services.AddSingleton<AuthenticationService>();
+            
+            // Database seeding (for development/testing)
+            builder.Services.AddDatabaseSeeding();
             
             // UI Services
             builder.Services.AddMudServices();

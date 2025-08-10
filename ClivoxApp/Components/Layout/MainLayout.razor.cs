@@ -335,14 +335,19 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
     {
         // Save current theme preference before reload
         await SaveThemePreferenceAsync();
-        
+
         // Update current language
         _currentLanguage = language;
-        
+
         var culture = new System.Globalization.CultureInfo(language);
         System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
         System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
         NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    }
+
+    private void OpenDatabaseAdmin()
+    {
+        NavigationManager.NavigateTo("/admin/database");
     }
 
     private async Task OpenBusinessOwnerDialog()

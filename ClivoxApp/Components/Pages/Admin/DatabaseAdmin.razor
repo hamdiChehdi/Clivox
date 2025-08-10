@@ -1,0 +1,369 @@
+﻿@page "/admin/database"
+@using ClivoxApp.Services
+@using ClivoxApp.Extensions
+@using ClivoxApp.Models.Invoice;
+@using ClivoxApp.Models.Clients;
+@using Microsoft.Extensions.Logging
+@inject IServiceProvider ServiceProvider
+@inject ISnackbar Snackbar
+@inject NavigationManager Navigation
+@inject Microsoft.Extensions.Logging.ILogger<DatabaseAdmin> Logger
+@inject IDialogService DialogService
+
+<PageTitle>Database Administration</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="pa-6">
+    <MudPaper Class="pa-6" Elevation="4" Style="border-radius: 16px;">
+        <MudStack Spacing="4">
+            <!-- Header -->
+            <div>
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
+                    <MudIcon Icon="@Icons.Material.Filled.Storage" Size="Size.Large" Color="Color.Primary" />
+                    <div>
+                        <MudText Typo="Typo.h4" Color="Color.Primary">Database Administration</MudText>
+                        <MudText Typo="Typo.body1" Color="Color.Secondary">Manage test data for development and testing</MudText>
+                    </div>
+                </MudStack>
+            </div>
+
+            <MudDivider />
+
+            <!-- Database Seeding Section -->
+            <MudPaper Class="pa-4" Elevation="2" Style="border-radius: 12px; border-left: 4px solid var(--mud-palette-success);">
+                <MudStack Spacing="3">
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                        <MudIcon Icon="@Icons.Material.Filled.Grass" Color="Color.Success" />
+                        <MudText Typo="Typo.h6" Color="Color.Success">Database Seeding</MudText>
+                    </MudStack>
+
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">
+                        Populate your database with realistic test data for development and testing purposes.
+                    </MudText>
+
+                    <MudStack Row="true" Spacing="2" Class="flex-wrap">
+                        <MudNumericField @bind-Value="clientCount" 
+                                       Label="Number of Clients" 
+                                       Min="1" 
+                                       Max="100" 
+                                       Variant="Variant.Outlined" 
+                                       Style="min-width: 160px;" />
+                        
+                        <MudNumericField @bind-Value="invoicesPerClient" 
+                                       Label="Invoices per Client" 
+                                       Min="1" 
+                                       Max="20" 
+                                       Variant="Variant.Outlined" 
+                                       Style="min-width: 160px;" />
+
+                        <MudSwitch @bind-Value="includeExpenseFiles" 
+                                 Label="Include Expense Files" 
+                                 Color="Color.Success"
+                                 Style="margin-top: 16px;" />
+                    </MudStack>
+
+                    <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">
+                        <MudText>
+                            <strong>What will be created:</strong><br />
+                            • @clientCount clients (@(Math.Round(clientCount * 0.7)) individuals, @(Math.Round(clientCount * 0.3)) companies)<br />
+                            • @(clientCount * invoicesPerClient) total invoices<br />
+                            @if (includeExpenseFiles)
+                            {
+                                <text>• @(Math.Round(clientCount * invoicesPerClient * 0.6 * 2.0)) expense proof files (60% of invoices, 1-3 files each)<br /></text>
+                            }
+                            • Random German addresses and realistic business data<br />
+                            • Various billing types (hourly, fixed, per object, per m²)
+                        </MudText>
+                    </MudAlert>
+
+                    <MudStack Row="true" Spacing="2">
+                        <MudButton StartIcon="@Icons.Material.Filled.Grass" 
+                                 Color="Color.Success" 
+                                 Variant="Variant.Filled" 
+                                 OnClick="SeedDatabase" 
+                                 Disabled="isOperationRunning"
+                                 Style="text-transform: none;">
+                            @if (isSeeding)
+                            {
+                                <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+                                <text>Seeding...</text>
+                            }
+                            else
+                            {
+                                <text>Seed Database</text>
+                            }
+                        </MudButton>
+
+                        <MudButton StartIcon="@Icons.Material.Filled.Speed" 
+                                 Color="Color.Info" 
+                                 Variant="Variant.Outlined" 
+                                 OnClick="SeedQuick" 
+                                 Disabled="isOperationRunning"
+                                 Style="text-transform: none;">
+                            Quick Seed (5 clients)
+                        </MudButton>
+                    </MudStack>
+                </MudStack>
+            </MudPaper>
+
+            <!-- Data Management Section -->
+            <MudPaper Class="pa-4" Elevation="2" Style="border-radius: 12px; border-left: 4px solid var(--mud-palette-warning);">
+                <MudStack Spacing="3">
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                        <MudIcon Icon="@Icons.Material.Filled.CleaningServices" Color="Color.Warning" />
+                        <MudText Typo="Typo.h6" Color="Color.Warning">Data Management</MudText>
+                    </MudStack>
+
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">
+                        Remove all test data from the database. This action cannot be undone.
+                    </MudText>
+
+                    <MudAlert Severity="Severity.Warning" Variant="Variant.Outlined">
+                        <strong>Warning:</strong> This will permanently delete ALL clients and invoices from the database!
+                    </MudAlert>
+
+                    <MudButton StartIcon="@Icons.Material.Filled.DeleteSweep" 
+                             Color="Color.Error" 
+                             Variant="Variant.Outlined" 
+                             OnClick="ClearDataWithConfirmation" 
+                             Disabled="isOperationRunning"
+                             Style="text-transform: none;">
+                        @if (isClearing)
+                        {
+                            <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+                            <text>Clearing...</text>
+                        }
+                        else
+                        {
+                            <text>Clear All Data</text>
+                        }
+                    </MudButton>
+                </MudStack>
+            </MudPaper>
+
+            <!-- Statistics Section -->
+            <MudPaper Class="pa-4" Elevation="2" Style="border-radius: 12px; border-left: 4px solid var(--mud-palette-info);">
+                <MudStack Spacing="3">
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                        <MudIcon Icon="@Icons.Material.Filled.Analytics" Color="Color.Info" />
+                        <MudText Typo="Typo.h6" Color="Color.Info">Database Statistics</MudText>
+                    </MudStack>
+
+                    <MudButton StartIcon="@Icons.Material.Filled.Refresh" 
+                             Color="Color.Info" 
+                             Variant="Variant.Text" 
+                             OnClick="LoadStatistics" 
+                             Disabled="isLoadingStats"
+                             Style="text-transform: none;">
+                        @if (isLoadingStats)
+                        {
+                            <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+                            <text>Loading...</text>
+                        }
+                        else
+                        {
+                            <text>Refresh Statistics</text>
+                        }
+                    </MudButton>
+
+                    @if (statisticsLoaded)
+                    {
+                        <MudGrid>
+                            <MudItem xs="6" sm="3">
+                                <MudPaper Class="pa-3 text-center" Style="border-radius: 8px;">
+                                    <MudText Typo="Typo.h4" Color="Color.Primary">@totalClients</MudText>
+                                    <MudText Typo="Typo.body2" Color="Color.Secondary">Total Clients</MudText>
+                                </MudPaper>
+                            </MudItem>
+                            <MudItem xs="6" sm="3">
+                                <MudPaper Class="pa-3 text-center" Style="border-radius: 8px;">
+                                    <MudText Typo="Typo.h4" Color="Color.Success">@totalInvoices</MudText>
+                                    <MudText Typo="Typo.body2" Color="Color.Secondary">Total Invoices</MudText>
+                                </MudPaper>
+                            </MudItem>
+                            <MudItem xs="6" sm="3">
+                                <MudPaper Class="pa-3 text-center" Style="border-radius: 8px;">
+                                    <MudText Typo="Typo.h4" Color="Color.Warning">@individualClients</MudText>
+                                    <MudText Typo="Typo.body2" Color="Color.Secondary">Individuals</MudText>
+                                </MudPaper>
+                            </MudItem>
+                            <MudItem xs="6" sm="3">
+                                <MudPaper Class="pa-3 text-center" Style="border-radius: 8px;">
+                                    <MudText Typo="Typo.h4" Color="Color.Info">@companyClients</MudText>
+                                    <MudText Typo="Typo.body2" Color="Color.Secondary">Companies</MudText>
+                                </MudPaper>
+                            </MudItem>
+                        </MudGrid>
+                        
+                        @if (totalExpenseFiles > 0)
+                        {
+                            <MudGrid>
+                                <MudItem xs="12" sm="6" Class="mx-auto">
+                                    <MudPaper Class="pa-3 text-center" Style="border-radius: 8px;">
+                                        <MudText Typo="Typo.h4" Color="Color.Error">@totalExpenseFiles</MudText>
+                                        <MudText Typo="Typo.body2" Color="Color.Secondary">Expense Files</MudText>
+                                    </MudPaper>
+                                </MudItem>
+                            </MudGrid>
+                        }
+                    }
+                </MudStack>
+            </MudPaper>
+
+            <!-- Navigation -->
+            <MudStack Row="true" Spacing="2" Justify="Justify.Center">
+                <MudButton StartIcon="@Icons.Material.Filled.ArrowBack" 
+                         Color="Color.Secondary" 
+                         Variant="Variant.Text" 
+                         OnClick="GoBack"
+                         Style="text-transform: none;">
+                    Back to Home
+                </MudButton>
+            </MudStack>
+        </MudStack>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private int clientCount = 20;
+    private int invoicesPerClient = 4;
+    private bool includeExpenseFiles = true;
+    private bool isOperationRunning = false;
+    private bool isSeeding = false;
+    private bool isClearing = false;
+    private bool isLoadingStats = false;
+    private bool statisticsLoaded = false;
+
+    // Statistics
+    private int totalClients = 0;
+    private int totalInvoices = 0;
+    private int individualClients = 0;
+    private int companyClients = 0;
+    private int totalExpenseFiles = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadStatistics();
+    }
+
+    private async Task SeedDatabase()
+    {
+        isSeeding = true;
+        isOperationRunning = true;
+        StateHasChanged();
+
+        try
+        {
+            await ServiceProvider.SeedDatabaseAsync(clientCount, invoicesPerClient, includeExpenseFiles, Snackbar);
+            await LoadStatistics(); // Refresh statistics after seeding
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to seed database");
+        }
+        finally
+        {
+            isSeeding = false;
+            isOperationRunning = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task SeedQuick()
+    {
+        isSeeding = true;
+        isOperationRunning = true;
+        StateHasChanged();
+
+        try
+        {
+            await ServiceProvider.SeedDatabaseAsync(5, 3, includeExpenseFiles, Snackbar);
+            await LoadStatistics(); // Refresh statistics after seeding
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to quick seed database");
+        }
+        finally
+        {
+            isSeeding = false;
+            isOperationRunning = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task ClearDataWithConfirmation()
+    {
+        var confirmed = await DialogService.ShowMessageBox(
+            "⚠️ Confirm Data Deletion",
+            "This will permanently delete ALL clients and invoices from the database. This action cannot be undone!\n\nAre you absolutely sure?",
+            yesText: "Yes, Delete All",
+            cancelText: "Cancel"
+        );
+
+        if (confirmed == true)
+        {
+            await ClearData();
+        }
+    }
+
+    private async Task ClearData()
+    {
+        isClearing = true;
+        isOperationRunning = true;
+        StateHasChanged();
+
+        try
+        {
+            await ServiceProvider.ClearTestDataAsync(Snackbar);
+            await LoadStatistics(); // Refresh statistics after clearing
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to clear test data");
+        }
+        finally
+        {
+            isClearing = false;
+            isOperationRunning = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadStatistics()
+    {
+        isLoadingStats = true;
+        StateHasChanged();
+
+        try
+        {
+            var clientRepository = ServiceProvider.GetRequiredService<ClientRepository>();
+            var invoiceRepository = ServiceProvider.GetRequiredService<InvoiceRepository>();
+
+            var clients = await clientRepository.GetAllClientsAsync();
+            var invoices = await invoiceRepository.GetAllInvoicesAsync();
+
+            totalClients = clients.Count;
+            totalInvoices = invoices.Count;
+            individualClients = clients.Count(c => !c.IsCompany);
+            companyClients = clients.Count(c => c.IsCompany);
+            totalExpenseFiles = invoices.Sum(i => i.ExpenseProofFiles?.Count ?? 0);
+
+            statisticsLoaded = true;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to load statistics");
+            Snackbar.Add("❌ Failed to load database statistics", Severity.Error);
+        }
+        finally
+        {
+            isLoadingStats = false;
+            StateHasChanged();
+        }
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/");
+    }
+}

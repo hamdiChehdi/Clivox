@@ -34,7 +34,7 @@ public class User : IAggregateRoot
 
         return new User
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.CreateVersion7(),
             Username = username,
             Email = email,
             PasswordHash = passwordHash,
@@ -165,7 +165,7 @@ public class LoginResult
 /// </summary>
 public class AuthSession
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; } = Guid.CreateVersion7();
     public Guid UserId { get; set; }
     public string Token { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

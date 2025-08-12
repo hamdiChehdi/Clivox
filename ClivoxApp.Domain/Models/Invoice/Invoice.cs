@@ -9,7 +9,7 @@ namespace ClivoxApp.Models.Invoice;
 
 public class Invoice : IAggregateRoot
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = Guid.CreateVersion7();
     public int Version { get; set; }
     public DateTime CreatedOn { get; set; }
     public DateTime ModifiedOn { get; set; }
@@ -532,7 +532,7 @@ public enum InvoiceStatus
 
 public class InvoiceItem
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; } = Guid.CreateVersion7();
     public string Description { get; set; } = string.Empty;
     public BillingType BillingType { get; set; }
 

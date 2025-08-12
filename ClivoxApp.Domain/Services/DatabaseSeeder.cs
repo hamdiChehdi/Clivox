@@ -267,6 +267,7 @@ public class DatabaseSeeder
         var baseDate = DateTime.UtcNow.AddDays(-_random.Next(0, 180));
         var invoice = new Invoice
         {
+            Id = Guid.CreateVersion7(),
             ClientId = clientId,
             InvoiceNumber = $"RN-{invoiceNumber:D4}",
             InvoiceDate = baseDate,
@@ -328,7 +329,7 @@ public class DatabaseSeeder
             var billingType = (BillingType)_random.Next(0, 4);
             var item = new InvoiceItem
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.CreateVersion7(),
                 Description = _serviceDescriptions[_random.Next(_serviceDescriptions.Length)],
                 BillingType = billingType
             };
@@ -370,7 +371,7 @@ public class DatabaseSeeder
         {
             var file = new ExpenseProofFile
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.CreateVersion7(),
                 Description = _expenseDescriptions[_random.Next(_expenseDescriptions.Length)],
                 Amount = (decimal)(_random.NextDouble() * 500 + 10), // 10-510 EUR expense amounts
                 UploadedAt = DateTime.UtcNow.AddDays(-_random.Next(0, 30)), // Uploaded within last 30 days

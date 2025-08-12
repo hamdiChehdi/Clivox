@@ -808,6 +808,42 @@ namespace ClivoxApp {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Due Date.
+        /// </summary>
+        public static string invoice_DueDate {
+            get {
+                return ResourceManager.GetString("invoice_DueDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invoice Date.
+        /// </summary>
+        public static string invoice_InvoiceDate {
+            get {
+                return ResourceManager.GetString("invoice_InvoiceDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invoice Number.
+        /// </summary>
+        public static string invoice_InvoiceNumber {
+            get {
+                return ResourceManager.GetString("invoice_InvoiceNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service Date.
+        /// </summary>
+        public static string invoice_ServiceDate {
+            get {
+                return ResourceManager.GetString("invoice_ServiceDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Current.
         /// </summary>
         public static string invoiceCard_Current {
@@ -853,7 +889,7 @@ namespace ClivoxApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expenses.
+        ///   Looks up a localized string similar to Expenses .
         /// </summary>
         public static string invoiceCard_Expenses {
             get {
@@ -943,7 +979,7 @@ namespace ClivoxApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Preview & Export PDF.
+        ///   Looks up a localized string similar to Preview &amp; Export PDF.
         /// </summary>
         public static string invoiceCard_PreviewExportPDF {
             get {
@@ -984,42 +1020,6 @@ namespace ClivoxApp {
         public static string invoiceCard_Tasks {
             get {
                 return ResourceManager.GetString("invoiceCard_Tasks", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Due Date.
-        /// </summary>
-        public static string invoice_DueDate {
-            get {
-                return ResourceManager.GetString("invoice_DueDate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invoice Date.
-        /// </summary>
-        public static string invoice_InvoiceDate {
-            get {
-                return ResourceManager.GetString("invoice_InvoiceDate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invoice Number.
-        /// </summary>
-        public static string invoice_InvoiceNumber {
-            get {
-                return ResourceManager.GetString("invoice_InvoiceNumber", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Service Date.
-        /// </summary>
-        public static string invoice_ServiceDate {
-            get {
-                return ResourceManager.GetString("invoice_ServiceDate", resourceCulture);
             }
         }
         
@@ -1299,96 +1299,6 @@ namespace ClivoxApp {
         public static string validation_PhoneNumberRequired {
             get {
                 return ResourceManager.GetString("validation_PhoneNumberRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Client is required..
-        /// </summary>
-        public static string validation_ClientRequired {
-            get {
-                return ResourceManager.GetString("validation_ClientRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invoice must have at least one item..
-        /// </summary>
-        public static string validation_InvoiceMustHaveOneItem {
-            get {
-                return ResourceManager.GetString("validation_InvoiceMustHaveOneItem", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invoice number is required..
-        /// </summary>
-        public static string validation_InvoiceNumberRequired {
-            get {
-                return ResourceManager.GetString("validation_InvoiceNumberRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invoice validation failed:.
-        /// </summary>
-        public static string validation_InvoiceValidationFailed {
-            get {
-                return ResourceManager.GetString("validation_InvoiceValidationFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Item {0}: Area must be greater than 0..
-        /// </summary>
-        public static string validation_ItemAreaGreaterThanZero {
-            get {
-                return ResourceManager.GetString("validation_ItemAreaGreaterThanZero", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Item {0}: Description is required..
-        /// </summary>
-        public static string validation_ItemDescriptionRequired {
-            get {
-                return ResourceManager.GetString("validation_ItemDescriptionRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Item {0}: Fixed amount must be greater than 0..
-        /// </summary>
-        public static string validation_ItemFixedAmountGreaterThanZero {
-            get {
-                return ResourceManager.GetString("validation_ItemFixedAmountGreaterThanZero", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Item {0}: Price per square meter must be greater than 0..
-        /// </summary>
-        public static string validation_ItemPricePerSquareMeterGreaterThanZero {
-            get {
-                return ResourceManager.GetString("validation_ItemPricePerSquareMeterGreaterThanZero", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Item {0}: Quantity must be greater than 0..
-        /// </summary>
-        public static string validation_ItemQuantityGreaterThanZero {
-            get {
-                return ResourceManager.GetString("validation_ItemQuantityGreaterThanZero", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Item {0}: Unit price must be greater than 0..
-        /// </summary>
-        public static string validation_ItemUnitPriceGreaterThanZero {
-            get {
-                return ResourceManager.GetString("validation_ItemUnitPriceGreaterThanZero", resourceCulture);
             }
         }
     }

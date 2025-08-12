@@ -111,7 +111,7 @@ public class AuthenticationService
             return new LoginResult
             {
                 Success = false,
-                Message = "An error occurred during login. Please try again."
+                Message = $"An error occurred during login. Please try again. {ex.Message}"
             };
         }
     }
@@ -223,7 +223,7 @@ public class AuthenticationService
     /// <summary>
     /// Unlocks the session with password verification
     /// </summary>
-    public async Task<bool> UnlockSessionAsync(string password)
+    public bool UnlockSessionAsync(string password)
     {
         if (_currentUser == null || !_currentUser.VerifyPassword(password))
             return false;

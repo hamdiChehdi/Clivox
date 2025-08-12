@@ -535,4 +535,10 @@
   <data name="validation_InvalidGermanPhoneFormat" xml:space="preserve">
     <value>Invalid German phone number format.</value>
   </data>
+  <data name="businessOwner_Button" xml:space="preserve">
+    <value>Business Owner</value>
+  </data>
+  <data name="home_SearchClients" xml:space="preserve">
+    <value>Search clients...</value>
+  </data>
 </root>

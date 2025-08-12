@@ -464,16 +464,16 @@ public class Invoice : IAggregateRoot
             return new InvoiceItemChanges
             {
                 Added = Items.ToList(),
-                Modified = new List<InvoiceItem>(),
-                Deleted = new List<Guid>()
+                Modified = [],
+                Deleted = []
             };
         }
 
         var changes = new InvoiceItemChanges
         {
-            Added = new List<InvoiceItem>(),
-            Modified = new List<InvoiceItem>(),
-            Deleted = new List<Guid>()
+            Added = [],
+            Modified = [],
+            Deleted = []
         };
 
         // Find added items (exist in current but not in other)

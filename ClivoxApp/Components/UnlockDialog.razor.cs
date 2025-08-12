@@ -21,7 +21,7 @@ public partial class UnlockDialog : ComponentBase
     private bool _isLoading = false;
     private string _errorMessage = string.Empty;
 
-    private async Task Unlock()
+    private void Unlock()
     {
         if (string.IsNullOrWhiteSpace(_password))
         {
@@ -35,7 +35,7 @@ public partial class UnlockDialog : ComponentBase
 
         try
         {
-            var success = await AuthService.UnlockSessionAsync(_password);
+            var success = AuthService.UnlockSessionAsync(_password);
             
             if (success)
             {
@@ -50,7 +50,7 @@ public partial class UnlockDialog : ComponentBase
         }
         catch (Exception ex)
         {
-            _errorMessage = "An unexpected error occurred. Please try again.";
+            _errorMessage = $"An unexpected error occurred. Please try again. {ex.Message}";
         }
         finally
         {
@@ -70,11 +70,11 @@ public partial class UnlockDialog : ComponentBase
         _showPassword = !_showPassword;
     }
 
-    private async Task OnKeyPress(KeyboardEventArgs e)
+    private void OnKeyPress(KeyboardEventArgs e)
     {
         if (e.Key == "Enter" && !_isLoading)
         {
-            await Unlock();
+            Unlock();
         }
     }
 }

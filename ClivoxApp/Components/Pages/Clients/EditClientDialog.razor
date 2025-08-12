@@ -96,7 +96,7 @@
 
 @code {
     [CascadingParameter]
-    private IMudDialogInstance MudDialog { get; set; }
+    public required IMudDialogInstance MudDialog { get; set; }
 
     [Parameter]
     public Client Client { get; set; } = new();
@@ -106,9 +106,9 @@
     private MudForm form;
 
     [Inject]
-    private MudBlazor.IDialogService DialogService { get; set; }
+    public required MudBlazor.IDialogService DialogService { get; set; }
     [Inject]
-    private ClivoxApp.Models.Invoice.InvoiceRepository InvoiceRepository { get; set; }
+    public required ClivoxApp.Models.Invoice.InvoiceRepository InvoiceRepository { get; set; }
 
     private void CompanyChanged(bool value)
     {

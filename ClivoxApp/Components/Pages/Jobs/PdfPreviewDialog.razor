@@ -164,10 +164,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await GeneratePdf();
+        GeneratePdf();
+        await Task.CompletedTask;
     }
 
-    private async Task GeneratePdf()
+    private void GeneratePdf()
     {
         IsLoading = true;
         HasError = false;
@@ -205,9 +206,9 @@
         }
     }
 
-    private async Task RegeneratePdf()
+    private void RegeneratePdf()
     {
-        await GeneratePdf();
+        GeneratePdf();
     }
 
     private async Task DownloadPdf()
@@ -241,7 +242,7 @@
         }
     }
 
-    private async Task OpenPdfInNewTab()
+    private void OpenPdfInNewTab()
     {
         if (PdfContent == null) return;
 

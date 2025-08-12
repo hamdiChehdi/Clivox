@@ -389,34 +389,151 @@
     <value>Error downloading file: {0}</value>
   </data>
   <!-- Invoice Validation Messages -->
-  <data name="validation_InvoiceMustHaveOneItem" xml:space="preserve">
-    <value>Invoice must have at least one item.</value>
+  <data name="mainLayout_Welcome" xml:space="preserve">
+    <value>Welcome</value>
   </data>
-  <data name="validation_InvoiceNumberRequired" xml:space="preserve">
-    <value>Invoice number is required.</value>
+  <data name="mainLayout_LockSession" xml:space="preserve">
+    <value>Lock Session</value>
   </data>
-  <data name="validation_ClientRequired" xml:space="preserve">
-    <value>Client is required.</value>
+  <data name="mainLayout_Logout" xml:space="preserve">
+    <value>Logout</value>
   </data>
-  <data name="validation_ItemDescriptionRequired" xml:space="preserve">
-    <value>Item {0}: Description is required.</value>
+  <data name="mainLayout_AuthenticationError" xml:space="preserve">
+    <value>Authentication Error</value>
   </data>
-  <data name="validation_ItemQuantityGreaterThanZero" xml:space="preserve">
-    <value>Item {0}: Quantity must be greater than 0.</value>
+  <data name="mainLayout_Retry" xml:space="preserve">
+    <value>Retry</value>
   </data>
-  <data name="validation_ItemUnitPriceGreaterThanZero" xml:space="preserve">
-    <value>Item {0}: Unit price must be greater than 0.</value>
+  <data name="mainLayout_InitializingAuthentication" xml:space="preserve">
+    <value>Initializing authentication...</value>
   </data>
-  <data name="validation_ItemAreaGreaterThanZero" xml:space="preserve">
-    <value>Item {0}: Area must be greater than 0.</value>
+  <data name="mainLayout_CheckingDatabase" xml:space="preserve">
+    <value>Checking database connection and user credentials...</value>
   </data>
-  <data name="validation_ItemPricePerSquareMeterGreaterThanZero" xml:space="preserve">
-    <value>Item {0}: Price per square meter must be greater than 0.</value>
+  <data name="mainLayout_TestLoginDialog" xml:space="preserve">
+    <value>Test Login Dialog</value>
   </data>
-  <data name="validation_ItemFixedAmountGreaterThanZero" xml:space="preserve">
-    <value>Item {0}: Fixed amount must be greater than 0.</value>
+  <data name="invoiceCard_NetTotal" xml:space="preserve">
+    <value>Net Total</value>
   </data>
-  <data name="validation_InvoiceValidationFailed" xml:space="preserve">
-    <value>Invoice validation failed:</value>
+  <data name="invoiceCard_Issued" xml:space="preserve">
+    <value>Issued</value>
+  </data>
+  <data name="invoiceCard_Due" xml:space="preserve">
+    <value>Due</value>
+  </data>
+  <data name="invoiceCard_Service" xml:space="preserve">
+    <value>Service</value>
+  </data>
+  <data name="invoiceCard_Tasks" xml:space="preserve">
+    <value>Tasks</value>
+  </data>
+  <data name="invoiceCard_Task" xml:space="preserve">
+    <value>Task</value>
+  </data>
+  <data name="invoiceCard_Expenses" xml:space="preserve">
+    <value>Expenses </value>
+  </data>
+  <data name="invoiceCard_NoCosts" xml:space="preserve">
+    <value>No Costs</value>
+  </data>
+  <data name="invoiceCard_FinancialSummary" xml:space="preserve">
+    <value>Financial Summary</value>
+  </data>
+  <data name="invoiceCard_ItemsTotal" xml:space="preserve">
+    <value>Items Total</value>
+  </data>
+  <data name="invoiceCard_ProfitMargin" xml:space="preserve">
+    <value>Profit Margin</value>
+  </data>
+  <data name="invoiceCard_EditInvoice" xml:space="preserve">
+    <value>Edit Invoice</value>
+  </data>
+  <data name="invoiceCard_ManageItems" xml:space="preserve">
+    <value>Manage Items</value>
+  </data>
+  <data name="invoiceCard_ManageFiles" xml:space="preserve">
+    <value>Manage Files</value>
+  </data>
+  <data name="invoiceCard_DeleteInvoice" xml:space="preserve">
+    <value>Delete Invoice</value>
+  </data>
+  <data name="invoiceCard_ExportToExcel" xml:space="preserve">
+    <value>Export to Excel</value>
+  </data>
+  <data name="invoiceCard_PreviewExportPDF" xml:space="preserve">
+    <value>Preview &amp; Export PDF</value>
+  </data>
+  <data name="invoiceCard_Overdue" xml:space="preserve">
+    <value>Overdue</value>
+  </data>
+  <data name="invoiceCard_DueSoon" xml:space="preserve">
+    <value>Due Soon</value>
+  </data>
+  <data name="invoiceCard_Current" xml:space="preserve">
+    <value>Current</value>
+  </data>
+  <data name="clientCard_Company" xml:space="preserve">
+    <value>Company</value>
+  </data>
+  <data name="clientCard_Individual" xml:space="preserve">
+    <value>Individual</value>
+  </data>
+  <data name="clientCard_Job" xml:space="preserve">
+    <value>Job</value>
+  </data>
+  <data name="clientCard_Jobs" xml:space="preserve">
+    <value>Jobs</value>
+  </data>
+  <data name="clientCard_EditClient" xml:space="preserve">
+    <value>Edit Client</value>
+  </data>
+  <data name="clientCard_DeleteClient" xml:space="preserve">
+    <value>Delete Client</value>
+  </data>
+  <data name="general_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="general_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="general_Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="general_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="general_Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="dialog_AddEditClient" xml:space="preserve">
+    <value>Add/Edit Client</value>
+  </data>
+  <data name="validation_CompanyNameRequired" xml:space="preserve">
+    <value>Company name is required</value>
+  </data>
+  <data name="validation_CompanyNameRequiredForCompany" xml:space="preserve">
+    <value>Company name is required for company clients.</value>
+  </data>
+  <data name="validation_FirstNameRequired" xml:space="preserve">
+    <value>First name is required</value>
+  </data>
+  <data name="validation_FirstNameRequiredForIndividual" xml:space="preserve">
+    <value>First name is required for individual clients.</value>
+  </data>
+  <data name="validation_LastNameRequired" xml:space="preserve">
+    <value>Last name is required</value>
+  </data>
+  <data name="validation_LastNameRequiredForIndividual" xml:space="preserve">
+    <value>Last name is required for individual clients.</value>
+  </data>
+  <data name="validation_PhoneNumberRequired" xml:space="preserve">
+    <value>Phone number is required</value>
+  </data>
+  <data name="validation_InvalidEmailFormat" xml:space="preserve">
+    <value>Invalid email format.</value>
+  </data>
+  <data name="validation_InvalidGermanPhoneFormat" xml:space="preserve">
+    <value>Invalid German phone number format.</value>
   </data>
 </root>

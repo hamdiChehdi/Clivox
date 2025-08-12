@@ -51,7 +51,7 @@ public partial class LoginDialog : ComponentBase
         }
         catch (Exception ex)
         {
-            _errorMessage = "An unexpected error occurred. Please try again.";
+            _errorMessage = $"An unexpected error occurred. Please try again. {ex.Message}";
         }
         finally
         {

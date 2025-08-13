@@ -31,18 +31,17 @@
                               Required="true"
                               Disabled="_isLoading"
                               OnKeyPress="@OnKeyPress" />
-
-                <MudTextField @bind-Value="_password"
-                              Label="Password"
-                              Variant="Variant.Outlined"
-                              InputType="@(_showPassword ? InputType.Text : InputType.Password)"
-                              StartIcon="@Icons.Material.Filled.Key"
-                              EndIcon="@(_showPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
-                              OnEndIconClick="@TogglePasswordVisibility"
+                <MudTextField @bind-Value="_password" 
+                              Label="Password" 
+                              Variant="Variant.Outlined" 
+                              InputType="@PasswordInput"
+                              Adornment="Adornment.End" 
+                              AdornmentIcon="@PasswordInputIcon" 
+                              OnAdornmentClick="TogglePasswordVisibility"
+                              AdornmentAriaLabel="Show Password"
                               Required="true"
-                              Disabled="_isLoading"
-                              OnKeyPress="@OnKeyPress" />
-
+                              Disabled="_isLoading" />
+                <MudTextField @bind-Value="_password" Label="Password" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibility" AdornmentAriaLabel="Show Password" />
                 <MudCheckBox @bind-Value="_rememberMe"
                              Label="Remember me for 7 days"
                              Color="Color.Primary"

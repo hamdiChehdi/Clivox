@@ -99,7 +99,7 @@ namespace ClivoxApp.Components.Pages.Jobs
             var dialog = await DialogService.ShowAsync<FileDetailsDialog>("Edit File Details", parameters);
             var result = await dialog.Result;
 
-            if (!result.Canceled && result.Data is FileDetailsResult fileDetails)
+            if (result is not null && !result.Canceled && result.Data is FileDetailsResult fileDetails)
             {
                 file.Description = fileDetails.Description;
                 file.Amount = fileDetails.Amount;
@@ -140,6 +140,12 @@ namespace ClivoxApp.Components.Pages.Jobs
 
         private async Task OnFilesChanged(FileResult? file)
         {
+            if (file is null) 
+            {
+                Snackbar.Add($"No file loaded.", Severity.Error);
+                return;
+            }
+
             try
             {
                 const int maxFileSize = 10 * 1024 * 1024; // 10 MB limit
@@ -197,7 +203,7 @@ namespace ClivoxApp.Components.Pages.Jobs
                 var dialog = await DialogService.ShowAsync<FileDetailsDialog>("Add File Details", parameters);
                 var result = await dialog.Result;
 
-                if (!result.Canceled && result.Data is FileDetailsResult fileDetails)
+                if (result is not null && !result.Canceled && result.Data is FileDetailsResult fileDetails)
                 {
                     expenseProofFile.Description = fileDetails.Description;
                     expenseProofFile.Amount = fileDetails.Amount;

@@ -22,6 +22,8 @@ public partial class LoginDialog : ComponentBase
     private bool _showPassword = false;
     private bool _isLoading = false;
     private string _errorMessage = string.Empty;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
 
     private async Task Login()
     {
@@ -60,9 +62,21 @@ public partial class LoginDialog : ComponentBase
         }
     }
 
-    private void TogglePasswordVisibility()
+    void TogglePasswordVisibility()
     {
         _showPassword = !_showPassword;
+        if(_showPassword)
+        {
+            _showPassword = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            _showPassword = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
     }
 
     private async Task OnKeyPress(KeyboardEventArgs e)

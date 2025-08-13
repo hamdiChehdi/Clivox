@@ -133,7 +133,7 @@ public partial class ExpenseProofFilesManagerDialog : ComponentBase
             var dialog = await DialogService.ShowAsync<FileDetailsDialog>("Add File Details", parameters);
             var result = await dialog.Result;
 
-            if (!result.Canceled && result.Data is FileDetailsResult fileDetails)
+            if (result is not null && !result.Canceled && result.Data is FileDetailsResult fileDetails)
             {
                 expenseProofFile.Description = fileDetails.Description;
                 expenseProofFile.Amount = fileDetails.Amount;
@@ -175,7 +175,7 @@ public partial class ExpenseProofFilesManagerDialog : ComponentBase
         var dialog = await DialogService.ShowAsync<FileDetailsDialog>("Edit File Details", parameters);
         var result = await dialog.Result;
 
-        if (!result.Canceled && result.Data is FileDetailsResult fileDetails)
+        if (result is not null && !result.Canceled && result.Data is FileDetailsResult fileDetails)
         {
             file.Description = fileDetails.Description;
             file.Amount = fileDetails.Amount;

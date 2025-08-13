@@ -28,19 +28,19 @@
             </MudItem>
             <!-- Address fields -->
             <MudItem xs="12" sm="6">
-                <MudTextField @bind-Value="BusinessOwner.Address.CompanyOrPerson" Label="Company/Person" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="BusinessOwner.Address!.CompanyOrPerson" Label="Company/Person" Variant="Variant.Outlined" />
             </MudItem>
             <MudItem xs="12" sm="6">
-                <MudTextField @bind-Value="BusinessOwner.Address.Street" Label="Street" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="BusinessOwner.Address!.Street" Label="Street" Variant="Variant.Outlined" />
             </MudItem>
             <MudItem xs="12" sm="6">
-                <MudTextField @bind-Value="BusinessOwner.Address.PostalCode" Label="Postal Code" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="BusinessOwner.Address!.PostalCode" Label="Postal Code" Variant="Variant.Outlined" />
             </MudItem>
             <MudItem xs="12" sm="6">
-                <MudTextField @bind-Value="BusinessOwner.Address.City" Label="City" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="BusinessOwner.Address!.City" Label="City" Variant="Variant.Outlined" />
             </MudItem>
             <MudItem xs="12" sm="6">
-                <MudSelect T="Countries" @bind-Value="BusinessOwner.Address.Country" Label="Country" Variant="Variant.Outlined">
+                <MudSelect T="Countries" @bind-Value="BusinessOwner.Address!.Country" Label="Country" Variant="Variant.Outlined">
                     @foreach (Countries country in Enum.GetValues(typeof(Countries)))
                     {
                         <MudSelectItem Value="@country">@country.ToString()</MudSelectItem>
@@ -70,7 +70,7 @@
 
 @code {
     [CascadingParameter]
-    private MudBlazor.IMudDialogInstance MudDialog { get; set; }
+    public required MudBlazor.IMudDialogInstance MudDialog { get; set; }
 
     [Parameter]
     public BusinessOwner BusinessOwner { get; set; } = new()

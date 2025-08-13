@@ -103,7 +103,7 @@
 
     public bool IsCompany;
     private bool success;
-    private MudForm form;
+    private MudForm form = new ();
 
     [Inject]
     public required MudBlazor.IDialogService DialogService { get; set; }

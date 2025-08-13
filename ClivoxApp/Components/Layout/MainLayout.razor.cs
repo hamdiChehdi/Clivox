@@ -36,25 +36,6 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
     private bool _needsUnlockDialog = false;
     private bool _initialRenderComplete = false;
 
-    MudTheme _theme = new MudTheme()
-    {
-        PaletteLight = new PaletteLight()
-        {
-            Primary = MudBlazor.Colors.Blue.Default,
-            Secondary = MudBlazor.Colors.Green.Accent4,
-            AppbarBackground = MudBlazor.Colors.Red.Default,
-        },
-        PaletteDark = new PaletteDark()
-        {
-            Primary = MudBlazor.Colors.Yellow.Darken4,
-        },
-        LayoutProperties = new LayoutProperties()
-        {
-            DrawerWidthLeft = "260px",
-            DrawerWidthRight = "300px"
-        }
-    };
-
     protected override async Task OnInitializedAsync()
     {
         AuthService.AuthenticationStateChanged += OnAuthenticationStateChanged;
@@ -125,14 +106,14 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
             else
             {
                 // No saved preference, use system preference
-                _isDarkMode = await _mudThemeProvider.GetSystemDarkModeAsync();
+                _isDarkMode = await _mudThemeProvider!.GetSystemDarkModeAsync();
             }
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error loading theme preference: {ex.Message}");
             // Fallback to system preference
-            _isDarkMode = await _mudThemeProvider.GetSystemDarkModeAsync();
+            _isDarkMode = await _mudThemeProvider!.GetSystemDarkModeAsync();
         }
     }
 
@@ -254,7 +235,15 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
             System.Diagnostics.Debug.WriteLine("Login dialog opened, waiting for result...");
             
             var result = await dialog.Result;
-            System.Diagnostics.Debug.WriteLine($"Login dialog result: Canceled={result.Canceled}");
+
+            if (result is null)
+            {
+                // User canceled login - exit app
+                System.Diagnostics.Debug.WriteLine("User canceled login, exiting app...");
+                Application.Current?.Quit();
+            }
+
+            System.Diagnostics.Debug.WriteLine($"Login dialog result: Canceled={result!.Canceled}");
 
             if (result.Canceled)
             {
@@ -298,7 +287,7 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
             var dialog = await DialogService.ShowAsync<UnlockDialog>("Session Locked", options);
             var result = await dialog.Result;
 
-            if (result.Canceled || (result.Data is bool success && !success))
+            if (result is null || result.Canceled || (result.Data is bool success && !success))
             {
                 // Session unlock failed or user chose logout
                 await ShowLoginDialog();

@@ -13,4 +13,5 @@ The app is built using:
 <img width="1915" height="1017" alt="image" src="https://github.com/user-attachments/assets/edfb5df6-8b64-4b3c-a2f4-2e45131b7dda" />
 
 
-
+Example of generated invoice:
+[Invoice_INV-7012_20250803_182656.pdf](https://github.com/user-attachments/files/21852225/Invoice_INV-7012_20250803_182656.pdf)
